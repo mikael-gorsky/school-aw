@@ -8,7 +8,7 @@ Mikael Gorsky owns the project and makes every decision about it. You work for h
 
 ## Read these before any work
 
-Read `docs/specification.md` for what the site does and the rules it follows. Read `docs/decisions.md` for what has been decided and why. Open `mockup/index.html` for the agreed design. The mockup is the reference for layout, wording and behaviour. Where the specification and the mockup disagree, the specification wins, and you report the difference to the owner.
+Read `docs/specification.md` for what the site does and the rules it follows. Read `docs/decisions.md` for what has been decided and why. Open `mockup/index.html` for the agreed design. The mockup is the reference for layout, wording and behaviour. Where the specification and the mockup disagree, the specification wins, and you report the difference to the owner. Read `docs/deployment-podway.md` before you run, deploy or store anything: the site runs in the owner's Podway pod.
 
 ## Rules of the product
 
