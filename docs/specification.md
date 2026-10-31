@@ -4,9 +4,9 @@ Status: agreed design, 31 October 2026. The clickable mockup in `mockup/index.ht
 
 ## 1. Purpose
 
-School of Agentic Work (SAW) supports students who are enrolled in programmes taught by Mikael Gorsky. It serves them during live lessons, in class or on Zoom, and between lessons. It does not offer programmes to the public, and it holds information only about programmes that have active students.
+School of Agentic Work (SAW) supports students who are enrolled in programs taught by Mikael Gorsky. It serves them during live lessons, in class or on Zoom, and between lessons. It does not offer programs to the public, and it holds information only about programs that have active students.
 
-The site has a second purpose. It shows potential clients of the teacher how deep the support of his programmes is. These clients come in 2 kinds. Some open the site from a link and do not sign in. Others ask the teacher for the demo login and use the site as a sample student.
+The site has a second purpose. It shows potential clients of the teacher how deep the support of his programs is. These clients come in 2 kinds. Some open the site from a link and do not sign in. Others ask the teacher for the demo login and use the site as a sample student.
 
 The site therefore follows one rule of communication. Every page addresses the student. A visitor who has not signed in sees every part of the site in a general form, and nothing is hidden behind a lock. After sign-in, the same pages show the student's own lessons, answers, checks and figures.
 
@@ -15,15 +15,15 @@ The site therefore follows one rule of communication. Every page addresses the s
 | User | How the user enters | What the user sees |
 |---|---|---|
 | Visitor | Does not sign in. | The general form of every page, with example screens that cannot be used. |
-| Student | Registers once, then signs in with Google or with a link sent by email. | The student's own programme and all 4 sections with the student's own data. |
+| Student | Registers once, then signs in with Google or with a link sent by email. | The student's own program and all 4 sections with the student's own data. |
 | Demo user | Signs in with the login "demo" and a password that the teacher gives out. | The student side of the SAW demo group. Nothing entered is kept. |
 | Teacher | Signs in with the teacher's account. | The teacher pages: the 4 sections from the teacher's side, class progress, satisfaction, groups and access, and the agents. |
 
 ### 2.1 Registration and the list of permitted addresses
 
-The teacher keeps a list of permitted addresses. Each address on the list carries an institution name, a group number and a programme. The teacher adds addresses by pasting them, one per line, with the institution, group and programme for the whole batch, or by uploading a CSV file. When the site reads a CSV file, such as a Moodle export, it reads only 5 columns: first name, last name, email, group and institution. It never imports ID numbers. Where a file has names in 2 languages, as a Moodle export does, the English columns are read. A group or institution in the file overrides the one written in the form. The names may be left out, and then they come from the student's Google account at sign-in. A name from the list comes before the name from Google.
+The teacher keeps a list of permitted addresses. Each address on the list carries an institution name, a group number and a program. The teacher adds addresses by pasting them, one per line, with the institution, group and program for the whole batch, or by uploading a CSV file. When the site reads a CSV file, such as a Moodle export, it reads only 5 columns: first name, last name, email, group and institution. It never imports ID numbers. Where a file has names in 2 languages, as a Moodle export does, the English columns are read. A group or institution in the file overrides the one written in the form. The names may be left out, and then they come from the student's Google account at sign-in. A name from the list comes before the name from Google.
 
-The page "Register to use the service" tells the student to register with the email address given to the course organiser, preferably a Gmail address. A Gmail address registers with Google. Any other address registers through a link sent to it by email. The site accepts only an address on the list. When it accepts one, it tells the student the institution, group and programme in which it has placed them. The student never enters these values.
+The page "Register to use the service" tells the student to register with the email address given to the course organizer, preferably a Gmail address. A Gmail address registers with Google. Any other address registers through a link sent to it by email. The site accepts only an address on the list. When it accepts one, it tells the student the institution, group and program in which it has placed them. The student never enters these values.
 
 When an address is not on any list, the site refuses the registration, tells the student to check the address or write to Contact SAW, and shows the attempt to the teacher on the Groups and access page. The teacher can add the address to a group or ignore it.
 
@@ -31,7 +31,7 @@ After registration, the student signs in with the same address.
 
 ### 2.2 The demo login
 
-A demo login is a sample student of a demo group. The login "demo" belongs to the group "demo" of the institution "SAW demo", in the programme Agentic software engineering. It has a password, which the teacher can change. A demo login for another programme can be added once that programme has content on the site.
+A demo login is a sample student of a demo group. The login "demo" belongs to the group "demo" of the institution "SAW demo", in the program Agentic software engineering. It has a password, which the teacher can change. A demo login for another program can be added once that program has content on the site.
 
 A demo user sees only the student side. A line under the header says that the user is signed in as demo, that nothing is saved, and that the demo group is reset every night. A demo user can never open a teacher page. The site records when the demo login is used and which pages are opened, and it deletes everything entered under it every night.
 
@@ -39,13 +39,13 @@ People ask for the demo login through Contact SAW.
 
 ### 2.3 Contact SAW
 
-Contact SAW is a form with a name, an email address, a topic and a message. The topics are "Registration and signing in", "My programme" and "Something else". The steward agent passes each message to the teacher's Groups and access page, where the teacher replies by email or sends the demo login. The form asks people not to send ID numbers or other personal documents.
+Contact SAW is a form with a name, an email address, a topic and a message. The topics are "Registration and signing in", "My program" and "Something else". The steward agent passes each message to the teacher's Groups and access page, where the teacher replies by email or sends the demo login. The form asks people not to send ID numbers or other personal documents.
 
 ## 3. Structure of the site
 
 The main menu has 4 sections: Learn in class, Study alone, Submit projects and Exam finale. Each section is run by one agent under the teacher.
 
-A signed-in student also has 2 personal pages, My programme and My progress, which appear beside the main menu. My programme is the page a student sees after signing in.
+A signed-in student also has 2 personal pages, My program and My progress, which appear beside the main menu. My program is the page a student sees after signing in.
 
 Every signed-in user, the teacher included, sees their last name and status beside the main menu, for example "Gold · student". It opens My account, which also holds Sign out.
 
@@ -57,26 +57,26 @@ On a phone, the 4 sections sit in a tab bar at the bottom of the screen, and all
 
 | Page | Visitor | Student and demo user | Teacher |
 |---|---|---|---|
-| Home | What the student does on the site, the agents, the teacher, Contact SAW. | The same, with links to My programme and My progress. | The same. |
-| My programme | How the site finds the student's group, and an example overview. | The student's programme, group, next lesson, grade parts, curriculum and documents. | The programme overview. |
+| Home | What the student does on the site, the agents, the teacher, Contact SAW. | The same, with links to My program and My progress. | The same. |
+| My program | How the site finds the student's group, and an example overview. | The student's program, group, next lesson, grade parts, curriculum and documents. | The program overview. |
 | Learn in class | How a lesson runs, an example exercise and an example rating. | The live exercise, the lesson plan, the lesson rating and the student's lessons. | The live lesson console. |
 | Study alone | How studying works, an example study page and an example question to the tutor. | The modules with practice results, the tutor and suggestions. | Practice results of the class and questions the tutor could not answer. |
 | Submit projects | How checks work, an example check and the list of checks. | Repository links, check results, feedback and project rules. | Checks of all students and the most common failed checks. |
 | Exam finale | How the exam works, an example readiness card and the exam format. | The student's readiness, practice exams and the rules for the exam day. | Readiness of the class, the exam draft and the exam settings. |
 | My progress | What the page shows, with an example. | The student's figures against the average of the group. | Class progress. |
-| My account | What the page shows, with an example. | The student's photo and name, email, institution, group, programme and comment, and Sign out. | The teacher's own name, photo, comment and Sign out. |
+| My account | What the page shows, with an example. | The student's photo and name, email, institution, group, program and comment, and Sign out. | The teacher's own name, photo, comment and Sign out. |
 
 ## 4. Pages
 
 ### 4.1 Home
 
-The home page opens with the name of the school and the sentence "This is where you work on your course, during lessons and between them." A visitor sees the buttons "Sign in" and "Register to use the service", and a line that sends first-time students to registration. A signed-in student sees "Go to my programme" and "My progress".
+The home page opens with the name of the school and the sentence "This is where you work on your course, during lessons and between them." A visitor sees the buttons "Sign in" and "Register to use the service", and a line that sends first-time students to registration. A signed-in student sees "Go to my program" and "My progress".
 
-The page continues with the 4 sections, each with the agent that runs it, a section about the student's programme, progress and anonymous ratings, the 7 agents, the teacher, and a block that leads to Contact SAW.
+The page continues with the 4 sections, each with the agent that runs it, a section about the student's program, progress and anonymous ratings, the 7 agents, the teacher, and a block that leads to Contact SAW.
 
-### 4.2 My programme
+### 4.2 My program
 
-The page shows the programme name, the institution, the group and the teacher. It shows the next lesson with its date, a button to Learn in class and the Zoom link. It shows the student's group as the site recorded it, the description of the programme, the parts of the grade with their weights, the full curriculum with the status of each module, the documents (the programme 2-pager, the full curriculum, the project rules and the grading rules) and a way to contact the teacher.
+The page shows the program name, the institution, the group and the teacher. It shows the next lesson with its date, a button to Learn in class and the Zoom link. It shows the student's group as the site recorded it, the description of the program, the parts of the grade with their weights, the full curriculum with the status of each module, the documents (the program 2-pager, the full curriculum, the project rules and the grading rules) and a way to contact the teacher.
 
 ### 4.3 Learn in class
 
@@ -104,7 +104,7 @@ The teacher sees how many projects are submitted and passing, the most common fa
 
 ### 4.6 Exam finale
 
-A programme without a final exam sets `"exam": false` in its `programme.json`. Its students, the teacher's view of its groups and the visitor's view of the site then show no Exam finale, no exam readiness and no @examiner. ASE has no final exam, so the section below applies only to a programme that has one.
+A program without a final exam sets `"exam": false` in its `programme.json`. Its students, the teacher's view of its groups and the visitor's view of the site then show no Exam finale, no exam readiness and no @examiner. ASE has no final exam, so the section below applies only to a program that has one.
 
 The exam format below is a draft for the owner to correct.
 
@@ -118,9 +118,13 @@ The teacher sees readiness of the class, the draft of part A prepared by the exa
 
 The student sees 6 figures: live exercises answered, live exercise score, practice accuracy, modules studied, projects passing and exam readiness. The page also shows the score in each lesson against the group average (with a table view), messages from the agents about what to do next, the state of each module, the answers in each lesson, and the student's own lesson ratings beside the group average. Only the student sees these figures.
 
+### 4.7b The helper
+
+Every page shows students and the demo login a round button with the teacher's photo. It opens a chat that begins "How can I help?". The helper answers questions about the site, the course and the textbook in the language the student writes in, in detail and in simple words, and names the textbook chapter it draws on. When the material does not settle a question about the course, it says so and points to Contact SAW. It never grades, never decides about a person, and does not write a student's project code. A student may ask 20 questions a day; the demo login's limit is counted per visitor. The conversation stays in the browser tab, and no name or email address is sent.
+
 ### 4.7a My account
 
-The page shows the user's photo, first name and last name, which come from the Google account at sign-in. The user can change both names freely. A name from the teacher's list or from Google fills a name only until the user saves My account; after that the user's own name always stays, even if it is empty. The site copies the photo at each sign-in and serves it itself. The page also shows the email address and, for a student, the institution, group and programme from the teacher's list, which the student cannot change. A comment field of up to 2,000 characters holds anything the student wants the teacher to know. Only the user and the teacher see the name, photo and comment; other students never see them. The page holds Sign out.
+The page shows the user's photo, first name and last name, which come from the Google account at sign-in. The user can change both names freely. A name from the teacher's list or from Google fills a name only until the user saves My account; after that the user's own name always stays, even if it is empty. The site copies the photo at each sign-in and serves it itself. The page also shows the email address and, for a student, the institution, group and program from the teacher's list, which the student cannot change. A comment field of up to 2,000 characters holds anything the student wants the teacher to know. Only the user and the teacher see the name, photo and comment; other students never see them. The page holds Sign out.
 
 The teacher's lists show each student by name, with the email address under it, and the name opens the student's details and comment, read-only.
 
@@ -132,7 +136,7 @@ The analyst agent flags a student who has not registered, who answers fewer than
 
 ### 4.9 Groups and access (teacher)
 
-The page shows each group with its institution, programme and the numbers of permitted and registered addresses, and the demo group. It holds the form for permitting addresses, the CSV upload, the list of permitted addresses with the state of each, refused registrations, the demo logins with their last use and a way to change the password, and the messages from Contact SAW.
+The page shows each group with its institution, program and the numbers of permitted and registered addresses, and the demo group. It holds the form for permitting addresses, the CSV upload, the list of permitted addresses with the state of each, refused registrations, the demo logins with their last use and a way to change the password, and the messages from Contact SAW.
 
 ### 4.10 Agents (teacher)
 
@@ -158,7 +162,7 @@ After each lesson, the analyst opens a lesson rating. The student gives a rating
 
 At the end of each study page, the student may rate the clarity of the module from 1 to 5.
 
-Twice in each programme, at the start and in the middle, the student answers a survey of 6 dimensions, each from 1 to 5: clarity, pace, usefulness for work, interest, support from agents and manageable workload. The survey also asks whether the student would recommend the course, on a scale from 0 to 10.
+Twice in each program, at the start and in the middle, the student answers a survey of 6 dimensions, each from 1 to 5: clarity, pace, usefulness for work, interest, support from agents and manageable workload. The survey also asks whether the student would recommend the course, on a scale from 0 to 10.
 
 ### 6.2 Rules
 
@@ -178,7 +182,7 @@ Each week, the analyst writes a short list of findings at the top of the report.
 
 Mikael Gorsky runs the site and is responsible for the data it keeps. The privacy notice on the site states the following.
 
-The site keeps the email address a student registers with, and the institution, group and programme written beside it on the teacher's list. It keeps the student's answers to exercises, project links and their checks, and messages sent through Contact SAW. When a user signs in with Google, the site also keeps the first and last name and the profile photo from the Google account, and the comment the user writes on My account. Only the user and the teacher see them. The site never asks for an ID number.
+The site keeps the email address a student registers with, and the institution, group and program written beside it on the teacher's list. It keeps the student's answers to exercises, project links and their checks, and messages sent through Contact SAW. When a user signs in with Google, the site also keeps the first and last name and the profile photo from the Google account, and the comment the user writes on My account. Only the user and the teacher see them. The site never asks for an ID number.
 
 Ratings and survey answers are anonymous to the teacher, as described in section 6.2.
 

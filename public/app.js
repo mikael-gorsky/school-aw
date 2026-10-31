@@ -1,4 +1,4 @@
-// Behaviour in the browser: the menu, tooltips, charts, live lessons, the tutor
+// Behavior in the browser: the menu, tooltips, charts, live lessons, the tutor
 // and reading a CSV file. Pages work without it except where they are live.
 import { readPermitCsv, writePermitCsv } from '/static/csv.js';
 
@@ -226,3 +226,48 @@ document.addEventListener('change', async e => {
     ? `${rows.length} addresses read from ${input.files[0].name}${groups.length ? ` in ${groups.length} group${groups.length > 1 ? 's' : ''}` : ''}, ${named} with names. Only the names, email, group and institution columns were read. Press "Add to the list" to save them.`
     : `No email addresses were found in ${input.files[0].name}.`;
 });
+
+// ---------- the helper ----------
+// The conversation lives in this browser tab only (sessionStorage), and each
+// question sends the recent turns so that the helper can follow the thread.
+(() => {
+  const fab = document.querySelector('[data-helper-open]');
+  const panel = document.getElementById('helper');
+  if (!fab || !panel) return;
+  const log = panel.querySelector('[data-helper-log]');
+  const form = panel.querySelector('[data-helper-form]');
+  const box = form.querySelector('textarea');
+  const note = panel.querySelector('[data-helper-note]');
+  const KEY = 'saw-helper';
+  let turns = [];
+  try { turns = JSON.parse(sessionStorage.getItem(KEY) || '[]'); } catch { turns = []; }
+  const save = () => { try { sessionStorage.setItem(KEY, JSON.stringify(turns.slice(-24))); } catch { /* private window */ } };
+  const add = (cls, text) => { const d = document.createElement('div'); d.className = `hm ${cls}`; d.textContent = text; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; };
+  for (const t of turns) add(t.role === 'user' ? 'u' : 'a', t.text);
+  const open = () => { panel.hidden = false; fab.setAttribute('aria-expanded', 'true'); box.focus(); log.scrollTop = log.scrollHeight; };
+  const close = () => { panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); fab.focus(); };
+  fab.addEventListener('click', open);
+  panel.querySelector('[data-helper-close]').addEventListener('click', close);
+  panel.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  box.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } });
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const q = box.value.trim();
+    if (!q) return;
+    box.value = ''; box.disabled = true;
+    add('u', q);
+    turns.push({ role: 'user', text: q }); save();
+    const wait = add('w', 'Thinking…');
+    try {
+      const r = await fetch('/api/helper', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ turns }) });
+      const data = await r.json().catch(() => ({}));
+      wait.remove();
+      if (r.ok && data.text) { add('a', data.text); turns.push({ role: 'assistant', text: data.text }); save(); }
+      else { add('e', data.error || 'The helper could not answer just now.'); turns.pop(); save(); }
+      if (typeof data.left === 'number') note.textContent = `Your name and address are not sent with your questions. ${data.left} question${data.left === 1 ? '' : 's'} left today.`;
+    } catch {
+      wait.remove(); add('e', 'The helper could not be reached. Check your connection.'); turns.pop(); save();
+    }
+    box.disabled = false; box.focus();
+  });
+})();

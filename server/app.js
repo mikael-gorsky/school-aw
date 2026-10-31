@@ -7,7 +7,7 @@ import { config, secureCookies } from './config.js';
 import { all, get, run, now, log, setting, setSetting } from './db.js';
 import { COOKIE, createSession, sessionUser, endSession, admit, demoLogin, googleStart, googleFinish, applyProfile, normEmail } from './auth.js';
 import { layout, HOME } from './html.js';
-import { programme, hasExam, planLesson } from './content.js';
+import { programme, hasExam } from './content.js';
 import * as M from './model.js';
 import * as P from './pages/public.js';
 import * as S from './pages/student.js';
@@ -17,6 +17,7 @@ import { resetDemo } from './demo.js';
 import { readPermitCsv, readPermitList, isEmail } from './csv.js';
 import { parseRepo, checkRepository } from './reviewer.js';
 import { aiAvailable, askTutor, groupThemes } from './ai.js';
+import { askHelper, cleanTurns, HELPER_DAILY } from './helper.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STATIC = {
@@ -108,7 +109,7 @@ on('POST', '/contact', {}, ctx => {
   const body = str(ctx.form.body, 4000);
   if (!isEmail(email) || !body) return { redirect: '/contact?e=1' };
   if (limited(`contact:${ctx.ip}`, 5, 3600e3)) return { redirect: '/contact?e=1', flash: 'You have sent several messages in the last hour. Please wait before you send another.' };
-  const topics = ['Registration and signing in', 'My programme', 'Something else'];
+  const topics = ['Registration and signing in', 'My program', 'Something else'];
   const topic = topics.includes(str(ctx.form.topic)) ? str(ctx.form.topic) : 'Something else';
   run('INSERT INTO messages(name, email, topic, body, at) VALUES(?, ?, ?, ?, ?)', str(ctx.form.name, 120) || null, email, topic, body, now());
   log('steward', 'passed a message from Contact SAW to the teacher');
@@ -136,7 +137,7 @@ on('GET', '/auth/google', {}, ctx => {
   return { redirect: url || '/signin' };
 });
 on('GET', '/auth/google/callback', {}, async ctx => {
-  if (ctx.query.error) return { redirect: `/signin?e=${encodeURIComponent('Google sign-in was cancelled.')}` };
+  if (ctx.query.error) return { redirect: `/signin?e=${encodeURIComponent('Google sign-in was canceled.')}` };
   try {
     const { email, intent, profile } = await googleFinish(ctx.query);
     return await signInAs(ctx, email, intent, profile);
@@ -153,7 +154,7 @@ on('POST', '/auth/demo', {}, ctx => {
   const user = demoLogin(str(ctx.form.login, 40), one(ctx.form.password));
   if (!user) return { redirect: '/signin?e=demo' };
   run('INSERT INTO demo_visits(path, at) VALUES(?, ?)', '/auth/demo', now());
-  return { redirect: '/programme', cookies: [cookie(COOKIE, createSession(user.id), 30 * 86400)] };
+  return { redirect: '/program', cookies: [cookie(COOKIE, createSession(user.id), 30 * 86400)] };
 });
 // ---------- my account ----------
 // The name in the header opens this page, which also holds Sign out
@@ -181,7 +182,9 @@ on('POST', '/auth/signout', {}, ctx => {
 // ---------- the student side ----------
 // The teacher has his own version of each section under /teacher.
 const toTeacher = k => ctx => (ctx.role === 'teacher' ? { redirect: `/teacher/${k}${ctx.groupQuery}` } : null);
-on('GET', '/programme', { title: 'My programme' }, ctx => toTeacher('progress')(ctx) || S.programmePage(ctx));
+// The address used British spelling until 31 October 2026; old links still work.
+on('GET', '/programme', {}, () => ({ redirect: '/program' }));
+on('GET', '/program', { title: 'My program' }, ctx => toTeacher('progress')(ctx) || S.programmePage(ctx));
 on('GET', '/class', { title: 'Learn in class' }, ctx => toTeacher('class')(ctx) || S.classPage(ctx));
 on('GET', '/study', { title: 'Study alone' }, ctx => toTeacher('study')(ctx) || S.studyPage(ctx));
 on('GET', '/projects', { title: 'Submit projects' }, ctx => toTeacher('projects')(ctx) || S.projectsPage(ctx));
@@ -247,6 +250,34 @@ on('POST', '/api/tutor', { roles: STU }, async ctx => {
     return { status: 502, json: { error: 'The tutor could not answer just now. Try again in a minute.', left } };
   }
 });
+// ---------- the helper ----------
+// Students and the demo login only (decision of 31 October 2026). The demo
+// login is shared, so its limit is counted per visitor address as well.
+on('POST', '/api/helper', { roles: STU }, async ctx => {
+  const turns = cleanTurns(ctx.form.turns);
+  if (!turns.length) return { status: 400, json: { error: 'Write a question first.' } };
+  if (!aiAvailable()) return { status: 503, json: { error: 'The helper is not connected yet. Ask your teacher through Contact SAW.' } };
+  const who = ctx.role === 'demo' ? `demo:${ctx.ip}` : `user:${ctx.user.id}`;
+  const day = new Date().toISOString().slice(0, 10);
+  const used = (get('SELECT count FROM helper_usage WHERE who = ? AND day = ?', who, day) || { count: 0 }).count;
+  if (used >= HELPER_DAILY) return { status: 429, json: { error: `You have asked ${HELPER_DAILY} questions today. You can ask again tomorrow.`, left: 0 } };
+  run('INSERT INTO helper_usage(who, day, count) VALUES(?, ?, 1) ON CONFLICT(who, day) DO UPDATE SET count = count + 1', who, day);
+  try {
+    // Only the conversation text goes to the AI service: no name and no address.
+    const a = await askHelper(ctx.group.programme, turns);
+    return { json: { text: a.text, left: HELPER_DAILY - used - 1 } };
+  } catch (e) {
+    console.error(`Helper failed: ${e.message}`);
+    return { status: 502, json: { error: 'The helper could not answer just now. Try again in a minute.', left: HELPER_DAILY - used - 1 } };
+  }
+});
+// The round button shows the teacher's photo from his Google account.
+on('GET', '/helper/avatar', { roles: [...STU, 'teacher'] }, () => {
+  const ph = get("SELECT p.type, p.data FROM user_photos p JOIN users u ON u.id = p.user_id WHERE u.role = 'teacher' ORDER BY p.updated_at DESC LIMIT 1");
+  if (ph) return { text: Buffer.from(ph.data), type: ph.type, headers: { 'cache-control': 'private, max-age=3600' } };
+  return { text: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#1c2128"/><text x="32" y="40" font-family="monospace" font-size="22" fill="#3DDC97" text-anchor="middle">MG</text></svg>', type: 'image/svg+xml' };
+});
+
 on('POST', '/projects/submit', { roles: STU }, async ctx => {
   const kind = str(ctx.form.kind) === 'tribunal' ? 'tribunal' : 'own';
   const back = `/projects?kind=${kind}`;
@@ -261,7 +292,7 @@ on('POST', '/projects/submit', { roles: STU }, async ctx => {
   if (c.error) return { redirect: `${back}&e=${encodeURIComponent(c.error)}` };
   const n = st => c.results.filter(r => r.state === st).length;
   run('INSERT INTO checks(project_id, at, results, passed, warnings, failed, feedback) VALUES(?, ?, ?, ?, ?, ?, ?)', pr.id, now(), JSON.stringify(c.results), n('ok'), n('warn'), n('bad'), c.feedback);
-  log('reviewer', `checked ${kind === 'own' ? 'an own project' : 'a tribunal'}: ${n('bad')} failed, ${n('warn')} warning`);
+  log('reviewer', `checked ${kind === 'own' ? 'an individual project' : 'a tribunal'}: ${n('bad')} failed, ${n('warn')} warning`);
   return { redirect: back, flash: `@reviewer finished the check: ${n('ok')} passed, ${n('warn')} warning, ${n('bad')} failed.` };
 });
 
@@ -314,13 +345,14 @@ on('POST', '/teacher/class/act', { roles: TEACHER }, ctx => {
     }
   } else if (a === 'add-lesson') {
     const number = Number(one(f.number));
-    // With a lesson plan the lesson number decides the modules; otherwise the teacher picks 1.
-    const mod = planLesson(g.programme, number) ? planLesson(g.programme, number).modules[0] : Number(one(f.module));
+    // The teacher picks 1 module, and may add a second one for the same lesson.
+    const known = n => programme(g.programme).modules.some(m => m.n === n);
+    const mods = [Number(one(f.module)), Number(one(f.module2))].filter((n, i, a) => known(n) && a.indexOf(n) === i);
     const zoom = str(f.zoom, 300);
-    if (!(number >= 1 && number <= 99) || !programme(g.programme).modules.some(m => m.n === mod)) flash = programme(g.programme).lessons ? `Choose a lesson from 1 to ${programme(g.programme).lessons.length}.` : 'Give a lesson number and a module.';
+    if (!(number >= 1 && number <= 99) || !known(Number(one(f.module)))) flash = 'Give a lesson number and a module.';
     else if (get('SELECT 1 FROM lessons WHERE group_id = ? AND number = ?', g.id, number)) flash = `Lesson ${number} already exists in this group.`;
     else if (zoom && !/^https:\/\/[^\s"<>]+$/.test(zoom)) flash = 'The Zoom link must start with https://.';
-    else { M.addLesson(g.id, number, mod, T.fromLocalInput(str(f.starts, 20)), zoom || null); flash = `Lesson ${number} is added.`; }
+    else { M.addLesson(g.id, number, mods, T.fromLocalInput(str(f.starts, 20)), zoom || null); flash = `Lesson ${number} is added.`; }
   } else if (a === 'add-item') {
     const l = lessonOf(f.lesson);
     const opts = ['a', 'b', 'c', 'd'].map(k => [k, str(f[`opt_${k}`], 200)]).filter(o => o[1]);
@@ -396,7 +428,7 @@ function permitTo(groupId, email, first = '', last = '') {
 on('POST', '/teacher/access/permit', { roles: TEACHER }, ctx => {
   const institution = str(ctx.form.institution, 120), code = str(ctx.form.code, 40);
   const prog = str(ctx.form.programme, 20) || 'ase';
-  try { programme(prog); } catch { return back(ctx, '/teacher/access', 'Choose a programme.'); }
+  try { programme(prog); } catch { return back(ctx, '/teacher/access', 'Choose a program.'); }
   // Only the names, email, group and institution of each row are used; nothing else is stored.
   const rows = [...readPermitList(one(ctx.form.emails)).map(email => ({ email })), ...readPermitCsv(one(ctx.form.csv))]
     .filter(r => r.email !== 'demo' && !config.teacherEmails.includes(r.email));

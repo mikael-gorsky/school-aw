@@ -14,7 +14,7 @@
     "The course teaches you to build software by directing AI agents and checking what they produce, instead of typing most of the code yourself.",
     "In this way of working you frame the problem, write the specification and judge the result, and the agent writes the code. The course calls your side of this work equipping and verifying. Equipping means giving the agent the right problem, specification, project context, tools, permissions and limits. Verifying means checking the agent's output against a defined standard before you accept it. Every module covers one part of equipping, one part of verifying, or the cycle that connects them.",
     "The course teaches a discipline and not a single tool. Agents now produce code faster than people can review it, and much of that code is not ready to merge. What separates professional from casual use of the same agent is the structure around its work: specification, context, version control, verification gates, review and an audit trail. These methods rest on long-standing ideas from software engineering and design, so they stay useful when the tools change.",
-    "You run your projects as a spiral of improvement and not as a single delivery. You revise the specification each time the agent's output shows something new about what is needed. You practise this on 2 projects that run through the semester: the Tribunal, which the whole class builds, and an individual project of your own design."
+    "You run your projects as a spiral of improvement and not as a single delivery. You revise the specification each time the agent's output shows something new about what is needed. You practice this on 2 projects that run through the semester: the Tribunal, which the whole class builds, and an individual (own) project on a subject you choose."
   ],
   "prerequisites": "You need programming and software engineering knowledge at the level of a third-year computer science student. The course does not teach programming or software engineering basics. Set up accounts for the course tools before the first lesson.",
   "outcomes": [
@@ -112,7 +112,7 @@
     {
       "n": 11,
       "title": "Context engineering",
-      "summary": "Context as a budgeted resource, and the context file as a designed artefact."
+      "summary": "Context as a budgeted resource, and the context file as a designed artifact."
     },
     {
       "n": 12,
@@ -132,12 +132,12 @@
     {
       "n": 15,
       "title": "Designing multi-agent workflows",
-      "summary": "Coordination between agents as a designed artefact."
+      "summary": "Coordination between agents as a designed artifact."
     },
     {
       "n": 16,
       "title": "Review and quality, legacy onboarding",
-      "summary": "Review at the centre of the discipline, the Merge-Readiness Pack in full, and legacy code."
+      "summary": "Review at the center of the discipline, the Merge-Readiness Pack in full, and legacy code."
     },
     {
       "n": 17,
@@ -155,84 +155,6 @@
       "summary": "What employers look for when agents write the code, and how to show the skills that compound."
     }
   ],
-  "lessons": [
-    {
-      "n": 1,
-      "modules": [
-        1
-      ]
-    },
-    {
-      "n": 2,
-      "modules": [
-        2,
-        3
-      ]
-    },
-    {
-      "n": 3,
-      "modules": [
-        4,
-        6
-      ]
-    },
-    {
-      "n": 4,
-      "modules": [
-        5,
-        7
-      ]
-    },
-    {
-      "n": 5,
-      "modules": [
-        8,
-        9
-      ]
-    },
-    {
-      "n": 6,
-      "modules": [
-        10
-      ]
-    },
-    {
-      "n": 7,
-      "modules": [
-        11
-      ],
-      "note": "Tribunal introduction"
-    },
-    {
-      "n": 8,
-      "modules": [
-        12,
-        13
-      ]
-    },
-    {
-      "n": 9,
-      "modules": [
-        14,
-        15
-      ]
-    },
-    {
-      "n": 10,
-      "modules": [
-        16,
-        17
-      ]
-    },
-    {
-      "n": 11,
-      "modules": [
-        18,
-        19
-      ]
-    }
-  ],
-  "lessonsNote": "The remaining meetings of the semester are used for project work and project presentations.",
   "grade": [
     {
       "key": "live",
@@ -257,7 +179,7 @@
     "The grade measures the discipline you show in directing agents, not the app you produce.",
     "Both projects are graded on the same trail: keeping to the module schedule and its checkpoints, documenting the work as it happens, maintained context files, a commit history with commits before agent runs and honest atomic messages, verification gates that catch real failures, and a final state that is ready to merge. A build that arrives late, or whose trail was written afterwards, loses marks even when the final product is sound.",
     "Only what is in the repository at the deadline is graded. Videos of a running app, verbal accounts, files kept outside the repository and repositories re-created after the fact are not graded.",
-    "Up to 90 is defendable: based on the specifications and the evidence in the repository. Complete and competent work lands here. 91 to 97 is obtainable: work of clear quality beyond the minimum, based on the lecturer's judgement. 98 to 100 is exceptional extra effort, judged against the strongest work in the class and not guaranteed.",
+    "Up to 90 is defendable: based on the specifications and the evidence in the repository. Complete and competent work lands here. 91 to 97 is obtainable: work of clear quality beyond the minimum, based on the lecturer's judgment. 98 to 100 is exceptional extra effort, judged against the strongest work in the class and not guaranteed.",
     "Grades are published no later than 10 days after the final class. You may ask once, in writing and within 7 days, for a regrade, pointing to the evidence you believe was misjudged. Regrades apply to the range up to 90, and the second grade is final."
   ],
   "projects": [
@@ -268,7 +190,7 @@
     },
     {
       "kind": "own",
-      "title": "Individual project",
+      "title": "Individual (own) project",
       "text": "You frame and build an independent application on a subject of your own choice. It follows the same steps as the Tribunal in the same weeks: when the class frames, specifies, verifies, reviews or audits the Tribunal, you do the same for this project. It needs a framing document, with a problem statement, a testable definition of done and an out-of-scope list, and a commit history covering at least 3 full turns of the specification spiral."
     }
   ],
@@ -317,7 +239,7 @@
   },
   "documents": [
     {
-      "title": "Programme 2-pager",
+      "title": "Program 2-pager",
       "url": ""
     },
     {

@@ -26,7 +26,7 @@ test('a visitor sees My account in a general form and cannot save it', async () 
 
 test('the header shows the last name and status, and it opens My account', async () => {
   db.run('UPDATE users SET last_name = ? WHERE id = ?', 'Gold', annId);
-  const page = await req('GET', '/programme', { jar: ann.jar });
+  const page = await req('GET', '/program', { jar: ann.jar });
   assert.match(page.text, /<a class="who" href="\/account"[^>]*>.*Gold · student<\/a>/);
   const t = await req('GET', '/teacher/progress', { jar: teacher.jar });
   assert.match(t.text, /href="\/account"[^>]*>.*· teacher<\/a>/);
@@ -131,4 +131,14 @@ test('an address without an institution or group is not added', async () => {
   const r = await req('POST', '/teacher/access/permit', { jar: teacher.jar, form: { emails: 'lost@gmail.com', institution: '', code: '', programme: 'ase' } });
   assert.equal(r.status, 303);
   assert.equal(db.get('SELECT * FROM permitted WHERE email = ?', 'lost@gmail.com'), undefined);
+});
+
+test('the teacher adds a lesson of 2 modules, and it takes the live exercises of both', async () => {
+  const g = db.get("SELECT id FROM groups WHERE code = 'acct'");
+  const r = await req('POST', '/teacher/class/act', { jar: teacher.jar, form: { group: g.id, action: 'add-lesson', number: '3', module: '4', module2: '6' } });
+  assert.equal(r.status, 303);
+  const l = db.get('SELECT * FROM lessons WHERE group_id = ? AND number = 3', g.id);
+  assert.deepEqual(JSON.parse(l.modules), [4, 6]);
+  const labels = db.all('SELECT label FROM items WHERE lesson_id = ?', l.id).map(i => i.label);
+  assert.ok(labels.some(x => x.startsWith('Module 4 · ')) && labels.some(x => x.startsWith('Module 6 · ')));
 });

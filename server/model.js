@@ -1,6 +1,6 @@
 // Queries and figures shared by the student and teacher pages.
 import { all, get, run, now, log, voterKey } from './db.js';
-import { programme, moduleContent, lessonItems, modulesWithContent, partOf, planLesson } from './content.js';
+import { programme, moduleContent, lessonItems, modulesWithContent, partOf } from './content.js';
 
 export const MIN_GROUP = 5; // ratings are shown only from 5 or more answers (decision of 29 October 2026)
 
@@ -32,12 +32,10 @@ export const liveLesson = groupId => get("SELECT * FROM lessons WHERE group_id =
 export const nextLesson = groupId => get("SELECT * FROM lessons WHERE group_id = ? AND state != 'ended' ORDER BY number LIMIT 1", groupId);
 export const lastEnded = groupId => get("SELECT * FROM lessons WHERE group_id = ? AND state = 'ended' ORDER BY number DESC LIMIT 1", groupId);
 
-// A lesson takes its modules from the programme's lesson plan when there is
-// one, and copies the live exercises of each module in turn.
-export function addLesson(groupId, number, moduleNo, startsAt, zoomUrl) {
+// A lesson covers the modules the teacher chose, and copies the live
+// exercises of each module in turn.
+export function addLesson(groupId, number, modules, startsAt, zoomUrl) {
   const g = groupById(groupId);
-  const plan = planLesson(g.programme, number);
-  const modules = plan ? plan.modules : [moduleNo];
   run('INSERT INTO lessons(group_id, number, module, modules, starts_at, zoom_url) VALUES(?, ?, ?, ?, ?, ?)', groupId, number, modules[0], JSON.stringify(modules), startsAt || null, zoomUrl || null);
   const lesson = get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', groupId, number);
   lessonItemsFor(g.programme, modules).forEach((it, i) => {
@@ -383,7 +381,7 @@ export function trendOf(live, lessons) {
 export function flagFor(person, live, prac, projs, lessons) {
   const held = lessons.filter(l => l.state === 'ended').length;
   if (held >= 2 && live.eng != null && live.eng < 60) return 'Answers fewer than 60% of live exercises';
-  if (trendOf(live, lessons) === 'down' && projectState(projs.own) !== 'passed') return 'Engagement falling and own project not passing';
+  if (trendOf(live, lessons) === 'down' && projectState(projs.own) !== 'passed') return 'Engagement falling and individual project not passing';
   const studied = Object.values(prac).filter(p => p.studied).length;
   if (held >= 6 && projectState(projs.own) === 'none' && studied === 0) return 'No project submitted and no module studied';
   return '';

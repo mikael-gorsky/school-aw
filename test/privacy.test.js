@@ -185,3 +185,36 @@ test('a question the tutor passes on is stored without the asker', async () => {
     globalThis.fetch = original;
   }
 });
+
+test('a question to the helper reaches the AI service without the name or address, and the limit holds', async () => {
+  const sent = [];
+  const original = globalThis.fetch;
+  globalThis.fetch = async (url, opts) => {
+    if (String(url).startsWith('https://api.anthropic.com')) {
+      sent.push(opts.body);
+      return new Response(JSON.stringify({ stop_reason: 'end_turn', content: [{ type: 'text', text: 'Module 11 is about context.' }] }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
+    return realFetch(url, opts);
+  };
+  try {
+    const email = 'helper.user@gmail.com';
+    await req('POST', '/teacher/access/permit', { jar: teacher.jar, form: { emails: email, institution: 'Test', code: 'helper', programme: 'ase' } });
+    const { jar } = await signInDev(email);
+    db.run('UPDATE users SET first_name = ?, last_name = ? WHERE email = ?', 'Quinby', 'Marlowe', email);
+    const r = await req('POST', '/api/helper', { jar, json: { turns: [{ role: 'user', text: 'What is module 11 about?' }] } });
+    assert.equal(r.status, 200);
+    assert.equal(r.json().text, 'Module 11 is about context.');
+    assert.equal(sent.length, 1);
+    for (const w of [email, 'helper.user', 'Quinby', 'Marlowe']) assert.ok(!sent[0].includes(w), w);
+    const body = JSON.parse(sent[0]);
+    assert.equal(body.model, 'claude-sonnet-5-5');
+    assert.ok(body.system.at(-1).cache_control);
+    db.run("UPDATE helper_usage SET count = 20 WHERE who LIKE 'user:%'");
+    const over = await req('POST', '/api/helper', { jar, json: { turns: [{ role: 'user', text: 'Another?' }] } });
+    assert.equal(over.status, 429);
+    const t = await req('POST', '/api/helper', { jar: teacher.jar, json: { turns: [{ role: 'user', text: 'Hi' }] } });
+    assert.equal(t.status, 403);
+  } finally {
+    globalThis.fetch = original;
+  }
+});

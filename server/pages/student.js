@@ -1,4 +1,4 @@
-// The student side: My programme, the 4 sections and My progress.
+// The student side: My program, the 4 sections and My progress.
 // Each page has a general form for visitors, with example screens that cannot
 // be used, and a form with the student's own data (decision of 31 October 2026).
 import { esc, pad, I, stat, ag, agS, head, squares, exFrame, steps, signStrip, tiles, hbars, chart, fmtDate } from '../html.js';
@@ -115,7 +115,7 @@ function groupInfo(ctx) {
   return { inst: g.institution, instS: M.instShort(g.institution), group: g.code, who: ctx.user.email };
 }
 
-// ---------- My programme ----------
+// ---------- My program ----------
 function programmeBody(prog, info, lessons, interactive, ctx) {
   const byModule = new Map();
   for (const l of lessons) for (const n of lessonModules(l)) if (!byModule.has(n) || l.state !== 'ended') byModule.set(n, l);
@@ -150,11 +150,11 @@ function programmeBody(prog, info, lessons, interactive, ctx) {
   const docs = prog.documents.map(d => d.url ? `<a href="${esc(d.url)}" rel="noopener" style="display:flex;justify-content:space-between;min-height:44px;align-items:center;color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line2)"><span>${esc(d.title)}</span><span class="chip">open</span></a>` : `<div style="display:flex;justify-content:space-between;min-height:44px;align-items:center;border-bottom:1px solid var(--line2)"><span class="fg2">${esc(d.title)}</span><span class="chip none">not published yet</span></div>`).join('');
   return `<div class="cols" style="align-items:stretch">${nextCard}
    <div class="card" style="flex:1 1 300px"><p class="ch">your group</p><dl class="kv" style="margin:0"><dt>institution</dt><dd>${esc(info.inst)}</dd><dt>group</dt><dd>${esc(info.group)}</dd><dt>teacher</dt><dd>Mikael Gorsky</dd><dt>signed in as</dt><dd class="mono" style="font-size:13.5px">${esc(info.who)}</dd></dl><p class="note">The site placed you in this group from the list your teacher keeps.</p></div></div>
-   <div class="section"><h2 class="h2">About the programme</h2>${prog.description.map(p => `<p class="lede" style="margin-bottom:12px">${esc(p)}</p>`).join('')}</div>${extra}
+   <div class="section"><h2 class="h2">About the program</h2>${prog.description.map(p => `<p class="lede" style="margin-bottom:12px">${esc(p)}</p>`).join('')}</div>${extra}
    <div class="cols section" style="--b:260px;gap:14px">${prog.grade.map(a => `<div class="card" style="padding:16px 18px"><p class="ch" style="margin-bottom:6px">${esc(a.title)} <span class="r">${weight(a.key)} of the grade</span></p><p style="margin:0;font-size:15px" class="fg2">${esc(a.text)}</p></div>`).join('')}</div>
    <h2 class="h2 section">Curriculum</h2>${parts}${after}
    <div class="cols section"><div class="card" style="--b:320px"><p class="ch">documents</p>${docs}</div>
-   <div class="card" style="--b:320px"><p class="ch">teacher</p><p style="margin:0 0 6px;font-weight:800;font-size:18px">Mikael Gorsky</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Questions about the programme go to your teacher through Contact SAW. Questions about the rules can also go to ${agS('tutor')}.</p><a class="btn sec" href="/contact">Contact SAW</a></div></div>`;
+   <div class="card" style="--b:320px"><p class="ch">teacher</p><p style="margin:0 0 6px;font-weight:800;font-size:18px">Mikael Gorsky</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Questions about the program go to your teacher through Contact SAW. Questions about the rules can also go to ${agS('tutor')}.</p><a class="btn sec" href="/contact">Contact SAW</a></div></div>`;
 }
 
 export function programmePage(ctx) {
@@ -162,13 +162,13 @@ export function programmePage(ctx) {
   if (!signedIn(ctx)) {
     const sampleLessons = Array.from({ length: 8 }, (_, i) => ({ number: i + 1, module: i + 1, state: 'ended' })).concat([{ number: 9, module: 9, state: 'planned', starts_at: null }]);
     const ex = `<div class="card" style="margin-bottom:16px"><p class="mono small" style="margin:0 0 6px">Holon Institute of Technology · group 62121-31</p><h2 class="h1" style="font-size:32px;margin:0">${esc(prog.title)}</h2></div>` + programmeBody(prog, { inst: 'Holon Institute of Technology', group: '62121-31', who: 'student@gmail.com' }, sampleLessons, false).split('<h2 class="h2 section">Curriculum</h2>')[0];
-    return `<div class="wrap page">${head('cat programme', 'My programme', 'This page gives you the overview of the programme you are enrolled in: its curriculum, your lesson calendar, the parts of your grade, the rules and the documents.')}
-     ${steps([['Register once', 'Register with the email address you gave your course organiser.'], ['The site finds your group', 'The site reads your institution and group from the list your teacher keeps.'], ['Your programme opens', 'This page shows your programme, and the 4 sections show your lessons, modules, projects and exam.']])}
-     <div class="section">${exFrame('the overview of a programme', ex)}</div>
-     ${signStrip('Sign in to see your programme.', ['the curriculum, part by part and module by module', 'your lesson calendar and the Zoom link', `the parts of your grade and the rules for projects${hasExam('ase') ? ' and the exam' : ''}`, 'the programme documents'])}</div>`;
+    return `<div class="wrap page">${head('cat program', 'My program', 'This page gives you the overview of the program you are enrolled in: its curriculum, your lesson calendar, the parts of your grade, the rules and the documents.')}
+     ${steps([['Register once', 'Register with the email address you gave your course organizer.'], ['The site finds your group', 'The site reads your institution and group from the list your teacher keeps.'], ['Your program opens', 'This page shows your program, and the 4 sections show your lessons, modules, projects and exam.']])}
+     <div class="section">${exFrame('the overview of a program', ex)}</div>
+     ${signStrip('Sign in to see your program.', ['the curriculum, part by part and module by module', 'your lesson calendar and the Zoom link', `the parts of your grade and the rules for projects${hasExam('ase') ? ' and the exam' : ''}`, 'the program documents'])}</div>`;
   }
   const g = ctx.group, p = programme(g.programme);
-  return `<div class="wrap page">${head('cat programme', esc(p.title), `${esc(g.institution)} · group ${esc(g.code)} · teacher Mikael Gorsky`, `<span class="chip">${p.modules.length} modules · ${p.parts.length} parts</span>`)}
+  return `<div class="wrap page">${head('cat program', esc(p.title), `${esc(g.institution)} · group ${esc(g.code)} · teacher Mikael Gorsky`, `<span class="chip">${p.modules.length} modules · ${p.parts.length} parts</span>`)}
    ${programmeBody(p, groupInfo(ctx), M.lessonsOf(g.id), true, ctx)}</div>`;
 }
 
@@ -240,10 +240,10 @@ export function studyPage(ctx) {
       <p class="mono small" style="margin:0 0 8px">practice · exercise 1 of 3</p><p style="margin:0 0 10px;font-weight:700">Which tension does this course set out to answer?</p>
       <button type="button" class="opt" aria-pressed="true"><span class="k">[A]</span><span>The speed of production has outrun our ability to trust the result.</span></button><button type="button" class="opt" aria-pressed="false"><span class="k">[B]</span><span>Models are still too expensive for everyday coding.</span></button>
       <p class="status" style="margin-top:6px"><span style="color:var(--accent)">${I.check}</span>Correct. Module 1 names this tension.</p></div>`;
-    return `<div class="wrap page">${head('study --alone', 'Study alone', `Each module of your programme has a study page with key ideas, slides, the recording of the lesson and practice exercises. ${agS('tutor')} answers your questions about the course rules, the lessons and the site.`, ag('tutor'))}
-     ${steps([['Read the key ideas', 'Each study page opens with the 4 or 5 ideas of the module.'], ['Watch or review', 'The slides and the recording of the lesson are on the same page.'], ['Practise', 'Practice exercises show at once whether you were right. They count towards no grade.'], ['Ask', '@tutor answers questions about the rules, the lessons and the site, up to 20 a day.']])}
+    return `<div class="wrap page">${head('study --alone', 'Study alone', `Each module of your program has a study page with key ideas, slides, the recording of the lesson and practice exercises. ${agS('tutor')} answers your questions about the course rules, the lessons and the site.`, ag('tutor'))}
+     ${steps([['Read the key ideas', 'Each study page opens with the 4 or 5 ideas of the module.'], ['Watch or review', 'The slides and the recording of the lesson are on the same page.'], ['Practice', 'Practice exercises show at once whether you were right. They count towards no grade.'], ['Ask', '@tutor answers questions about the rules, the lessons and the site, up to 20 a day.']])}
      <div class="cols section" style="align-items:flex-start"><div style="--b:420px;flex:999 1 420px">${exFrame('a study page', studyEx)}</div><div style="--b:340px">${exFrame('a question to the tutor', tutorMarkup({ sample: true, left: 18, id: 'askEx' }))}</div></div>
-     ${signStrip('Sign in to study the modules of your programme.', ['the study page of each module taught so far', 'practice exercises, with your own results kept', 'questions to @tutor', 'suggestions on what to review before the next lesson'])}</div>`;
+     ${signStrip('Sign in to study the modules of your program.', ['the study page of each module taught so far', 'practice exercises, with your own results kept', 'questions to @tutor', 'suggestions on what to review before the next lesson'])}</div>`;
   }
   const d = studentData(ctx);
   const used = ctx.db.get('SELECT count FROM tutor_usage WHERE user_id = ? AND day = ?', ctx.user.id, new Date().toISOString().slice(0, 10));
@@ -263,7 +263,7 @@ export function studyPage(ctx) {
     : '<div class="card"><p class="ch">continue</p><p class="fg2" style="margin:0">You have studied every module that has a study page so far. New pages appear as the course goes on.</p></div>';
   const sugg = weak ? `<div class="card flat"><p class="ch">suggestion from @tutor</p><p class="fg2" style="margin:0">Your practice score on module ${weak} was ${d.prac[weak].accuracy}%. Read its key ideas again, then try its exercises again.</p></div>` : '';
   // Questions the tutor passed on carry no asker, so the teacher's answers are
-  // published to every student of the programme.
+  // published to every student of the program.
   const answered = ctx.db.all('SELECT question, answer FROM tutor_passed WHERE programme = ? AND answer IS NOT NULL ORDER BY at DESC LIMIT 6', d.g.programme);
   const fromTeacher = answered.length ? `<div class="card flat"><p class="ch">answers from your teacher</p>${answered.map(a => `<div style="padding:8px 0;border-bottom:1px solid var(--line2)"><p style="margin:0 0 4px;font-weight:700;font-size:15px">${esc(a.question)}</p><p class="fg2" style="margin:0;font-size:15px">${esc(a.answer)}</p></div>`).join('')}</div>` : '';
   return `<div class="wrap page">${head('study --alone', 'Study alone', `Work through each module at your own pace. ${agS('tutor')} answers questions about the course rules, the lessons and the site.`)}
@@ -306,7 +306,7 @@ export function modulePage(ctx, n) {
 
 // ---------- Submit projects ----------
 function rulesMarkup(prog) {
-  return `<div class="card"><p class="ch">project rules of your programme</p><div class="stack" style="gap:10px;font-size:15px">${prog.projectRules.map(r => `<p class="fg2" style="margin:0">${esc(r)}</p>`).join('')}</div></div>`;
+  return `<div class="card"><p class="ch">project rules of your program</p><div class="stack" style="gap:10px;font-size:15px">${prog.projectRules.map(r => `<p class="fg2" style="margin:0">${esc(r)}</p>`).join('')}</div></div>`;
 }
 const SAMPLE_CHECK = { passed: 5, warnings: 1, failed: 1, results: [
   { state: 'ok', title: 'The repository is public.' }, { state: 'ok', title: 'A context file, CLAUDE.md, is in the root folder.' },
@@ -317,10 +317,10 @@ const SAMPLE_CHECK = { passed: 5, warnings: 1, failed: 1, results: [
 
 export function projectsPage(ctx) {
   if (!signedIn(ctx)) {
-    return `<div class="wrap page">${head('check projects', 'Submit projects', `Your programme may ask you to build projects. You link the public repository of each project, ${agS('reviewer')} checks its structure and history and explains every failed check, and your teacher grades the work itself.`, ag('reviewer'))}
+    return `<div class="wrap page">${head('check projects', 'Submit projects', `Your program may ask you to build projects. You link the public repository of each project, ${agS('reviewer')} checks its structure and history and explains every failed check, and your teacher grades the work itself.`, ag('reviewer'))}
      ${steps([['Link the repository', 'Paste the link to the public repository of your project.'], ['@reviewer checks it', 'The check looks at access, the context file, the history of commits, tests and the README.'], ['Fix and check again', 'Every failed check comes with an explanation. You can run the check again at any time.'], ['Your teacher grades', 'The check never grades. Your teacher grades the work itself.']])}
      <div class="cols section" style="align-items:flex-start"><div style="--b:460px;flex:999 1 460px">${exFrame('the result of a check', checkLogMarkup(SAMPLE_CHECK))}</div><div class="card" style="--b:300px"><p class="ch">what @reviewer checks</p>${SAMPLE_CHECK.results.map(c => `<p class="status fg2" style="margin:0 0 10px;align-items:flex-start;font-size:15px"><span style="color:var(--accent);margin-top:2px">${I.check}</span>${esc(c.title)}</p>`).join('')}</div></div>
-     ${signStrip('Sign in to submit your repositories and see your checks.', ['the project rules of your programme', 'a check of each repository whenever you ask', 'feedback from @reviewer on every failed check', 'the history of your checks'])}</div>`;
+     ${signStrip('Sign in to submit your repositories and see your checks.', ['the project rules of your program', 'a check of each repository whenever you ask', 'feedback from @reviewer on every failed check', 'the history of your checks'])}</div>`;
   }
   const d = studentData(ctx);
   const kind = ctx.query.kind === 'tribunal' ? 'tribunal' : 'own';
@@ -332,25 +332,25 @@ export function projectsPage(ctx) {
     ? checkLogMarkup(pr.last) + `<div class="card flat" style="margin-top:20px"><p class="ch">feedback from @reviewer</p><p class="fg2" style="margin:0">${esc(pr.last.feedback || '')}</p></div><p class="small" style="margin-top:12px">The check looks at the structure and history of the repository only. Mikael Gorsky grades the work itself.</p>`
     : `<div class="card dash"><p class="ch">no check yet</p><p class="fg2" style="margin:0">Submit the link when the repository is ready. @reviewer runs the checks at once.</p></div>`;
   const hist = pr.history.length ? `<div class="card"><p class="ch">earlier checks</p><div class="log">${pr.history.map(h => `<div class="l"><span class="x">${esc(fmtDate(h.at))}</span><span class="muted">${h.passed} passed · ${h.warnings} warning · ${h.failed} failed</span></div>`).join('')}</div></div>` : '';
-  return `<div class="wrap page">${head(`check ${kind === 'own' ? 'own-project' : 'tribunal'}`, 'Submit projects', `Link the public repository of each project. ${agS('reviewer')} checks its structure and history and explains every failed check. The teacher grades the work itself.`)}
-   <div class="tabs" role="tablist" aria-label="Projects"><a role="tab" aria-selected="${kind === 'own'}" href="/projects?kind=own" style="text-decoration:none;display:inline-flex;align-items:center;min-height:46px;padding:0 16px;font-family:var(--mono);font-size:14px;color:${kind === 'own' ? 'var(--fg)' : 'var(--muted)'};border-bottom:2px solid ${kind === 'own' ? 'var(--accent)' : 'transparent'};margin-bottom:-1px">own project · ${label('own')}</a><a role="tab" aria-selected="${kind === 'tribunal'}" href="/projects?kind=tribunal" style="text-decoration:none;display:inline-flex;align-items:center;min-height:46px;padding:0 16px;font-family:var(--mono);font-size:14px;color:${kind === 'tribunal' ? 'var(--fg)' : 'var(--muted)'};border-bottom:2px solid ${kind === 'tribunal' ? 'var(--accent)' : 'transparent'};margin-bottom:-1px">tribunal · ${label('tribunal')}</a></div>
+  return `<div class="wrap page">${head(`check ${kind === 'own' ? 'individual-project' : 'tribunal'}`, 'Submit projects', `Link the public repository of each project. ${agS('reviewer')} checks its structure and history and explains every failed check. The teacher grades the work itself.`)}
+   <div class="tabs" role="tablist" aria-label="Projects"><a role="tab" aria-selected="${kind === 'own'}" href="/projects?kind=own" style="text-decoration:none;display:inline-flex;align-items:center;min-height:46px;padding:0 16px;font-family:var(--mono);font-size:14px;color:${kind === 'own' ? 'var(--fg)' : 'var(--muted)'};border-bottom:2px solid ${kind === 'own' ? 'var(--accent)' : 'transparent'};margin-bottom:-1px"'>individual project · '${label('own')}</a><a role="tab" aria-selected="${kind === 'tribunal'}" href="/projects?kind=tribunal" style="text-decoration:none;display:inline-flex;align-items:center;min-height:46px;padding:0 16px;font-family:var(--mono);font-size:14px;color:${kind === 'tribunal' ? 'var(--fg)' : 'var(--muted)'};border-bottom:2px solid ${kind === 'tribunal' ? 'var(--accent)' : 'transparent'};margin-bottom:-1px">tribunal · ${label('tribunal')}</a></div>
    <div class="cols" style="align-items:flex-start;gap:28px"><div style="--b:560px;flex:999 1 560px">${err}${form}${body}</div><div class="stack" style="flex:1 1 280px">${rulesMarkup(d.prog)}${hist}</div></div></div>`;
 }
 
 // ---------- Exam finale ----------
 export function noExamPage(ctx) {
-  const home = ctx.role === 'teacher' ? '/teacher/progress' : '/programme';
-  return `<div class="wrap page" style="max-width:820px">${head('exam --status', 'No final exam', 'Your programme has no final exam. Your grade comes from your class engagement and your 2 projects, as My programme describes.')}<a class="btn sec" href="${home}">Open My programme</a></div>`;
+  const home = ctx.role === 'teacher' ? '/teacher/progress' : '/program';
+  return `<div class="wrap page" style="max-width:820px">${head('exam --status', 'No final exam', 'Your program has no final exam. Your grade comes from your class engagement and your 2 projects, as My program describes.')}<a class="btn sec" href="${home}">Open My program</a></div>`;
 }
 const SAMPLE_READY = [
   { state: 'ok', title: 'Study the modules taught so far', text: '8 of 8 studied' }, { state: 'ok', title: 'Answer at least 80% of live exercises', text: '95% answered' },
-  { state: 'warn', title: 'Reach 70% in practice for each part', text: 'part 1: 82%, part 2: 64%' }, { state: 'bad', title: 'Own project passes every check', text: '1 check failed' },
+  { state: 'warn', title: 'Reach 70% in practice for each part', text: 'part 1: 82%, part 2: 64%' }, { state: 'bad', title: 'Individual project passes every check', text: '1 check failed' },
   { state: 'none', title: 'Tribunal submitted and passes every check', text: 'not submitted' }, { state: 'ok', title: 'Take at least 1 practice exam', text: '1 taken, score 72%' }];
 
 export function examPage(ctx) {
   if (!signedIn(ctx)) {
-    return `<div class="wrap page">${head('exam --status', 'Exam finale', `Your programme ends with a final exam. Before it, ${agS('examiner')} shows how ready you are, condition by condition, and runs practice exams on the modules taught so far.`, ag('examiner'))}
-     ${steps([['Follow your readiness', '@examiner checks your modules, live answers, practice results and projects against the conditions for the exam.'], ['Practise', 'Practice exams of about 20 questions show where you are weak. They never count towards the grade.'], ['Sit the exam', 'Part A has closed questions. In part B you direct an agent on a small task and submit the session record.'], ['Your teacher grades', '@examiner marks the closed questions. Your teacher reviews every exam and sets the mark.']])}
+    return `<div class="wrap page">${head('exam --status', 'Exam finale', `Your program ends with a final exam. Before it, ${agS('examiner')} shows how ready you are, condition by condition, and runs practice exams on the modules taught so far.`, ag('examiner'))}
+     ${steps([['Follow your readiness', '@examiner checks your modules, live answers, practice results and projects against the conditions for the exam.'], ['Practice', 'Practice exams of about 20 questions show where you are weak. They never count towards the grade.'], ['Sit the exam', 'Part A has closed questions. In part B you direct an agent on a small task and submit the session record.'], ['Your teacher grades', '@examiner marks the closed questions. Your teacher reviews every exam and sets the mark.']])}
      <div class="cols section" style="align-items:flex-start"><div style="--b:440px;flex:999 1 440px">${exFrame('readiness for the exam', readyMarkup(SAMPLE_READY))}</div><div style="--b:320px">${examMarkup()}</div></div>
      ${signStrip('Sign in to see your readiness and take practice exams.', ['your readiness for the exam, condition by condition', 'practice exams on the modules taught so far', 'the date, format and rules of your exam'])}</div>`;
   }
@@ -367,9 +367,9 @@ export function examPage(ctx) {
 export function progressPage(ctx) {
   if (!signedIn(ctx)) {
     const ME = [80, 80, 100, 60, 80, 40, 80, 100], GRP = [78, 74, 81, 69, 72, 66, 75, 79];
-    const ex = tilesMarkup({ answered: '38<small> of 40</small>', answeredSub: '95% · group average 85%', score: '78%', scoreSub: 'group average 74%', practice: '75%', practiceSub: 'part 1: 82% · part 2: 64%', modules: '8<small> of 19</small>', modulesSub: 'module 9 in progress', projects: '0<small> of 2</small>', projectsSub: 'own: 1 failed · tribunal: not yet', ready: '3<small> of 6</small>' }, hasExam('ase'))
+    const ex = tilesMarkup({ answered: '38<small> of 40</small>', answeredSub: '95% · group average 85%', score: '78%', scoreSub: 'group average 74%', practice: '75%', practiceSub: 'part 1: 82% · part 2: 64%', modules: '8<small> of 19</small>', modulesSub: 'module 9 in progress', projects: '0<small> of 2</small>', projectsSub: 'individual: 1 failed · tribunal: not yet', ready: '3<small> of 6</small>' }, hasExam('ase'))
       + `<div class="card" style="margin-top:16px"><p class="ch">live exercise score by lesson <span class="r">you and your group</span></p><div class="legend"><span><i></i>You</span><span><i class="ref"></i>Group average</span></div>${scoreChart(ME, GRP, ME.map((_, i) => 'L' + (i + 1)))}</div>`;
-    return `<div class="wrap page">${head('progress --me', 'My progress', 'This page shows how you are doing in your programme, set against the average of your group. Only you see your own figures.', ag('analyst'))}
+    return `<div class="wrap page">${head('progress --me', 'My progress', 'This page shows how you are doing in your program, set against the average of your group. Only you see your own figures.', ag('analyst'))}
      ${exFrame('the progress of a student', ex)}
      <div class="cols section"><div class="card" style="--b:300px"><p class="ch">what the page shows</p><div class="ticks" style="margin:0">${['your answers and scores in each lesson', 'the modules you have studied and your practice results', 'the checks of your projects', 'your readiness for the exam', 'messages from your agents on what to do next'].map(t => `<p>${I.check}<span>${t}</span></p>`).join('')}</div></div>
      <div class="card" style="--b:300px"><p class="ch">your ratings</p><h3 class="h3">Your ratings stay anonymous</h3><p class="fg2" style="margin:0;font-size:15px">You see your own lesson ratings beside the group average. Your teacher sees ratings only as totals from 5 or more students, and ratings never affect grades.</p></div></div>
@@ -390,15 +390,15 @@ export function progressPage(ctx) {
     score: d.live.score == null ? '–' : `${d.live.score}%`, scoreSub: groupScore == null ? '' : `group average ${Math.round(groupScore)}%`,
     practice: prAcc == null ? '–' : `${Math.round(prAcc)}%`, practiceSub: Object.entries(pa).map(([k, v]) => `part ${k}: ${v}%`).join(' · '),
     modules: `${studied}<small> of ${d.prog.modules.length}</small>`, modulesSub: `${withContent.length} with study pages so far`,
-    projects: `${passing}<small> of 2</small>`, projectsSub: `own: ${own === 'none' ? 'not yet' : own} · tribunal: ${trib === 'none' ? 'not yet' : trib}`,
+    projects: `${passing}<small> of 2</small>`, projectsSub: `individual: ${own === 'none' ? 'not yet' : own} · tribunal: ${trib === 'none' ? 'not yet' : trib}`,
     ready: `${d.ready.met}<small> of ${d.ready.conds.length}</small>`,
   }, hasExam(d.g.programme));
   const labels = d.matrix.lessons.map(l => 'L' + l.number);
   const msgs = [];
   const weak = withContent.filter(n => d.prac[n].accuracy != null && d.prac[n].accuracy < 70)[0];
   if (weak) msgs.push(['tutor', `Your practice score on module ${weak} was ${d.prac[weak].accuracy}%. Read its key ideas again before the next lesson.`]);
-  if (d.projs.own.last && d.projs.own.last.failed) msgs.push(['reviewer', `Your own project has ${d.projs.own.last.failed} failed check${d.projs.own.last.failed > 1 ? 's' : ''}. Fix ${d.projs.own.last.failed > 1 ? 'them' : 'it'} and run the check again.`]);
-  if (own === 'none') msgs.push(['reviewer', 'You have not submitted your own project yet.']);
+  if (d.projs.own.last && d.projs.own.last.failed) msgs.push(['reviewer', `Your individual project has ${d.projs.own.last.failed} failed check${d.projs.own.last.failed > 1 ? 's' : ''}. Fix ${d.projs.own.last.failed > 1 ? 'them' : 'it'} and run the check again.`]);
+  if (own === 'none') msgs.push(['reviewer', 'You have not submitted your individual project yet.']);
   if (hasExam(d.g.programme)) msgs.push(['examiner', `You meet ${d.ready.met} of ${d.ready.conds.length} exam conditions.`]);
   const liveL = M.liveLesson(d.g.id);
   if (liveL) msgs.push(['proctor', `Lesson ${liveL.number} is running now. Open Learn in class.`]);

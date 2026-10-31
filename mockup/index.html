@@ -382,12 +382,12 @@ var MODULES = [
  ['Interface design and documentation','Clarity as a control mechanism, and design that the engineer specifies rather than draws.'],
  ['Cognified software and the economics of a model call','Software with a model reasoning inside it, and the price and time of every call.'],
  ['Specification and the co-evolution spiral','The quality of the work placed in the specification, and the spiral in which problem and solution evolve together.'],
- ["Context engineering: the agent's briefing",'Context as a budgeted resource, and the context file as a designed artefact.'],
+ ["Context engineering: the agent's briefing",'Context as a budgeted resource, and the context file as a designed artifact.'],
  ['Version control, and keeping a session on course','Version control as the way back, and reading the drift in a session before it compounds.'],
  ['Verification before trust','Verification as a whole category, and the rule of no gate, no merge.'],
  ['Multi-agent decomposition and orchestration','Decomposition as an engineering activity, and 5 workflow patterns.'],
- ['Designing multi-agent workflows','Coordination between agents as a designed artefact.'],
- ['Review and quality, and the onboarding of legacy code','Review at the centre of the discipline, the Merge-Readiness Pack in full, and legacy code.'],
+ ['Designing multi-agent workflows','Coordination between agents as a designed artifact.'],
+ ['Review and quality, and the onboarding of legacy code','Review at the center of the discipline, the Merge-Readiness Pack in full, and legacy code.'],
  ['Building secure software','Security as a built-in quality, including the prompt injection peculiar to a cognified product.'],
  ['Entrepreneurship in the age of AI coding','How cheap building moved the bottleneck, and the unit economics of a cognified product.'],
  ['Where software work is going','A world model for the cognified economy, and the skills that compound.']
@@ -587,10 +587,10 @@ function header(){
   drawer = '<p class="lbl">'+(r==='teacher'?'teacher':'your course')+'</p>' + MAIN.map(function(m){ return '<a href="#'+rt(m.k)+'"'+(isCur(m.k)?' aria-current="page"':'')+'>'+I[m.ic]+m.t+'</a>'; }).join('');
   if (r==='visitor'){
     acct = '<a class="who" href="#register"'+cur('register')+'>Register</a><a class="btn out" href="#signin" style="min-height:40px">Sign in</a>';
-    drawer += '<p class="lbl">you</p><a href="#programme"'+cur('programme')+'>My programme</a><a href="#progress"'+cur('progress')+'>My progress</a><a href="#signin"'+cur('signin')+'>Sign in</a><a href="#register"'+cur('register')+'>Register to use the service</a>';
+    drawer += '<p class="lbl">you</p><a href="#program"'+cur('program')+'>My program</a><a href="#progress"'+cur('progress')+'>My progress</a><a href="#signin"'+cur('signin')+'>Sign in</a><a href="#register"'+cur('register')+'>Register to use the service</a>';
   } else if (signed()){
-    acct = '<a class="who" href="#programme"'+cur('programme')+'>My programme</a><a class="who" href="#progress"'+cur('progress')+'><span class="dot'+(r==='demo'?' h':'')+'"></span>My progress</a>';
-    drawer += '<p class="lbl">you · '+esc(me().who)+'</p><a href="#programme"'+cur('programme')+'>My programme</a><a href="#progress"'+cur('progress')+'>My progress</a>';
+    acct = '<a class="who" href="#program"'+cur('program')+'>My program</a><a class="who" href="#progress"'+cur('progress')+'><span class="dot'+(r==='demo'?' h':'')+'"></span>My progress</a>';
+    drawer += '<p class="lbl">you · '+esc(me().who)+'</p><a href="#program"'+cur('program')+'>My program</a><a href="#progress"'+cur('progress')+'>My progress</a>';
   } else {
     acct = '<span class="who"><span class="dot h"></span>teacher</span>';
     var T = [['t-progress','Class progress'],['t-satisfaction','Satisfaction'],['t-access','Groups and access'],['t-agents','Agents']];
@@ -625,7 +625,7 @@ function steps(arr){ return '<div class="steps">' + arr.map(function(s,i){ retur
 function signStrip(title, items){
   return '<div class="card hl section"><p class="ch">after you sign in</p><h2 class="h3" style="font-size:21px;margin-bottom:14px">'+title+'</h2><div class="ticks">'
    + items.map(function(t){ return '<p>'+I.check+'<span>'+t+'</span></p>'; }).join('')
-   + '</div><div class="row"><a class="btn pri" href="#signin">Sign in</a><a class="btn sec" href="#register">Register to use the service</a></div><p class="note">Register once, with the email address you gave your course organiser.</p></div>';
+   + '</div><div class="row"><a class="btn pri" href="#signin">Sign in</a><a class="btn sec" href="#register">Register to use the service</a></div><p class="note">Register once, with the email address you gave your course organizer.</p></div>';
 }
 
 /* ---------- shared pieces ---------- */
@@ -690,21 +690,21 @@ function vHome(){
     ['exam','exam','Exam finale','You follow your readiness for the final exam, take practice exams, and then sit the exam itself.','examiner']
   ];
   var cta = signed()
-    ? '<a class="btn pri" href="#programme">Go to my programme</a><a class="btn sec" href="#progress">My progress</a>'
+    ? '<a class="btn pri" href="#program">Go to my program</a><a class="btn sec" href="#progress">My progress</a>'
     : '<a class="btn pri" href="#signin">Sign in</a><a class="btn sec" href="#register">Register to use the service</a>';
   return '<section class="hero"><div class="wrap in"><div class="txt">'
    + '<p class="eyebrow"><span class="p">$</span> whoami</p>'
    + '<h1 class="display">School of Agentic Work</h1>'
    + '<p class="lede">This is where you work on your course, during lessons and between them. Your teacher teaches every lesson and sets every grade. A team of named agents runs the exercises, checks your projects, answers your questions and shows you your progress.</p>'
    + '<div class="row" style="margin-top:28px">'+cta+'</div>'
-   + (signed() ? '' : '<p class="small" style="margin-top:14px">First time here? Register with the email address you gave your course organiser. <a href="#class">See how a lesson runs</a>.</p>')
+   + (signed() ? '' : '<p class="small" style="margin-top:14px">First time here? Register with the email address you gave your course organizer. <a href="#class">See how a lesson runs</a>.</p>')
    + '</div><div class="term"><div class="top"><i></i><i></i><i></i><span style="margin-left:6px">school.log</span><span class="sample" style="margin-left:auto">sample</span></div><div class="body log">'+logLines(log)+'</div></div>'
    + '</div></section>'
    + '<section class="band deep"><div class="wrap in"><div class="sechead"><h2 class="h2">What you do here</h2><p class="small">4 sections, each run by one agent under your teacher</p></div>'
    + '<div class="cols" style="--b:240px">' + comp.map(function(c){ return '<a class="card" href="#'+c[0]+'" style="display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit"><span style="color:var(--accent)">'+I[c[1]].replace('width="18" height="18"','width="26" height="26"')+'</span><h3 class="h3" style="margin:0">'+c[2]+'</h3><p class="fg2" style="margin:0;font-size:15px">'+c[3]+'</p><span class="row" style="margin-top:auto;justify-content:space-between">'+agS(c[4])+'<span class="mono small" style="color:var(--accent)">how it works</span></span></a>'; }).join('') + '</div></div></section>'
-   + '<section class="band"><div class="wrap in"><div class="sechead"><h2 class="h2">Your programme and your progress</h2></div>'
+   + '<section class="band"><div class="wrap in"><div class="sechead"><h2 class="h2">Your program and your progress</h2></div>'
    + '<div class="cols" style="--b:260px">'
-   + '<a class="card" href="#programme" style="text-decoration:none;color:inherit"><p class="ch">my programme</p><h3 class="h3">You see your whole programme</h3><p class="fg2" style="margin:0;font-size:15px">The site knows your institution and group from the address you register with, and it shows the curriculum, the lesson calendar and the rules of your programme.</p></a>'
+   + '<a class="card" href="#program" style="text-decoration:none;color:inherit"><p class="ch">my program</p><h3 class="h3">You see your whole program</h3><p class="fg2" style="margin:0;font-size:15px">The site knows your institution and group from the address you register with, and it shows the curriculum, the lesson calendar and the rules of your program.</p></a>'
    + '<a class="card" href="#progress" style="text-decoration:none;color:inherit"><p class="ch">my progress</p><h3 class="h3">You see your own progress</h3><p class="fg2" style="margin:0;font-size:15px">Every answer, module, project check and your readiness for the exam, set against the average of your group.</p></a>'
    + '<div class="card"><p class="ch">your ratings</p><h3 class="h3">Your ratings stay anonymous</h3><p class="fg2" style="margin:0;font-size:15px">You rate each lesson in a few seconds. Your teacher sees ratings only from groups of 5 or more, and ratings never affect grades.</p></div>'
    + '</div></div></section>'
@@ -713,12 +713,12 @@ function vHome(){
    + '<section class="band"><div class="wrap in" style="display:flex;flex-wrap:wrap;gap:36px;align-items:center">'
    + '<div class="photo" role="img" aria-label="Photo placeholder" style="flex:0 0 220px;height:260px;max-width:100%">photo</div>'
    + '<div style="flex:999 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> teacher</p><h2 class="h2" style="font-size:34px">Mikael Gorsky</h2>'
-   + '<p class="fg2" style="margin:0 0 10px;font-size:17px;max-width:62ch">Mikael Gorsky teaches every programme on this site. He is a senior researcher at the School of Computer Science, Holon Institute of Technology.</p>'
+   + '<p class="fg2" style="margin:0 0 10px;font-size:17px;max-width:62ch">Mikael Gorsky teaches every program on this site. He is a senior researcher at the School of Computer Science, Holon Institute of Technology.</p>'
    + '<p class="fg2" style="margin:0 0 10px;font-size:17px;max-width:62ch">He wrote the textbook on agentic software engineering that the course follows, forthcoming from Springer.</p>'
-   + '<p class="fg2" style="margin:0;font-size:17px;max-width:62ch">He builds software with AI agents himself, after 30 years leading consulting, software implementation and book publishing organisations.</p></div>'
+   + '<p class="fg2" style="margin:0;font-size:17px;max-width:62ch">He builds software with AI agents himself, after 30 years leading consulting, software implementation and book publishing organizations.</p></div>'
    + '</div></section>'
    + '<section class="band deep"><div class="wrap in" style="display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between">'
-   + '<div style="flex:1 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> contact</p><h2 class="h2">Contact SAW</h2><p class="fg2" style="margin:0;font-size:17px">Questions about registration, signing in or your programme? Write to us, and your teacher answers by email.</p></div>'
+   + '<div style="flex:1 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> contact</p><h2 class="h2">Contact SAW</h2><p class="fg2" style="margin:0;font-size:17px">Questions about registration, signing in or your program? Write to us, and your teacher answers by email.</p></div>'
    + '<a class="btn pri" href="#contact">Write to SAW</a></div></section>';
 }
 function vAgents(){
@@ -733,7 +733,7 @@ function vPrivacy(){
   return '<div class="wrap page" style="max-width:820px">' + head('cat privacy.txt','Privacy notice','This summary tells you what the school keeps about you and why.')
    + '<div class="stack">'
    + '<div class="card"><h2 class="h3">Who is responsible</h2><p class="fg2" style="margin:0">Mikael Gorsky runs this site and is responsible for the data it keeps. You can ask him to show, correct or delete your data at any time through <a href="#contact">Contact SAW</a>.</p></div>'
-   + '<div class="card"><h2 class="h3">What the site keeps</h2><p class="fg2" style="margin:0">The email address you register with, and the institution, group and programme that your teacher wrote beside it on the list of permitted addresses. The site also keeps your answers to exercises, your project links and the results of their checks, and the messages you send through Contact SAW. It does not keep your name or photo from Google, and it never asks for an ID number.</p></div>'
+   + '<div class="card"><h2 class="h3">What the site keeps</h2><p class="fg2" style="margin:0">The email address you register with, and the institution, group and program that your teacher wrote beside it on the list of permitted addresses. The site also keeps your answers to exercises, your project links and the results of their checks, and the messages you send through Contact SAW. It does not keep your name or photo from Google, and it never asks for an ID number.</p></div>'
    + '<div class="card"><h2 class="h3">Ratings and surveys</h2><p class="fg2" style="margin:0">Lesson ratings and survey answers are anonymous to the teacher. He sees them only as totals from groups of 5 or more students, and they never affect any grade.</p></div>'
    + '<div class="card"><h2 class="h3">Services that process the data</h2><p class="fg2" style="margin:0">The site runs on [hosting service] in [region]. Questions to @tutor go to an AI service without your name or email address. Do not write personal matters in those questions.</p></div>'
    + '<div class="card"><h2 class="h3">How long it is kept</h2><p class="fg2" style="margin:0">Course data is deleted [period] after the end of the course, once the time for grade appeals has passed.</p></div>'
@@ -743,8 +743,8 @@ function vPrivacy(){
 }
 function vSignin(){
   return '<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">'
-   + '<div style="--b:340px"><p class="eyebrow"><span class="p">$</span> sign-in</p><h1 class="h1">Sign in</h1><p class="lede" style="margin-bottom:22px">Sign in with the address you registered with. The site then opens your programme.</p>'
-   + '<div class="card flat"><p class="ch">not registered yet?</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Register once, with the email address you gave your course organiser.</p><a class="btn sec" href="#register">Register to use the service</a></div></div>'
+   + '<div style="--b:340px"><p class="eyebrow"><span class="p">$</span> sign-in</p><h1 class="h1">Sign in</h1><p class="lede" style="margin-bottom:22px">Sign in with the address you registered with. The site then opens your program.</p>'
+   + '<div class="card flat"><p class="ch">not registered yet?</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Register once, with the email address you gave your course organizer.</p><a class="btn sec" href="#register">Register to use the service</a></div></div>'
    + '<div class="stack" style="--b:380px">'
    + '<div class="card" style="padding:26px"><button type="button" class="btn pri wide" data-act="signin" style="min-height:52px;font-size:17px">Sign in with Google</button>'
    + '<form data-form="emaillink" style="margin-top:18px"><label class="f" for="sie">or get a sign-in link by email</label><div class="row" style="flex-wrap:nowrap"><input class="inp" id="sie" type="email" placeholder="the address you registered with"><button type="submit" class="btn sec">Send</button></div></form>'
@@ -756,14 +756,14 @@ function vSignin(){
 }
 function vRegister(){
   if (S.regDone) return '<div class="wrap page"><div class="card hl" style="max-width:680px;margin:20px auto 0"><p class="eyebrow"><span class="p">$</span> register</p><h1 class="h2">You are registered</h1><p class="fg2" style="margin:0 0 16px">'+agS('registrar')+' found your address on the list your teacher keeps, and placed you in your group.</p>'
-   + '<dl class="kv" style="margin:0 0 20px"><dt>address</dt><dd>student07@gmail.com</dd><dt>institution</dt><dd>Holon Institute of Technology</dd><dt>group</dt><dd>62121-31</dd><dt>programme</dt><dd>Agentic software engineering</dd></dl>'
-   + '<p class="small" style="margin:0 0 18px">From now on, sign in with the same address.</p><button type="button" class="btn pri" data-act="reg-go">Go to my programme</button></div></div>';
+   + '<dl class="kv" style="margin:0 0 20px"><dt>address</dt><dd>student07@gmail.com</dd><dt>institution</dt><dd>Holon Institute of Technology</dd><dt>group</dt><dd>62121-31</dd><dt>program</dt><dd>Agentic software engineering</dd></dl>'
+   + '<p class="small" style="margin:0 0 18px">From now on, sign in with the same address.</p><button type="button" class="btn pri" data-act="reg-go">Go to my program</button></div></div>';
   return '<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">'
    + '<div style="--b:360px"><p class="eyebrow"><span class="p">$</span> register</p><h1 class="h1">Register to use the service</h1><p class="lede" style="margin-bottom:22px">You register once. After that, you sign in with the same address.</p>'
-   + '<div class="card warnb"><p class="ch" style="color:var(--warn)">use the right address</p><p class="fg2" style="margin:0 0 10px">Register with the email address you gave your course organiser. If it is a Gmail address, register with Google.</p><p class="fg2" style="margin:0">The site accepts only addresses that your teacher has put on a group list. It reads your institution and group from that list, so you do not enter them yourself.</p></div></div>'
+   + '<div class="card warnb"><p class="ch" style="color:var(--warn)">use the right address</p><p class="fg2" style="margin:0 0 10px">Register with the email address you gave your course organizer. If it is a Gmail address, register with Google.</p><p class="fg2" style="margin:0">The site accepts only addresses that your teacher has put on a group list. It reads your institution and group from that list, so you do not enter them yourself.</p></div></div>'
    + '<div class="stack" style="--b:380px"><div class="card" style="padding:26px"><button type="button" class="btn pri wide" data-act="reg-google" style="min-height:52px;font-size:17px">Register with Google</button>'
-   + '<form data-form="emaillink" style="margin-top:18px"><label class="f" for="rge">or register with another email address</label><div class="row" style="flex-wrap:nowrap"><input class="inp" id="rge" type="email" placeholder="the address you gave your course organiser"><button type="submit" class="btn sec">Send link</button></div><p class="small" style="margin-top:6px;font-size:13px">The site sends a link to this address. Open it to finish registering.</p></form>'
-   + '<div style="margin-top:22px;border-top:1px solid var(--line);padding-top:18px"><p class="ch">if the site does not accept your address</p><p class="fg2" style="margin:0;font-size:15px">Check that it is the address you gave your course organiser. If it is, write to us through <a href="#contact">Contact SAW</a>, and say which programme and group you are in.</p></div></div>'
+   + '<form data-form="emaillink" style="margin-top:18px"><label class="f" for="rge">or register with another email address</label><div class="row" style="flex-wrap:nowrap"><input class="inp" id="rge" type="email" placeholder="the address you gave your course organizer"><button type="submit" class="btn sec">Send link</button></div><p class="small" style="margin-top:6px;font-size:13px">The site sends a link to this address. Open it to finish registering.</p></form>'
+   + '<div style="margin-top:22px;border-top:1px solid var(--line);padding-top:18px"><p class="ch">if the site does not accept your address</p><p class="fg2" style="margin:0;font-size:15px">Check that it is the address you gave your course organizer. If it is, write to us through <a href="#contact">Contact SAW</a>, and say which program and group you are in.</p></div></div>'
    + '<div class="card flat"><p class="ch">what the site keeps</p><p class="fg2" style="margin:0 0 6px;font-size:15px">Your email address and the institution and group on your teacher’s list, your answers to exercises and your project links. It does not keep your name or photo from Google.</p><p class="fg2" style="margin:0 0 6px;font-size:15px">Your lesson ratings are anonymous and never affect grades.</p><a href="#privacy" style="min-height:44px;display:inline-flex;align-items:center">Read the privacy notice</a><p class="small" style="font-size:13px">By registering, you confirm that you have read the privacy notice.</p></div>'
    + '</div></div></div>';
 }
@@ -772,9 +772,9 @@ function vContact(){
   var who = signed() ? me().who : '';
   return '<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">'
    + '<form data-form="contact" style="--b:480px;flex:999 1 480px;display:flex;flex-direction:column;gap:18px">'
-   + '<div><p class="eyebrow"><span class="p">$</span> contact</p><h1 class="h1">Contact SAW</h1><p class="lede">Write to us about registration, signing in or your programme. Your teacher answers by email.</p></div>'
+   + '<div><p class="eyebrow"><span class="p">$</span> contact</p><h1 class="h1">Contact SAW</h1><p class="lede">Write to us about registration, signing in or your program. Your teacher answers by email.</p></div>'
    + '<div class="cols" style="--b:220px;gap:16px"><div><label class="f" for="cn">name</label><input class="inp" id="cn" placeholder="Your name"></div><div><label class="f" for="ce">email</label><input class="inp" id="ce" type="email" placeholder="Your email address" value="'+(S.role==='student'?esc(who):'')+'"></div></div>'
-   + '<div><label class="f" for="ct">about</label><select class="inp" id="ct"><option>Registration and signing in</option><option>My programme</option><option>Something else</option></select></div>'
+   + '<div><label class="f" for="ct">about</label><select class="inp" id="ct"><option>Registration and signing in</option><option>My program</option><option>Something else</option></select></div>'
    + '<div><label class="f" for="cm">message</label><textarea class="inp" id="cm" rows="5" placeholder="Your message"></textarea></div>'
    + '<div class="row"><button class="btn pri" type="submit">Send message</button><span class="small">Do not send ID numbers or other personal documents.</span></div></form>'
    + '<aside class="card" style="flex:1 1 280px"><p class="ch">what happens next</p>'
@@ -782,7 +782,7 @@ function vContact(){
    + '</aside></div></div>';
 }
 
-/* ---------- my programme ---------- */
+/* ---------- my program ---------- */
 function programmeOverview(m, interactive){
   var parts = PARTS.map(function(p){
     var rows = '';
@@ -794,27 +794,27 @@ function programmeOverview(m, interactive){
     return '<div class="section"><div class="row" style="gap:6px 14px;margin-bottom:6px"><span class="mono" style="color:var(--accent);font-size:14px">part-'+p.n+'/</span><h3 class="h3" style="margin:0;font-size:21px">'+p.t+'</h3><span class="mono small">modules '+pad(p.a)+'–'+pad(p.b)+'</span></div><p class="fg2" style="margin:0 0 12px;font-size:15px">'+p.d+'</p><div class="card" style="padding:4px 20px">'+rows+'</div></div>';
   }).join('');
   return '<div class="cols" style="align-items:stretch">'
-   + '<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">next lesson <span class="r">[day, date, time]</span></p><h2 class="h2" style="font-size:24px">Lesson 9 · '+esc(MODULES[8][0])+'</h2><p class="fg2" style="margin:0 0 16px">The warm-up quiz opens before the lecture starts. Keep Learn in class open beside Zoom during the lesson.</p><div class="row"><a class="btn pri" href="#class">Open Learn in class</a><a class="btn sec" href="#programme" data-act="note" data-v="The Zoom link opens here in the real site.">Zoom link</a></div></div>'
+   + '<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">next lesson <span class="r">[day, date, time]</span></p><h2 class="h2" style="font-size:24px">Lesson 9 · '+esc(MODULES[8][0])+'</h2><p class="fg2" style="margin:0 0 16px">The warm-up quiz opens before the lecture starts. Keep Learn in class open beside Zoom during the lesson.</p><div class="row"><a class="btn pri" href="#class">Open Learn in class</a><a class="btn sec" href="#program" data-act="note" data-v="The Zoom link opens here in the real site.">Zoom link</a></div></div>'
    + '<div class="card" style="flex:1 1 300px"><p class="ch">your group</p><dl class="kv" style="margin:0"><dt>institution</dt><dd>'+esc(m.inst)+'</dd><dt>group</dt><dd>'+esc(m.group)+'</dd><dt>teacher</dt><dd>Mikael Gorsky</dd><dt>signed in as</dt><dd class="mono" style="font-size:13.5px">'+esc(m.who)+'</dd></dl><p class="note">The site placed you in this group from the list your teacher keeps.</p></div></div>'
-   + '<div class="section"><h2 class="h2">About the programme</h2><p class="lede" style="margin-bottom:12px">Agentic software engineering taught as a discipline, not a tool. The course teaches how to build good software by directing AI agents, and it measures good against industry standards: software that is functionally suitable, reliable, secure, maintainable, and fit for the person who uses it.</p><p class="lede">From module 6 to the end, you build one running project and carry it from a rough intent to a finished system.</p></div>'
+   + '<div class="section"><h2 class="h2">About the program</h2><p class="lede" style="margin-bottom:12px">Agentic software engineering taught as a discipline, not a tool. The course teaches how to build good software by directing AI agents, and it measures good against industry standards: software that is functionally suitable, reliable, secure, maintainable, and fit for the person who uses it.</p><p class="lede">From module 6 to the end, you build one running project and carry it from a rough intent to a finished system.</p></div>'
    + '<div class="cols section" style="--b:260px;gap:14px">'
    + [['live engagement','Answers to the warm-up quizzes and the exercises after each block.','[%] of the grade'],['own project','Your running project, in a public repository.','[%] of the grade'],['tribunal','The second project, in a public repository.','[%] of the grade'],['final exam','2 parts, at the end of the course.','[%] of the grade']].map(function(a){ return '<div class="card" style="padding:16px 18px"><p class="ch" style="margin-bottom:6px">'+a[0]+' <span class="r">'+a[2]+'</span></p><p style="margin:0;font-size:15px" class="fg2">'+a[1]+'</p></div>'; }).join('')
    + '</div>'
    + '<h2 class="h2 section">Curriculum</h2>' + parts
    + '<div class="cols section"><div class="card" style="--b:320px"><p class="ch">documents</p>'
-   + ['Programme 2-pager','Full curriculum','Project rules','Grading rules'].map(function(d){ return '<a href="#programme" data-act="note" data-v="The PDF opens here in the real site." style="display:flex;justify-content:space-between;min-height:44px;align-items:center;color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line2)"><span>'+d+'</span><span class="chip">PDF</span></a>'; }).join('')
-   + '</div><div class="card" style="--b:320px"><p class="ch">teacher</p><p style="margin:0 0 6px;font-weight:800;font-size:18px">Mikael Gorsky</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Questions about the programme go to your teacher through Contact SAW. Questions about the rules can also go to '+agS('tutor')+'.</p><a class="btn sec" href="#contact">Contact SAW</a></div></div>';
+   + ['Program 2-pager','Full curriculum','Project rules','Grading rules'].map(function(d){ return '<a href="#program" data-act="note" data-v="The PDF opens here in the real site." style="display:flex;justify-content:space-between;min-height:44px;align-items:center;color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line2)"><span>'+d+'</span><span class="chip">PDF</span></a>'; }).join('')
+   + '</div><div class="card" style="--b:320px"><p class="ch">teacher</p><p style="margin:0 0 6px;font-weight:800;font-size:18px">Mikael Gorsky</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Questions about the program go to your teacher through Contact SAW. Questions about the rules can also go to '+agS('tutor')+'.</p><a class="btn sec" href="#contact">Contact SAW</a></div></div>';
 }
-function vProgramme(){
+function vProgram(){
   if (S.role==='visitor'){
     var exM = {inst:'Holon Institute of Technology', group:'62121-31', who:'student@gmail.com'};
-    return '<div class="wrap page">' + head('cat programme','My programme','This page gives you the overview of the programme you are enrolled in: its curriculum, your lesson calendar, the parts of your grade, the rules and the documents.')
-     + steps([['Register once','Register with the email address you gave your course organiser.'],['The site finds your group','The site reads your institution and group from the list your teacher keeps.'],['Your programme opens','This page shows your programme, and the 4 sections show your lessons, modules, projects and exam.']])
-     + '<div class="section">'+exFrame('the overview of a programme', '<div class="card" style="margin-bottom:16px"><p class="mono small" style="margin:0 0 6px">'+esc(exM.inst)+' · group '+exM.group+'</p><h2 class="h1" style="font-size:32px;margin:0">Agentic software engineering</h2></div>' + programmeOverview(exM, false).split('<h2 class="h2 section">Curriculum</h2>')[0])+'</div>'
-     + signStrip('Sign in to see your programme.', ['the curriculum, part by part and module by module','your lesson calendar and the Zoom link','the parts of your grade and the rules for projects and the exam','the programme documents']) + '</div>';
+    return '<div class="wrap page">' + head('cat program','My program','This page gives you the overview of the program you are enrolled in: its curriculum, your lesson calendar, the parts of your grade, the rules and the documents.')
+     + steps([['Register once','Register with the email address you gave your course organizer.'],['The site finds your group','The site reads your institution and group from the list your teacher keeps.'],['Your program opens','This page shows your program, and the 4 sections show your lessons, modules, projects and exam.']])
+     + '<div class="section">'+exFrame('the overview of a program', '<div class="card" style="margin-bottom:16px"><p class="mono small" style="margin:0 0 6px">'+esc(exM.inst)+' · group '+exM.group+'</p><h2 class="h1" style="font-size:32px;margin:0">Agentic software engineering</h2></div>' + programmeOverview(exM, false).split('<h2 class="h2 section">Curriculum</h2>')[0])+'</div>'
+     + signStrip('Sign in to see your program.', ['the curriculum, part by part and module by module','your lesson calendar and the Zoom link','the parts of your grade and the rules for projects and the exam','the program documents']) + '</div>';
   }
   var m = me();
-  return '<div class="wrap page">' + head('cat programme','Agentic software engineering', esc(m.inst)+' · group '+esc(m.group)+' · teacher Mikael Gorsky', '<span class="chip">19 modules · 4 parts</span><span class="sample">sample data</span>')
+  return '<div class="wrap page">' + head('cat program','Agentic software engineering', esc(m.inst)+' · group '+esc(m.group)+' · teacher Mikael Gorsky', '<span class="chip">19 modules · 4 parts</span><span class="sample">sample data</span>')
    + programmeOverview(m, true) + '</div>';
 }
 
@@ -844,10 +844,10 @@ function vStudy(){
       + '<p class="mono small" style="margin:0 0 8px">practice · exercise 1 of 3</p><p style="margin:0 0 10px;font-weight:700">Which tension does this course set out to answer?</p>'
       + '<button type="button" class="opt" aria-pressed="true"><span class="k">[A]</span><span>The speed of production has outrun our ability to trust the result.</span></button><button type="button" class="opt" aria-pressed="false"><span class="k">[B]</span><span>Models are still too expensive for everyday coding.</span></button>'
       + '<p class="status" style="margin-top:6px"><span style="color:var(--accent)">'+I.check+'</span>Correct. Module 1 names this tension.</p></div>';
-    return '<div class="wrap page">' + head('study --alone','Study alone','Each module of your programme has a study page with key ideas, slides, the recording of the lesson and practice exercises. '+agS('tutor')+' answers your questions about the course rules, the lessons and the site.', ag('tutor'))
-     + steps([['Read the key ideas','Each study page opens with the 4 or 5 ideas of the module.'],['Watch or review','The slides and the recording of the lesson are on the same page.'],['Practise','Practice exercises show at once whether you were right. They count towards no grade.'],['Ask','@tutor answers questions about the rules, the lessons and the site, up to 20 a day.']])
+    return '<div class="wrap page">' + head('study --alone','Study alone','Each module of your program has a study page with key ideas, slides, the recording of the lesson and practice exercises. '+agS('tutor')+' answers your questions about the course rules, the lessons and the site.', ag('tutor'))
+     + steps([['Read the key ideas','Each study page opens with the 4 or 5 ideas of the module.'],['Watch or review','The slides and the recording of the lesson are on the same page.'],['Practice','Practice exercises show at once whether you were right. They count towards no grade.'],['Ask','@tutor answers questions about the rules, the lessons and the site, up to 20 a day.']])
      + '<div class="cols section" style="align-items:flex-start"><div style="--b:420px;flex:999 1 420px">'+exFrame('a study page', studyEx)+'</div><div style="--b:340px">'+exFrame('a question to the tutor', tutorCard('askEx'))+'</div></div>'
-     + signStrip('Sign in to study the modules of your programme.', ['the study page of each module taught so far','practice exercises, with your own results kept','questions to @tutor','suggestions on what to review before the next lesson']) + '</div>';
+     + signStrip('Sign in to study the modules of your program.', ['the study page of each module taught so far','practice exercises, with your own results kept','questions to @tutor','suggestions on what to review before the next lesson']) + '</div>';
   }
   var list = MODULES.map(function(m,i){
     var n = i+1, st = n<=8 ? stat('ok','practice '+ME_PRACT[i]+'%') : n===9 ? '<span class="chip solid">in progress</span>' : '<span class="chip">not started</span>';
@@ -888,14 +888,14 @@ function vModule(){
 
 /* ---------- submit projects ---------- */
 function projectRules(){
-  return '<div class="card"><p class="ch">project rules of your programme</p><div class="stack" style="gap:10px;font-size:15px"><p class="fg2" style="margin:0">Only code in a public GitHub repository is graded. You may open a separate GitHub account for the course.</p><p class="fg2" style="margin:0">Keep a context file from the first day of the project.</p><p class="fg2" style="margin:0">Build along the course schedule and commit as you work, with messages that say what changed.</p><p class="fg2" style="margin:0">Write tests and keep them passing.</p></div><a class="mono" href="#projects" data-act="note" data-v="The full rules open here in the real site." style="min-height:44px;display:inline-flex;align-items:center;font-size:13px">read the full project rules</a></div>';
+  return '<div class="card"><p class="ch">project rules of your program</p><div class="stack" style="gap:10px;font-size:15px"><p class="fg2" style="margin:0">Only code in a public GitHub repository is graded. You may open a separate GitHub account for the course.</p><p class="fg2" style="margin:0">Keep a context file from the first day of the project.</p><p class="fg2" style="margin:0">Build along the course schedule and commit as you work, with messages that say what changed.</p><p class="fg2" style="margin:0">Write tests and keep them passing.</p></div><a class="mono" href="#projects" data-act="note" data-v="The full rules open here in the real site." style="min-height:44px;display:inline-flex;align-items:center;font-size:13px">read the full project rules</a></div>';
 }
 function vProjects(){
   if (S.role==='visitor'){
-    return '<div class="wrap page">' + head('check projects','Submit projects','Your programme may ask you to build projects. You link the public repository of each project, '+agS('reviewer')+' checks its structure and history and explains every failed check, and your teacher grades the work itself.', ag('reviewer'))
+    return '<div class="wrap page">' + head('check projects','Submit projects','Your program may ask you to build projects. You link the public repository of each project, '+agS('reviewer')+' checks its structure and history and explains every failed check, and your teacher grades the work itself.', ag('reviewer'))
      + steps([['Link the repository','Paste the link to the public repository of your project.'],['@reviewer checks it','The check looks at access, the context file, the history of commits, tests and the README.'],['Fix and check again','Every failed check comes with an explanation. You can run the check again at any time.'],['Your teacher grades','The check never grades. Your teacher grades the work itself.']])
      + '<div class="cols section" style="align-items:flex-start"><div style="--b:460px;flex:999 1 460px">'+exFrame('the result of a check', checkLog())+'</div><div class="card" style="--b:300px"><p class="ch">what @reviewer checks</p>'+CHECKS.map(function(c){ return '<p class="status fg2" style="margin:0 0 10px;align-items:flex-start;font-size:15px"><span style="color:var(--accent);margin-top:2px">'+I.check+'</span>'+c[1]+'</p>'; }).join('')+'</div></div>'
-     + signStrip('Sign in to submit your repositories and see your checks.', ['the project rules of your programme','a check of each repository whenever you ask','feedback from @reviewer on every failed check','the history of your checks']) + '</div>';
+     + signStrip('Sign in to submit your repositories and see your checks.', ['the project rules of your program','a check of each repository whenever you ask','feedback from @reviewer on every failed check','the history of your checks']) + '</div>';
   }
   var own = '<form style="margin-bottom:20px"><label class="f" for="repo">public repository link</label><div class="row" style="flex-wrap:wrap"><input class="inp mono" id="repo" value="https://github.com/[student]/[project]" style="flex:1 1 300px;width:auto;font-family:var(--mono);font-size:14.5px"><button type="button" class="btn pri" data-act="note" data-v="@reviewer started a new check. It takes about a minute.">Run check</button></div></form>'
    + checkLog()
@@ -915,8 +915,8 @@ function examCard(){
 }
 function vExam(){
   if (S.role==='visitor'){
-    return '<div class="wrap page">' + head('exam --status','Exam finale','Your programme ends with a final exam. Before it, '+agS('examiner')+' shows how ready you are, condition by condition, and runs practice exams on the modules taught so far.', ag('examiner'))
-     + steps([['Follow your readiness','@examiner checks your modules, live answers, practice results and projects against the conditions for the exam.'],['Practise','Practice exams of about 20 questions show where you are weak. They never count towards the grade.'],['Sit the exam','Part A has closed questions. In part B you direct an agent on a small task and submit the session record.'],['Your teacher grades','@examiner marks the closed questions. Your teacher reviews every exam and sets the mark.']])
+    return '<div class="wrap page">' + head('exam --status','Exam finale','Your program ends with a final exam. Before it, '+agS('examiner')+' shows how ready you are, condition by condition, and runs practice exams on the modules taught so far.', ag('examiner'))
+     + steps([['Follow your readiness','@examiner checks your modules, live answers, practice results and projects against the conditions for the exam.'],['Practice','Practice exams of about 20 questions show where you are weak. They never count towards the grade.'],['Sit the exam','Part A has closed questions. In part B you direct an agent on a small task and submit the session record.'],['Your teacher grades','@examiner marks the closed questions. Your teacher reviews every exam and sets the mark.']])
      + '<div class="cols section" style="align-items:flex-start"><div style="--b:440px;flex:999 1 440px">'+exFrame('readiness for the exam', readyCard())+'</div><div style="--b:320px">'+examCard()+'</div></div>'
      + signStrip('Sign in to see your readiness and take practice exams.', ['your readiness for the exam, condition by condition','practice exams on the modules taught so far','the date, format and rules of your exam']) + '</div>';
   }
@@ -934,7 +934,7 @@ function vExam(){
 function vProgress(){
   if (S.role==='visitor'){
     var exChart = '<div class="card"><p class="ch">live exercise score by lesson <span class="r">you and your group</span></p><div class="legend"><span><i></i>You</span><span><i class="ref"></i>Group average</span></div><div class="chart" data-chart="me-score" style="height:220px"></div></div>';
-    return '<div class="wrap page">' + head('progress --me','My progress','This page shows how you are doing in your programme, set against the average of your group. Only you see your own figures.', ag('analyst'))
+    return '<div class="wrap page">' + head('progress --me','My progress','This page shows how you are doing in your program, set against the average of your group. Only you see your own figures.', ag('analyst'))
      + exFrame('the progress of a student', progressTiles() + '<div style="margin-top:16px">'+exChart+'</div>')
      + '<div class="cols section"><div class="card" style="--b:300px"><p class="ch">what the page shows</p><div class="ticks" style="margin:0"><p>'+I.check+'<span>your answers and scores in each lesson</span></p><p>'+I.check+'<span>the modules you have studied and your practice results</span></p><p>'+I.check+'<span>the checks of your projects</span></p><p>'+I.check+'<span>your readiness for the exam</span></p><p>'+I.check+'<span>messages from your agents on what to do next</span></p></div></div>'
      + '<div class="card" style="--b:300px"><p class="ch">your ratings</p><h3 class="h3">Your ratings stay anonymous</h3><p class="fg2" style="margin:0;font-size:15px">You see your own lesson ratings beside the group average. Your teacher sees ratings only as totals from 5 or more students, and ratings never affect grades.</p></div></div>'
@@ -1064,25 +1064,25 @@ function vTAccess(){
   var rows = STUD.slice(0,5).concat(STUD.slice(18,22)).map(function(s){ return '<tr><td class="m">'+s.email+'</td><td>HIT</td><td class="m">'+s.group+'</td><td>Agentic software engineering</td><td>'+(s.reg?stat('ok','registered [date]'):stat('warn','not registered'))+'</td><td class="m">'+(s.reg?'[date]':'–')+'</td><td>'+(s.reg?'':'<button type="button" class="btn out" style="min-height:36px" data-act="note" data-v="@steward will remind '+s.email+' to register.">remind</button>')+'</td></tr>'; }).join('');
   var msgs = [
     ['[Name]','[email]','Something else','I received the link to this site from Mikael Gorsky and would like to try it as a student.','Send the demo login'],
-    ['[address 1]','[address 1]','Registration and signing in','I tried to register with my university address, but my course organiser has my Gmail address.','Reply']
+    ['[address 1]','[address 1]','Registration and signing in','I tried to register with my university address, but my course organizer has my Gmail address.','Reply']
   ];
-  return '<div class="wrap page">' + head('registrar --access','Groups and access','A student can register only with an address on this list. The site places each student in the institution, group and programme written beside the address. '+agS('registrar')+' checks every registration against the list.', '<span class="sample">sample data</span>')
+  return '<div class="wrap page">' + head('registrar --access','Groups and access','A student can register only with an address on this list. The site places each student in the institution, group and program written beside the address. '+agS('registrar')+' checks every registration against the list.', '<span class="sample">sample data</span>')
    + '<div class="cols" style="--b:280px">'
    + groups.map(function(g){ return '<div class="card"><p class="ch">'+esc(g.p.toLowerCase())+' <span class="r">running</span></p><p style="margin:0 0 4px;font-weight:800;font-size:18px">HIT · group '+g.g+'</p><p class="small" style="margin:0 0 10px">'+g.inst+'</p><p class="mono small" style="margin:0">'+g.permitted+' permitted · '+g.registered+' registered</p></div>'; }).join('')
    + '<div class="card dash"><p class="ch" style="color:var(--warn)">demo <span class="r">sample group</span></p><p style="margin:0 0 4px;font-weight:800;font-size:18px">SAW demo · group demo</p><p class="small" style="margin:0 0 10px">Agentic software engineering</p><p class="mono small" style="margin:0">1 demo login · reset every night</p></div>'
    + '</div>'
    + '<form class="card section" data-form="addmem"><p class="ch">permit addresses</p><div class="cols" style="gap:16px;align-items:flex-start">'
    + '<div style="--b:320px;flex:999 1 320px"><label class="f" for="pa">email addresses, one per line</label><textarea class="inp" id="pa" rows="5" placeholder="name@gmail.com"></textarea></div>'
-   + '<div class="stack" style="--b:280px;gap:14px"><div><label class="f" for="pi">institution</label><input class="inp" id="pi" value="Holon Institute of Technology"></div><div><label class="f" for="pg">group</label><input class="inp" id="pg" placeholder="62121-31"></div><div><label class="f" for="pp">programme</label><select class="inp" id="pp"><option>Agentic software engineering</option><option>Building Cognified Systems</option><option>Directing AI Agents</option></select></div></div></div>'
+   + '<div class="stack" style="--b:280px;gap:14px"><div><label class="f" for="pi">institution</label><input class="inp" id="pi" value="Holon Institute of Technology"></div><div><label class="f" for="pg">group</label><input class="inp" id="pg" placeholder="62121-31"></div><div><label class="f" for="pp">program</label><select class="inp" id="pp"><option>Agentic software engineering</option><option>Building Cognified Systems</option><option>Directing AI Agents</option></select></div></div></div>'
    + '<div class="row" style="margin-top:16px"><button type="submit" class="btn pri">Add to the list</button><button type="button" class="btn sec" data-act="note" data-v="Choose a CSV file. The site reads only the email and group columns.">Upload a CSV</button><span class="small">From a Moodle export the site reads only the email and group columns. It never imports ID numbers.</span></div></form>'
    + '<div class="card section" style="padding:0"><div class="row" style="justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)"><h2 class="h3" style="margin:0">Permitted addresses</h2><button type="button" class="btn out" data-act="note" data-v="The CSV has 2 columns, email and engagement. Moodle matches rows by email.">export CSV for Moodle</button></div>'
-   + '<div class="scroll"><table class="tbl" style="min-width:860px"><thead><tr><th>email</th><th>institution</th><th>group</th><th>programme</th><th>status</th><th>last sign-in</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="small" style="padding:12px 20px">Showing 9 of 34. The Moodle export has 2 columns, the email address and the engagement figure, and Moodle matches each row by email.</p></div>'
+   + '<div class="scroll"><table class="tbl" style="min-width:860px"><thead><tr><th>email</th><th>institution</th><th>group</th><th>program</th><th>status</th><th>last sign-in</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="small" style="padding:12px 20px">Showing 9 of 34. The Moodle export has 2 columns, the email address and the engagement figure, and Moodle matches each row by email.</p></div>'
    + '<div class="cols section" style="align-items:flex-start">'
    + '<div class="card warnb" style="--b:380px"><p class="ch" style="color:var(--warn)">refused registrations <span class="r">not on any list</span></p>'
-   + [['[address 1]','tried to register [date]'],['[address 2]','tried to register [date]']].map(function(x){ return '<div class="li"><div class="t"><b class="mono" style="font-size:14px">'+x[0]+'</b><span>'+x[1]+'</span></div><div class="row"><button type="button" class="btn out" style="min-height:38px" data-act="note" data-v="Choose the institution, group and programme for this address.">add to a group</button><button type="button" class="btn sec" style="min-height:38px;font-size:14px" data-act="note" data-v="@registrar will ignore this address.">Ignore</button></div></div>'; }).join('')
+   + [['[address 1]','tried to register [date]'],['[address 2]','tried to register [date]']].map(function(x){ return '<div class="li"><div class="t"><b class="mono" style="font-size:14px">'+x[0]+'</b><span>'+x[1]+'</span></div><div class="row"><button type="button" class="btn out" style="min-height:38px" data-act="note" data-v="Choose the institution, group and program for this address.">add to a group</button><button type="button" class="btn sec" style="min-height:38px;font-size:14px" data-act="note" data-v="@registrar will ignore this address.">Ignore</button></div></div>'; }).join('')
    + '</div>'
-   + '<div class="card" style="--b:380px"><p class="ch">demo logins</p><div class="scroll"><table class="tbl" style="min-width:420px"><thead><tr><th>login</th><th>programme</th><th>last used</th><th>this month</th></tr></thead><tbody><tr><td class="m">demo</td><td>Agentic software engineering</td><td class="m">[date]</td><td class="m">7 sign-ins</td></tr></tbody></table></div>'
-   + '<div class="row" style="margin-top:14px"><button type="button" class="btn sec" style="min-height:40px;font-size:14px" data-act="note" data-v="The new password applies to the next sign-in.">Change the password</button><button type="button" class="btn out" style="min-height:40px" data-act="note" data-v="A demo login for another programme needs that programme’s content first.">add a demo login for another programme</button></div>'
+   + '<div class="card" style="--b:380px"><p class="ch">demo logins</p><div class="scroll"><table class="tbl" style="min-width:420px"><thead><tr><th>login</th><th>program</th><th>last used</th><th>this month</th></tr></thead><tbody><tr><td class="m">demo</td><td>Agentic software engineering</td><td class="m">[date]</td><td class="m">7 sign-ins</td></tr></tbody></table></div>'
+   + '<div class="row" style="margin-top:14px"><button type="button" class="btn sec" style="min-height:40px;font-size:14px" data-act="note" data-v="The new password applies to the next sign-in.">Change the password</button><button type="button" class="btn out" style="min-height:40px" data-act="note" data-v="A demo login for another program needs that program’s content first.">add a demo login for another program</button></div>'
    + '<p class="note">A demo login is a sample student. It sees only the student side, and the demo group is reset every night.</p></div>'
    + '</div>'
    + '<div class="section"><div class="sechead"><h2 class="h2">Messages from Contact SAW</h2><span class="mono small">2 waiting · passed by @steward</span></div><div class="stack" style="gap:12px">'
@@ -1106,12 +1106,12 @@ var ST = ['visitor','student','demo'];
 var ROUTES = {
   home:{r:'*', v:vHome}, agents:{r:'*', v:vAgents}, privacy:{r:'*', v:vPrivacy}, contact:{r:'*', v:vContact},
   signin:{r:['visitor'], v:vSignin}, register:{r:['visitor'], v:vRegister},
-  programme:{r:'*', v:vProgramme}, module:{r:['visitor','student','demo','teacher'], v:vModule},
+  program:{r:'*', v:vProgram}, module:{r:['visitor','student','demo','teacher'], v:vModule},
   'class':{r:ST, v:vClass}, study:{r:ST, v:vStudy}, projects:{r:ST, v:vProjects}, exam:{r:ST, v:vExam}, progress:{r:ST, v:vProgress},
   't-class':{r:['teacher'], v:vTClass}, 't-study':{r:['teacher'], v:vTStudy}, 't-projects':{r:['teacher'], v:vTProjects}, 't-exam':{r:['teacher'], v:vTExam},
   't-progress':{r:['teacher'], v:vTProgress}, 't-satisfaction':{r:['teacher'], v:vTSat}, 't-access':{r:['teacher'], v:vTAccess}, 't-agents':{r:['teacher'], v:vTAgents}
 };
-var HOME = {visitor:'home', student:'programme', demo:'programme', teacher:'t-progress'};
+var HOME = {visitor:'home', student:'program', demo:'program', teacher:'t-progress'};
 function resolve(){
   var r = location.hash.replace('#','') || HOME[S.role];
   if (!ROUTES[r]) r = HOME[S.role];
@@ -1142,10 +1142,10 @@ document.getElementById('devSeg').addEventListener('click', function(e){ var b =
 /* ---------- actions ---------- */
 var ACT = {
   menu: function(){ S.menu = !S.menu; render(); },
-  signin: function(){ S.role = 'student'; go('programme'); toast('Signed in. The site recognised you as a student of HIT, group 62121-31.'); },
-  demo: function(){ S.role = 'demo'; go('programme'); toast('Signed in as demo.'); },
+  signin: function(){ S.role = 'student'; go('program'); toast('Signed in. The site recognized you as a student of HIT, group 62121-31.'); },
+  demo: function(){ S.role = 'demo'; go('program'); toast('Signed in as demo.'); },
   'reg-google': function(){ S.regDone = true; render(); },
-  'reg-go': function(){ S.regDone = false; S.role = 'student'; go('programme'); },
+  'reg-go': function(){ S.regDone = false; S.role = 'student'; go('program'); },
   emaillink: function(){ toast('In the real site, a link goes to this address.'); },
   contact: function(){ S.contactSent = true; render(); },
   signout: function(v,t,e){ if (e) e.preventDefault(); S.role = 'visitor'; go('home'); },

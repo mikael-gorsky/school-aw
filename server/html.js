@@ -51,7 +51,7 @@ export function steps(arr) {
   return `<div class="steps">${arr.map((s, i) => `<div class="step"><span class="n">${i + 1}</span><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 }
 export function signStrip(title, items) {
-  return `<div class="card hl section"><p class="ch">after you sign in</p><h2 class="h3" style="font-size:21px;margin-bottom:14px">${title}</h2><div class="ticks">${items.map(t => `<p>${I.check}<span>${t}</span></p>`).join('')}</div><div class="row"><a class="btn pri" href="/signin">Sign in</a><a class="btn sec" href="/register">Register to use the service</a></div><p class="note">Register once, with the email address you gave your course organiser.</p></div>`;
+  return `<div class="card hl section"><p class="ch">after you sign in</p><h2 class="h3" style="font-size:21px;margin-bottom:14px">${title}</h2><div class="ticks">${items.map(t => `<p>${I.check}<span>${t}</span></p>`).join('')}</div><div class="row"><a class="btn pri" href="/signin">Sign in</a><a class="btn sec" href="/register">Register to use the service</a></div><p class="note">Register once, with the email address you gave your course organizer.</p></div>`;
 }
 export function tiles(arr) {
   return `<div class="tiles">${arr.map(t => `<div class="tile"><p class="k">${t[0]}</p><p class="v">${t[1]}</p>${t[2] ? `<p class="s${t[3] ? ' ' + t[3] : ''}">${t[2]}</p>` : ''}</div>`).join('')}</div>`;
@@ -88,10 +88,10 @@ const MAIN = [
   { k: 'projects', t: 'Submit projects', s: 'Projects', ic: 'projects' },
   { k: 'exam', t: 'Exam finale', s: 'Exam', ic: 'exam' },
 ];
-export const HOME = { visitor: '/', student: '/programme', demo: '/programme', teacher: '/teacher/progress' };
+export const HOME = { visitor: '/', student: '/program', demo: '/program', teacher: '/teacher/progress' };
 
-// The menu of the programme in view: the student's own, the group the teacher
-// is looking at, or ASE for a visitor, since ASE is the only programme on the site.
+// The menu of the program in view: the student's own, the group the teacher
+// is looking at, or ASE for a visitor, since ASE is the only program on the site.
 const menuOf = ctx => (hasExam(ctx.group ? ctx.group.programme : 'ase') ? MAIN : MAIN.filter(m => m.k !== 'exam'));
 
 function header(ctx) {
@@ -108,10 +108,10 @@ function header(ctx) {
   const me = r === 'visitor' ? '' : `<a class="who" href="/account"${cur('/account')} title="My account"><span class="dot${r === 'student' ? '' : ' h'}"></span>${esc(displayName(ctx.user))} · ${r}</a>`;
   if (r === 'visitor') {
     acct = `<a class="who" href="/register"${cur('/register')}>Register</a><a class="btn out" href="/signin" style="min-height:40px">Sign in</a>`;
-    drawer += `<p class="lbl">you</p><a href="/programme"${cur('/programme')}>My programme</a><a href="/progress"${cur('/progress')}>My progress</a><a href="/signin"${cur('/signin')}>Sign in</a><a href="/register"${cur('/register')}>Register to use the service</a>`;
+    drawer += `<p class="lbl">you</p><a href="/program"${cur('/program')}>My program</a><a href="/progress"${cur('/progress')}>My progress</a><a href="/signin"${cur('/signin')}>Sign in</a><a href="/register"${cur('/register')}>Register to use the service</a>`;
   } else if (r === 'student' || r === 'demo') {
-    acct = `<a class="who" href="/programme"${cur('/programme')}>My programme</a><a class="who" href="/progress"${cur('/progress')}>My progress</a>${me}`;
-    drawer += `<p class="lbl">you · ${esc(ctx.user.email)}</p><a href="/account"${cur('/account')}>My account · ${esc(displayName(ctx.user))}</a><a href="/programme"${cur('/programme')}>My programme</a><a href="/progress"${cur('/progress')}>My progress</a>`;
+    acct = `<a class="who" href="/program"${cur('/program')}>My program</a><a class="who" href="/progress"${cur('/progress')}>My progress</a>${me}`;
+    drawer += `<p class="lbl">you · ${esc(ctx.user.email)}</p><a href="/account"${cur('/account')}>My account · ${esc(displayName(ctx.user))}</a><a href="/program"${cur('/program')}>My program</a><a href="/progress"${cur('/progress')}>My progress</a>`;
   } else {
     acct = me;
     drawer += `<p class="lbl">you · ${esc(ctx.user.email)}</p><a href="/account"${cur('/account')}>My account · ${esc(displayName(ctx.user))}</a>`;
@@ -139,6 +139,17 @@ function tabbar(ctx) {
   return `<nav class="tabbar" aria-label="Main"><div class="in">${MAIN.map(m => `<a href="${href(m.k)}"${isCur(m.k) ? ' aria-current="page"' : ''}>${I[m.ic].replace('width="18" height="18"', 'width="22" height="22"')}${m.s}</a>`).join('')}</div></nav>`;
 }
 
+// The helper button and its chat panel, for students and the demo login
+// (decision of 31 October 2026). public/app.js runs the conversation.
+function helper(ctx) {
+  if (ctx.role !== 'student' && ctx.role !== 'demo') return '';
+  return `<button type="button" class="helper-fab" data-helper-open aria-label="Ask the helper" aria-expanded="false" aria-controls="helper"><img src="/helper/avatar" alt=""></button>
+<section class="helper" id="helper" hidden aria-label="Helper"><header class="helper-h"><img src="/helper/avatar" alt=""><div><b>Helper</b><span>Answers about the site and your course</span></div><button type="button" class="helper-x" data-helper-close aria-label="Close">${I.x}</button></header>
+<div class="helper-log" data-helper-log aria-live="polite"><div class="hm a">How can I help? Ask me about the site, your course, the textbook or your projects, in any language.</div></div>
+<form class="helper-f" data-helper-form><textarea class="inp" name="q" rows="2" maxlength="3000" placeholder="Write your question" aria-label="Your question" required></textarea><button class="btn pri" type="submit">Send</button></form>
+<p class="helper-n" data-helper-note>Your name and address are not sent with your questions. 20 questions a day.</p></section>`;
+}
+
 export function layout(ctx, title, body, flash) {
   const note = flash ? `<div class="wrap" style="padding-top:20px"><p class="flash" role="status">${esc(flash)}</p></div>` : '';
   return `<!doctype html>
@@ -153,7 +164,7 @@ export function layout(ctx, title, body, flash) {
 <script type="module" src="/static/app.js"></script>
 </head>
 <body>
-<div class="app">${header(ctx)}${note}<main class="main" id="main">${body}</main>${footer(ctx)}${tabbar(ctx)}</div>
+<div class="app">${header(ctx)}${note}<main class="main" id="main">${body}</main>${footer(ctx)}${tabbar(ctx)}</div>${helper(ctx)}
 <div id="tip" role="tooltip" hidden></div>
 </body>
 </html>`;

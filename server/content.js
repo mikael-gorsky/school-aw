@@ -1,4 +1,4 @@
-// Programme content lives in content/<programme>/ as plain files, so the teacher
+// Program content lives in content/<program>/ as plain files, so the teacher
 // can review and change it in Git without touching code.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -18,7 +18,7 @@ export function programme(id = 'ase') {
   return readJson(path.join(ROOT, id, 'programme.json'));
 }
 
-// A programme without a final exam sets "exam": false. Its students and the
+// A program without a final exam sets "exam": false. Its students and the
 // teacher then never see Exam finale or readiness for an exam
 // (decision of 31 October 2026: ASE is graded without an exam).
 export function hasExam(id = 'ase') {
@@ -46,25 +46,16 @@ export function moduleTitle(id, n) {
   return m ? m.title : `Module ${n}`;
 }
 
-// The lesson plan of a programme: lesson n covers these modules. A programme
-// without a plan teaches 1 module per lesson.
-export function planLesson(id, n) {
-  const p = programme(id);
-  const l = p && p.lessons && p.lessons.find(x => x.n === n);
-  return l ? { modules: l.modules, note: l.note || '' } : null;
-}
-
 export function lessonModules(l) {
   try { const m = l.modules ? JSON.parse(l.modules) : null; if (Array.isArray(m) && m.length) return m; } catch { /* fall back */ }
   return [l.module];
 }
 
-// "Modules 4 and 6" and the module titles, for a lesson row from the database.
+// A lesson covers 1 or more modules, chosen by the teacher when the lesson is
+// added: how modules are grouped into lessons is a decision for each semester,
+// not part of the program (decision of 31 October 2026).
 export function lessonTitle(id, l) {
-  const ms = lessonModules(l);
-  const plan = planLesson(id, l.number);
-  const note = plan && plan.note && plan.modules.join() === ms.join() ? `${plan.note} · ` : '';
-  return note + ms.map(n => moduleTitle(id, n)).join(' · ');
+  return lessonModules(l).map(n => moduleTitle(id, n)).join(' · ');
 }
 export const lessonModulesLabel = l => { const ms = lessonModules(l); return ms.length > 1 ? `modules ${ms.slice(0, -1).join(', ')} and ${ms[ms.length - 1]}` : `module ${ms[0]}`; };
 

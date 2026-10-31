@@ -4,7 +4,7 @@ import { config, googleConfigured } from '../config.js';
 import { groupLabel } from '../model.js';
 import { hasExam } from '../content.js';
 
-// @examiner works only in a programme with a final exam, and ASE has none
+// @examiner works only in a program with a final exam, and ASE has none
 // (decision of 31 October 2026).
 export const activeAgents = () => AGENTS.filter(a => a.id !== 'examiner' || hasExam('ase'));
 export const AGENTS = [
@@ -42,7 +42,7 @@ export function home(ctx) {
     ['exam', 'exam', 'Exam finale', 'You follow your readiness for the final exam, take practice exams, and then sit the exam itself.', 'examiner'],
   ].filter(c => c[0] !== 'exam' || hasExam('ase'));
   const cta = signed(ctx)
-    ? '<a class="btn pri" href="/programme">Go to my programme</a><a class="btn sec" href="/progress">My progress</a>'
+    ? '<a class="btn pri" href="/program">Go to my program</a><a class="btn sec" href="/progress">My progress</a>'
     : ctx.role === 'teacher' ? '<a class="btn pri" href="/teacher/progress">Open class progress</a>'
       : '<a class="btn pri" href="/signin">Sign in</a><a class="btn sec" href="/register">Register to use the service</a>';
   return `<section class="hero"><div class="wrap in"><div class="txt">
@@ -50,14 +50,14 @@ export function home(ctx) {
    <h1 class="display">School of Agentic Work</h1>
    <p class="lede">This is where you work on your course, during lessons and between them. Your teacher teaches every lesson and sets every grade. A team of named agents runs the exercises, checks your projects, answers your questions and shows you your progress.</p>
    <div class="row" style="margin-top:28px">${cta}</div>
-   ${ctx.role === 'visitor' ? '<p class="small" style="margin-top:14px">First time here? Register with the email address you gave your course organiser. <a href="/class">See how a lesson runs</a>.</p>' : ''}
+   ${ctx.role === 'visitor' ? '<p class="small" style="margin-top:14px">First time here? Register with the email address you gave your course organizer. <a href="/class">See how a lesson runs</a>.</p>' : ''}
    </div><div class="term"><div class="top"><i></i><i></i><i></i><span style="margin-left:6px">school.log</span><span class="sample" style="margin-left:auto">example</span></div><div class="body log">${logLines(log)}</div></div>
    </div></section>
    <section class="band deep"><div class="wrap in"><div class="sechead"><h2 class="h2">What you do here</h2><p class="small">${comp.length} sections, each run by one agent under your teacher</p></div>
    <div class="cols" style="--b:240px">${comp.map(c => `<a class="card" href="/${c[0]}" style="display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit"><span style="color:var(--accent)">${I[c[1]].replace('width="18" height="18"', 'width="26" height="26"')}</span><h3 class="h3" style="margin:0">${c[2]}</h3><p class="fg2" style="margin:0;font-size:15px">${c[3]}</p><span class="row" style="margin-top:auto;justify-content:space-between">${agS(c[4])}<span class="mono small" style="color:var(--accent)">how it works</span></span></a>`).join('')}</div></div></section>
-   <section class="band"><div class="wrap in"><div class="sechead"><h2 class="h2">Your programme and your progress</h2></div>
+   <section class="band"><div class="wrap in"><div class="sechead"><h2 class="h2">Your program and your progress</h2></div>
    <div class="cols" style="--b:260px">
-   <a class="card" href="/programme" style="text-decoration:none;color:inherit"><p class="ch">my programme</p><h3 class="h3">You see your whole programme</h3><p class="fg2" style="margin:0;font-size:15px">The site knows your institution and group from the address you register with, and it shows the curriculum, the lesson calendar and the rules of your programme.</p></a>
+   <a class="card" href="/program" style="text-decoration:none;color:inherit"><p class="ch">my program</p><h3 class="h3">You see your whole program</h3><p class="fg2" style="margin:0;font-size:15px">The site knows your institution and group from the address you register with, and it shows the curriculum, the lesson calendar and the rules of your program.</p></a>
    <a class="card" href="/progress" style="text-decoration:none;color:inherit"><p class="ch">my progress</p><h3 class="h3">You see your own progress</h3><p class="fg2" style="margin:0;font-size:15px">Every answer, module, project check and your readiness for the exam, set against the average of your group.</p></a>
    <div class="card"><p class="ch">your ratings</p><h3 class="h3">Your ratings stay anonymous</h3><p class="fg2" style="margin:0;font-size:15px">You rate each lesson in a few seconds. Your teacher sees ratings only from groups of 5 or more, and ratings never affect grades.</p></div>
    </div></div></section>
@@ -66,12 +66,12 @@ export function home(ctx) {
    <section class="band"><div class="wrap in" style="display:flex;flex-wrap:wrap;gap:36px;align-items:center">
    <div class="photo" role="img" aria-label="Photo placeholder" style="flex:0 0 220px;height:260px;max-width:100%">photo</div>
    <div style="flex:999 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> teacher</p><h2 class="h2" style="font-size:34px">Mikael Gorsky</h2>
-   <p class="fg2" style="margin:0 0 10px;font-size:17px;max-width:62ch">Mikael Gorsky teaches every programme on this site. He is a senior researcher at the School of Computer Science, Holon Institute of Technology.</p>
+   <p class="fg2" style="margin:0 0 10px;font-size:17px;max-width:62ch">Mikael Gorsky teaches every program on this site. He is a senior researcher at the School of Computer Science, Holon Institute of Technology.</p>
    <p class="fg2" style="margin:0 0 10px;font-size:17px;max-width:62ch">He wrote the textbook on agentic software engineering that the course follows, forthcoming from Springer.</p>
-   <p class="fg2" style="margin:0;font-size:17px;max-width:62ch">He builds software with AI agents himself, after 30 years leading consulting, software implementation and book publishing organisations.</p></div>
+   <p class="fg2" style="margin:0;font-size:17px;max-width:62ch">He builds software with AI agents himself, after 30 years leading consulting, software implementation and book publishing organizations.</p></div>
    </div></section>
    <section class="band deep"><div class="wrap in" style="display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between">
-   <div style="flex:1 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> contact</p><h2 class="h2">Contact SAW</h2><p class="fg2" style="margin:0;font-size:17px">Questions about registration, signing in or your programme? Write to us, and your teacher answers by email.</p></div>
+   <div style="flex:1 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> contact</p><h2 class="h2">Contact SAW</h2><p class="fg2" style="margin:0;font-size:17px">Questions about registration, signing in or your program? Write to us, and your teacher answers by email.</p></div>
    <a class="btn pri" href="/contact">Write to SAW</a></div></section>`;
 }
 
@@ -88,7 +88,7 @@ export function privacy() {
   const card = (t, x) => `<div class="card"><h2 class="h3">${t}</h2><p class="fg2" style="margin:0">${x}</p></div>`;
   return `<div class="wrap page" style="max-width:820px">${head('cat privacy.txt', 'Privacy notice', 'This summary tells you what the school keeps about you and why.')}<div class="stack">
    ${card('Who is responsible', 'Mikael Gorsky runs this site and is responsible for the data it keeps. You can ask him to show, correct or delete your data at any time through <a href="/contact">Contact SAW</a>.')}
-   ${card('What the site keeps', 'The email address you register with, and the institution, group and programme that your teacher wrote beside it on the list of permitted addresses. The site also keeps your answers to exercises, your project links and the results of their checks, and the messages you send through Contact SAW. When you sign in with Google, it also keeps your first and last name and your profile photo from your Google account, and the comment you write on My account. Only you and the teacher see them. You can correct your name on My account. The site never asks for an ID number.')}
+   ${card('What the site keeps', 'The email address you register with, and the institution, group and program that your teacher wrote beside it on the list of permitted addresses. The site also keeps your answers to exercises, your project links and the results of their checks, and the messages you send through Contact SAW. When you sign in with Google, it also keeps your first and last name and your profile photo from your Google account, and the comment you write on My account. Only you and the teacher see them. You can correct your name on My account. The site never asks for an ID number.')}
    ${card('Ratings and surveys', 'Lesson ratings and survey answers are anonymous to the teacher. He sees them only as totals from groups of 5 or more students, and they never affect any grade.')}
    ${card('Services that process the data', 'The site runs in a Podway pod in [region]. Questions to @tutor go to an AI service without your name or email address. Do not write personal matters in those questions.')}
    ${card('How long it is kept', 'Course data is deleted [period] after the end of the course, once the time for grade appeals has passed.')}
@@ -102,10 +102,10 @@ export function contact(ctx) {
   const mail = ctx.role === 'student' ? esc(ctx.user.email) : '';
   return `<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">
    <form method="post" action="/contact" style="--b:480px;flex:999 1 480px;display:flex;flex-direction:column;gap:18px">
-   <div><p class="eyebrow"><span class="p">$</span> contact</p><h1 class="h1">Contact SAW</h1><p class="lede">Write to us about registration, signing in or your programme. Your teacher answers by email.</p></div>
+   <div><p class="eyebrow"><span class="p">$</span> contact</p><h1 class="h1">Contact SAW</h1><p class="lede">Write to us about registration, signing in or your program. Your teacher answers by email.</p></div>
    ${ctx.query.e ? '<p class="alert">Write your email address and a message, so that the teacher can answer.</p>' : ''}
    <div class="cols" style="--b:220px;gap:16px"><div><label class="f" for="cn">name</label><input class="inp" id="cn" name="name" maxlength="120" placeholder="Your name"></div><div><label class="f" for="ce">email</label><input class="inp" id="ce" name="email" type="email" required maxlength="200" placeholder="Your email address" value="${mail}"></div></div>
-   <div><label class="f" for="ct">about</label><select class="inp" id="ct" name="topic"><option>Registration and signing in</option><option>My programme</option><option>Something else</option></select></div>
+   <div><label class="f" for="ct">about</label><select class="inp" id="ct" name="topic"><option>Registration and signing in</option><option>My program</option><option>Something else</option></select></div>
    <div><label class="f" for="cm">message</label><textarea class="inp" id="cm" name="body" rows="5" required maxlength="4000" placeholder="Your message"></textarea></div>
    <div class="row"><button class="btn pri" type="submit">Send message</button><span class="small">Do not send ID numbers or other personal documents.</span></div></form>
    <aside class="card" style="flex:1 1 280px"><p class="ch">what happens next</p>
@@ -121,13 +121,13 @@ function devForm(intent) {
   if (!config.devLogin) return '';
   return `<form method="post" action="/auth/dev" class="card dash" style="margin-top:16px;padding:16px"><p class="ch" style="color:var(--warn)">development sign-in</p><input type="hidden" name="intent" value="${intent}"><div class="row" style="flex-wrap:nowrap"><label class="sr" for="dev">address</label><input class="inp" id="dev" name="email" type="email" placeholder="any address"><button class="btn sec" type="submit">Enter</button></div><p class="small" style="margin-top:6px;font-size:13px">Shown only because DEV_LOGIN is set. Never set it in the pod.</p></form>`;
 }
-const refusedMsg = '<p class="alert">The site did not accept this address, because it is not on your group’s list. Check that it is the address you gave your course organiser. If it is, write to us through <a href="/contact">Contact SAW</a> and say which programme and group you are in.</p>';
+const refusedMsg = '<p class="alert">The site did not accept this address, because it is not on your group’s list. Check that it is the address you gave your course organizer. If it is, write to us through <a href="/contact">Contact SAW</a> and say which program and group you are in.</p>';
 
 export function signin(ctx) {
   const err = ctx.query.e === 'refused' ? refusedMsg : ctx.query.e === 'demo' ? '<p class="alert">The demo login or password is wrong.</p>' : ctx.query.e ? `<p class="alert">${esc(ctx.query.e)}</p>` : '';
   return `<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">
-   <div style="--b:340px"><p class="eyebrow"><span class="p">$</span> sign-in</p><h1 class="h1">Sign in</h1><p class="lede" style="margin-bottom:22px">Sign in with the address you registered with. The site then opens your programme.</p>
-   <div class="card flat"><p class="ch">not registered yet?</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Register once, with the email address you gave your course organiser.</p><a class="btn sec" href="/register">Register to use the service</a></div></div>
+   <div style="--b:340px"><p class="eyebrow"><span class="p">$</span> sign-in</p><h1 class="h1">Sign in</h1><p class="lede" style="margin-bottom:22px">Sign in with the address you registered with. The site then opens your program.</p>
+   <div class="card flat"><p class="ch">not registered yet?</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Register once, with the email address you gave your course organizer.</p><a class="btn sec" href="/register">Register to use the service</a></div></div>
    <div class="stack" style="--b:380px">${err}
    <div class="card" style="padding:26px">${googleButton('signin', 'Sign in with Google')}
    <p class="small" style="margin-top:14px;font-size:13px">If your address is not a Google address, or the site does not let you in, write to us through <a href="/contact">Contact SAW</a>.</p>${devForm('signin')}</div>
@@ -141,14 +141,14 @@ export function register(ctx) {
   if (ctx.query.done && ctx.user && ctx.group) {
     return `<div class="wrap page"><div class="card hl" style="max-width:680px;margin:20px auto 0"><p class="eyebrow"><span class="p">$</span> register</p><h1 class="h2">You are registered</h1><p class="fg2" style="margin:0 0 16px">${agS('registrar')} found your address on the list your teacher keeps, and placed you in your group.</p>
      <dl class="kv" style="margin:0 0 20px"><dt>address</dt><dd>${esc(ctx.user.email)}</dd><dt>institution</dt><dd>${esc(ctx.group.institution)}</dd><dt>group</dt><dd>${esc(ctx.group.code)}</dd><dt>programme</dt><dd>${esc(ctx.programme ? ctx.programme.title : ctx.group.programme)}</dd></dl>
-     <p class="small" style="margin:0 0 18px">From now on, sign in with the same address.</p><a class="btn pri" href="/programme">Go to my programme</a></div></div>`;
+     <p class="small" style="margin:0 0 18px">From now on, sign in with the same address.</p><a class="btn pri" href="/program">Go to my program</a></div></div>`;
   }
   const err = ctx.query.e === 'refused' ? refusedMsg : ctx.query.e ? `<p class="alert">${esc(ctx.query.e)}</p>` : '';
   return `<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">
    <div style="--b:360px"><p class="eyebrow"><span class="p">$</span> register</p><h1 class="h1">Register to use the service</h1><p class="lede" style="margin-bottom:22px">You register once. After that, you sign in with the same address.</p>
-   <div class="card warnb"><p class="ch" style="color:var(--warn)">use the right address</p><p class="fg2" style="margin:0 0 10px">Register with the email address you gave your course organiser. If it is a Gmail address, register with Google.</p><p class="fg2" style="margin:0">The site accepts only addresses that your teacher has put on a group list. It reads your institution and group from that list, so you do not enter them yourself.</p></div></div>
+   <div class="card warnb"><p class="ch" style="color:var(--warn)">use the right address</p><p class="fg2" style="margin:0 0 10px">Register with the email address you gave your course organizer. If it is a Gmail address, register with Google.</p><p class="fg2" style="margin:0">The site accepts only addresses that your teacher has put on a group list. It reads your institution and group from that list, so you do not enter them yourself.</p></div></div>
    <div class="stack" style="--b:380px">${err}<div class="card" style="padding:26px">${googleButton('register', 'Register with Google')}
-   <div style="margin-top:22px;border-top:1px solid var(--line);padding-top:18px"><p class="ch">if your address is not a Google address</p><p class="fg2" style="margin:0;font-size:15px">Registration by an email link is not available yet. Write to us through <a href="/contact">Contact SAW</a>, and say which programme and group you are in.</p></div>${devForm('register')}</div>
+   <div style="margin-top:22px;border-top:1px solid var(--line);padding-top:18px"><p class="ch">if your address is not a Google address</p><p class="fg2" style="margin:0;font-size:15px">Registration by an email link is not available yet. Write to us through <a href="/contact">Contact SAW</a>, and say which program and group you are in.</p></div>${devForm('register')}</div>
    <div class="card flat"><p class="ch">what the site keeps</p><p class="fg2" style="margin:0 0 6px;font-size:15px">Your email address and the institution and group on your teacher’s list, your answers to exercises and your project links. It does not keep your name or photo from Google.</p><p class="fg2" style="margin:0 0 6px;font-size:15px">Your lesson ratings are anonymous and never affect grades.</p><a href="/privacy" style="min-height:44px;display:inline-flex;align-items:center">Read the privacy notice</a><p class="small" style="font-size:13px">By registering, you confirm that you have read the privacy notice.</p></div>
    </div></div></div>`;
 }

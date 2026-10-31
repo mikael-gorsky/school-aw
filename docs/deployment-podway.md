@@ -30,7 +30,7 @@ The site needs Node.js 22.13 or later and no packages. Check the Node version in
 
 Declare one service that Podway supervises. It runs `npm start` in the repository folder, with `PORT` set to the port of the pod's preview and `DATA_DIR` set to a folder in the persistent workspace. The database is a single SQLite file in that folder, so the site needs no separate database service.
 
-Ask the owner to add these secrets in the Secrets panel: `SESSION_SECRET`, a long random string that must never change afterwards; `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, from a Google OAuth client of type "Web application" whose authorised redirect address is `https://territorial-mink-85a7.podway.site/auth/google/callback`; `TEACHER_EMAILS`, the addresses that sign in as the teacher; and `DEMO_PASSWORD`, the password of the demo login. `ANTHROPIC_API_KEY` turns on @tutor and the grouping of comments, and `GITHUB_TOKEN` raises GitHub's limit for repository checks. Set `BASE_URL` to `https://territorial-mink-85a7.podway.site`. Never set `DEV_LOGIN` in the pod.
+Ask the owner to add these secrets in the Secrets panel: `SESSION_SECRET`, a long random string that must never change afterwards; `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, from a Google OAuth client of type "Web application" whose authorized redirect address is `https://territorial-mink-85a7.podway.site/auth/google/callback`; `TEACHER_EMAILS`, the addresses that sign in as the teacher; and `DEMO_PASSWORD`, the password of the demo login. `ANTHROPIC_API_KEY` turns on @tutor and the grouping of comments, and `GITHUB_TOKEN` raises GitHub's limit for repository checks. Set `BASE_URL` to `https://territorial-mink-85a7.podway.site`. Never set `DEV_LOGIN` in the pod.
 
 Before the owner shares the address, test registration, sign-in and the demo login in a signed-out browser.
 
@@ -39,3 +39,11 @@ The site resets the demo group every night at 03:00 Israel time. A pod that is s
 ## Backups
 
 `npm run backup` writes a consistent copy of the database to `backups/` while the site runs. Copy each backup out of the pod. To restore one, stop the service, replace `saw.db` in `DATA_DIR` with the backup file, delete any `saw.db-wal` and `saw.db-shm` files beside it, and start the service again. Write down here where the copies go once that is set up.
+
+## The helper and the textbook
+
+The helper reads the course textbook from `textbook-ase.txt` in `DATA_DIR` (in the pod, `~/saw-data/textbook-ase.txt`). The file is the teacher's own book and is never committed, because the repository is public. Without the file the helper still answers from the site guide and the course content. The helper and @tutor need `ANTHROPIC_API_KEY`; `HELPER_MODEL` overrides the model, which is `claude-sonnet-5-5` by default.
+
+## The service in this pod
+
+The site runs as the Podway startup service `preview-3000`, which runs `~/saw-start.sh`. That script loads the secrets, unsets `DEV_LOGIN`, sets `PORT=3000`, `DATA_DIR=~/saw-data` and `BASE_URL=https://school.mgorsky.net`, and starts `node server/main.js`. Podway's own dev server is disabled. Restart the site with `podway startup restart preview-3000`.

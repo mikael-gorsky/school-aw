@@ -31,7 +31,7 @@ export async function askTutor(question, programmeId) {
     'If the text does not contain the answer, reply with the single word PASS and nothing else.',
     'Otherwise end with a separate line in the form "Source: <heading of the section you used>".',
     '',
-    `Programme: ${p.title}`,
+    `Program: ${p.title}`,
     p.description.join(' '),
     'Modules: ' + p.modules.map(m => `${m.n}. ${m.title}: ${m.summary}`).join(' '),
     '',

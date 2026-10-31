@@ -4,7 +4,7 @@
   "intro": "In this module you learn to treat everything an agent produces as a hypothesis until it has passed a check. You will see why verification is a family of checks rather than one, the 3 ways it fails in agentic work, and the rule that no output merges without passing a gate. You will also learn how to verify a system with a model inside it, and how to gather the evidence that a change is fit to merge.",
   "ideas": [
     { "title": "Every output is a hypothesis", "text": "The agent's report that a task is finished only records that the work looks finished to the agent. Every output stays a hypothesis until it has been checked, and nothing enters the project because it looks finished." },
-    { "title": "Verification is a category, not a technique", "text": "Tests catch wrong behaviour, type checks catch values of the wrong kind, linters catch known bad patterns, manual review catches a design that is wrong as a whole, and acceptance gates check the work against the specification. No single check covers all these kinds of fault, so the skill is placing the right check at the right gate." },
+    { "title": "Verification is a category, not a technique", "text": "Tests catch wrong behavior, type checks catch values of the wrong kind, linters catch known bad patterns, manual review catches a design that is wrong as a whole, and acceptance gates check the work against the specification. No single check covers all these kinds of fault, so the skill is placing the right check at the right gate." },
     { "title": "Tests that confirm the implementation", "text": "If an agent writes its tests by reading its own code, the tests check what the code does, not what the specification asked, and they can even defend the fault. Write the tests from the specification, before the code exists or by a different agent that never sees the code." },
     { "title": "Verification theatre and the bypassed gate", "text": "A gate that catches no real fault is decoration, and it is worse than no gate because it is trusted: a coverage figure only says which lines ran, not what was checked. A gate skipped under pressure protects nothing, so the tools must refuse the merge and the team must hold the rule together." },
     { "title": "No gate, no merge", "text": "No output enters the main line without passing a gate that was defined in advance and is applied to every change. Cheap automated gates run first and the human gate runs last, so your attention goes only to work that has passed everything a machine can decide." },
@@ -33,13 +33,13 @@
       "kind": "choice",
       "question": "Your test suite reports 90% coverage. What does that figure tell you?",
       "options": [
-        ["a", "That 90% of the code's behaviour has been checked against the specification."],
+        ["a", "That 90% of the code's behavior has been checked against the specification."],
         ["b", "That 90% of the lines ran while the tests executed, whether or not anything checked them."],
         ["c", "That the change is safe to merge without a human review."],
         ["d", "That only 10% of the faults in the code are left to find."]
       ],
       "correct": "b",
-      "right": "Correct. Coverage measures how much code was exercised, not how much behaviour was checked.",
+      "right": "Correct. Coverage measures how much code was exercised, not how much behavior was checked.",
       "wrong": "Not quite. Read idea 4 again."
     },
     {
@@ -75,14 +75,14 @@
       "kind": "short",
       "question": "An agent rewrote the function that rounds invoice totals. The type checker and the linter passed, the agent's own tests (written after the code) passed, and the change was merged within the hour without anyone reading it or comparing it with the specification. Which members of the verification family were applied, which were not, and what kind of fault did each missing member leave unchecked?",
       "help": "Write your own answer first, then compare it with the teacher's answer.",
-      "model": "Type checks and linters were applied, and tests were applied only in a weak form, because the agent wrote them from its own code. So wrong behaviour against the specification was not really checked: the tests can only show that the code agrees with itself. Manual review was not applied, so a design that is wrong as a whole, such as rounding at the wrong step, was left unchecked. The acceptance gate was not applied either, so nobody checked whether the function does what the specification asked."
+      "model": "Type checks and linters were applied, and tests were applied only in a weak form, because the agent wrote them from its own code. So wrong behavior against the specification was not really checked: the tests can only show that the code agrees with itself. Manual review was not applied, so a design that is wrong as a whole, such as rounding at the wrong step, was left unchecked. The acceptance gate was not applied either, so nobody checked whether the function does what the specification asked."
     },
     {
       "id": "e6",
       "kind": "short",
       "question": "Write the acceptance criteria for one feature of your own project, or of the Tribunal, directly from its specification. Mark each criterion as checkable automatically or needing a human reading, and say why at least one must be read by a person.",
       "help": "Write your own answer first, then compare it with the teacher's answer.",
-      "model": "For the Tribunal judges: each stored verdict is exactly justified or not justified (automatic); each verdict has at least 2 reasons (automatic); a malformed or empty response is never stored as a verdict (automatic, with a stub that feeds bad responses). The reasons are drawn from the charge sheet and not invented, and each judge's reasoning is recognisably its own rather than generic (human reading). These last ones cannot be tested by any machine, so an engineer reads and signs for them as the human part of the gate. A specification whose every criterion can be automated has probably not stated the ones that matter."
+      "model": "For the Tribunal judges: each stored verdict is exactly justified or not justified (automatic); each verdict has at least 2 reasons (automatic); a malformed or empty response is never stored as a verdict (automatic, with a stub that feeds bad responses). The reasons are drawn from the charge sheet and not invented, and each judge's reasoning is recognizably its own rather than generic (human reading). These last ones cannot be tested by any machine, so an engineer reads and signs for them as the human part of the gate. A specification whose every criterion can be automated has probably not stated the ones that matter."
     }
   ]
 }

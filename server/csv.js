@@ -5,7 +5,7 @@
 
 const EMAIL = /^[^\s@,;"]+@[^\s@,;"]+\.[^\s@,;"]+$/;
 
-// Splits one CSV line, honouring quotes. The delimiter is guessed per file.
+// Splits one CSV line, honoring quotes. The delimiter is guessed per file.
 function splitLine(line, d) {
   const out = []; let cur = ''; let q = false;
   for (let i = 0; i < line.length; i++) {

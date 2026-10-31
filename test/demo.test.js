@@ -19,8 +19,8 @@ test('a wrong demo password is refused', async () => {
 
 test('the demo login opens the student side', async () => {
   const { r, jar } = await signInDemo();
-  assert.equal(r.location, '/programme');
-  for (const p of ['/programme', '/class', '/study', '/projects', '/exam', '/progress']) {
+  assert.equal(r.location, '/program');
+  for (const p of ['/program', '/class', '/study', '/projects', '/exam', '/progress']) {
     assert.equal((await req('GET', p, { jar })).status, 200, p);
   }
 });
@@ -46,7 +46,7 @@ test('the demo login cannot use any teacher action', async () => {
 
 test('the demo login has no teacher links in its pages', async () => {
   const { jar } = await signInDemo();
-  const page = await req('GET', '/programme', { jar });
+  const page = await req('GET', '/program', { jar });
   assert.doesNotMatch(page.text, /href="\/teacher/);
 });
 
@@ -85,9 +85,9 @@ test('the nightly reset deletes what was entered under the demo login', async ()
   assert.equal((await req('GET', '/class/live', { jar })).status, 401);
 });
 
-test('a programme without an exam shows no Exam finale', async () => {
+test('a program without an exam shows no Exam finale', async () => {
   const { jar } = await signInDemo();
-  const page = await req('GET', '/programme', { jar });
+  const page = await req('GET', '/program', { jar });
   assert.doesNotMatch(page.text, /href="\/exam"/);
   const exam = await req('GET', '/exam', { jar });
   assert.equal(exam.status, 200);

@@ -1,12 +1,12 @@
 # School of Agentic Work
 
-School of Agentic Work (SAW) is a teaching platform for students who are enrolled in programmes taught by Mikael Gorsky. It supports them during live lessons, in class or on Zoom, and between lessons. A team of named AI agents runs the exercises, checks projects, answers questions and reports on progress, and the teacher directs them and sets every grade.
+School of Agentic Work (SAW) is a teaching platform for students who are enrolled in programs taught by Mikael Gorsky. It supports them during live lessons, in class or on Zoom, and between lessons. A team of named AI agents runs the exercises, checks projects, answers questions and reports on progress, and the teacher directs them and sets every grade.
 
-The site does not offer programmes to the public. Every page addresses the student. A visitor who has not signed in sees each part of the site in a general form, and a person who has received the demo login can use the site as a sample student.
+The site does not offer programs to the public. Every page addresses the student. A visitor who has not signed in sees each part of the site in a general form, and a person who has received the demo login can use the site as a sample student.
 
 ## Status
 
-The first working version of the site is built and follows the agreed mockup. `docs/status.md` describes what is built, how the code is organised, how to run it, and where this version differs from the specification.
+The first working version of the site is built and follows the agreed mockup. `docs/status.md` describes what is built, how the code is organized, how to run it, and where this version differs from the specification.
 
 ## What is in the repository
 

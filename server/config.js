@@ -26,6 +26,8 @@ export const config = {
   demoPassword: env.DEMO_PASSWORD || '',
   anthropicKey: env.ANTHROPIC_API_KEY || '',
   tutorModel: env.TUTOR_MODEL || 'claude-sonnet-5-5',
+  // The helper runs on Claude Sonnet (decision of 31 October 2026).
+  helperModel: env.HELPER_MODEL || 'claude-sonnet-5-5',
   githubToken: env.GITHUB_TOKEN || '',
   devLogin: env.DEV_LOGIN === '1',
 };

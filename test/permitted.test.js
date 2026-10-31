@@ -60,7 +60,7 @@ test('moving an address to another group moves the student', async () => {
   await req('POST', '/teacher/access/permit', { jar: teacher.jar, form: { emails: 'student.two@gmail.com', institution: 'Holon Institute of Technology', code: '62121-32', programme: 'ase' } });
   const g2 = db.get("SELECT * FROM groups WHERE code = '62121-32'");
   const { jar } = await signInDev('student.two@gmail.com');
-  await req('GET', '/programme', { jar });
+  await req('GET', '/program', { jar });
   assert.equal(db.get('SELECT group_id FROM users WHERE email = ?', 'student.two@gmail.com').group_id, g2.id);
 });
 

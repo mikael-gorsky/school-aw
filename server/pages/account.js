@@ -44,9 +44,9 @@ function form(u, g, interactive) {
 export function accountPage(ctx) {
   if (ctx.role === 'visitor') {
     const sample = { first_name: 'Noa', last_name: 'Cohen', email: 'noa.cohen@gmail.com', role: 'student', comment: 'I work full time, so I join most lessons on Zoom.' };
-    return `<div class="wrap page" style="max-width:820px">${head('whoami', 'My account', 'This page shows your name and photo, the programme and group you belong to, and a comment for your teacher.')}
+    return `<div class="wrap page" style="max-width:820px">${head('whoami', 'My account', 'This page shows your name and photo, the program and group you belong to, and a comment for your teacher.')}
      ${exFrame('the account of a student', form(sample, { institution: 'Holon Institute of Technology', code: '1', programme: 'ase' }, false))}
-     ${signStrip('Sign in to see your own account.', ['your name and photo from your Google account, which you can correct', 'the institution, group and programme from your teacher’s list', 'a comment that only you and the teacher see'])}</div>`;
+     ${signStrip('Sign in to see your own account.', ['your name and photo from your Google account, which you can correct', 'the institution, group and program from your teacher’s list', 'a comment that only you and the teacher see'])}</div>`;
   }
   const u = get('SELECT * FROM users WHERE id = ?', ctx.user.id);
   const g = ctx.role === 'teacher' ? null : ctx.group;

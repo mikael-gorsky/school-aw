@@ -8,6 +8,7 @@ import { DIMENSIONS } from './model.js';
 
 const DEMO = { institution: 'SAW demo', code: 'demo', programme: 'ase' };
 const SAMPLES = 33;
+const DEMO_LESSONS = [[1], [2, 3], [4, 6], [5, 7], [8, 9], [10], [11], [12, 13], [14, 15], [16, 17], [18, 19]].map((modules, i) => ({ n: i + 1, modules }));
 const HELPED = ['Live exercises', 'Examples', 'Slides', 'Pace', 'Questions and answers'];
 const BLOCKED = ['Too fast', 'Too slow', 'Unclear slides', 'Sound or video', 'Too much at once'];
 const COMMENTS = [
@@ -85,11 +86,10 @@ function build() {
     people.push({ id: u.id, p: 0.62 + r() * 0.38, q: 0.5 + r() * 0.45, fade: i % 9 === 0 ? 0.12 : 0 });
   }
 
-  // The lessons follow the programme's lesson plan. The first half are over, the
-  // middle one is running, and the rest are planned: for ASE, lessons 1 to 5 are
-  // over, lesson 6 is running, and lessons 7 to 11 are planned.
+  // The demo groups its modules into 11 lessons, as a teacher might in a
+  // semester. The first 5 are over, lesson 6 is running, and the rest are planned.
   const prog = programme(DEMO.programme);
-  const plan = prog.lessons || prog.modules.map(m => ({ n: m.n, modules: [m.n] }));
+  const plan = DEMO_LESSONS.filter(l => l.modules.every(n => prog.modules.some(m => m.n === n)));
   const LIVE = Math.ceil(plan.length / 2);
   const nowMs = Date.now();
   const lessons = [];

@@ -2,13 +2,13 @@
 
 ## What this project is
 
-School of Agentic Work (SAW) is a teaching platform for students enrolled in programmes taught by Mikael Gorsky. The first programme on it is Agentic software engineering (ASE), taught at Holon Institute of Technology. The platform supports students during live lessons and between them, and it shows potential clients of the teacher how deep this support is.
+School of Agentic Work (SAW) is a teaching platform for students enrolled in programs taught by Mikael Gorsky. The first program on it is Agentic software engineering (ASE), taught at Holon Institute of Technology. The platform supports students during live lessons and between them, and it shows potential clients of the teacher how deep this support is.
 
 Mikael Gorsky owns the project and makes every decision about it. You work for him.
 
 ## Read these before any work
 
-Read `docs/specification.md` for what the site does and the rules it follows. Read `docs/decisions.md` for what has been decided and why. Open `mockup/index.html` for the agreed design. The mockup is the reference for layout, wording and behaviour. Where the specification and the mockup disagree, the specification wins, and you report the difference to the owner. Read `docs/deployment-podway.md` before you run, deploy or store anything: the site runs in the owner's Podway pod. Read `docs/status.md` for what is built, how the code is organised and where the build differs from the specification.
+Read `docs/specification.md` for what the site does and the rules it follows. Read `docs/decisions.md` for what has been decided and why. Open `mockup/index.html` for the agreed design. The mockup is the reference for layout, wording and behavior. Where the specification and the mockup disagree, the specification wins, and you report the difference to the owner. Read `docs/deployment-podway.md` before you run, deploy or store anything: the site runs in the owner's Podway pod. Read `docs/status.md` for what is built, how the code is organized and where the build differs from the specification.
 
 ## Rules of the product
 
@@ -16,7 +16,7 @@ Every text on the site addresses the student. Do not write copy aimed at clients
 
 A visitor who has not signed in sees every section in a general form: how it works, an example screen that cannot be used, and what signing in adds. Never hide a section behind a lock. After sign-in, the same page shows the student's own data.
 
-A student can register only with an address on the teacher's list of permitted addresses. The institution, group and programme come from that list, and the student never enters them.
+A student can register only with an address on the teacher's list of permitted addresses. The institution, group and program come from that list, and the student never enters them.
 
 The demo login is a sample student. It sees only the student side, it can never open a teacher page, and everything entered under it is deleted every night.
 
@@ -30,7 +30,7 @@ Agents never grade, never add a person to a group and never change a rule on the
 
 ## How to write copy
 
-Write in plain English, in full sentences with a subject and a verb. Use the plainest word that carries the meaning. Write numbers as digits. Use capital letters only at the start of a sentence or heading and for names and abbreviations. Name things by what a student recognises, not by how the system is built.
+Write in plain English with American spelling (program, practice, behavior, organize), in full sentences with a subject and a verb. Use the plainest word that carries the meaning. Write numbers as digits. Use capital letters only at the start of a sentence or heading and for names and abbreviations. Name things by what a student recognizes, not by how the system is built.
 
 ## How to work
 

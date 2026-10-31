@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS groups(
   UNIQUE(institution, code, programme)
 );
 -- The list of permitted addresses. An address carries its group, and the group
--- carries the institution and programme (decision of 31 October 2026).
+-- carries the institution and program (decision of 31 October 2026).
 -- There is deliberately no column for an ID number.
 CREATE TABLE IF NOT EXISTS permitted(
   email TEXT PRIMARY KEY,
@@ -205,6 +205,8 @@ function migrate() {
   // first one, and "modules" the full list (decision of 31 October 2026).
   const haveLesson = new Set(db.prepare('PRAGMA table_info(lessons)').all().map(c => c.name));
   if (!haveLesson.has('modules')) db.exec('ALTER TABLE lessons ADD COLUMN modules TEXT');
+  // Questions to the helper, counted per person and day for the daily limit.
+  db.exec('CREATE TABLE IF NOT EXISTS helper_usage(who TEXT NOT NULL, day TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY(who, day))');
   // The teacher may give the English names of students on the list, which the
   // student then sees at registration (decision of 31 October 2026).
   const havePermit = new Set(db.prepare('PRAGMA table_info(permitted)').all().map(c => c.name));
@@ -220,7 +222,7 @@ function migrate() {
 }
 
 export function getDb() {
-  if (!db) throw new Error('Database is not initialised');
+  if (!db) throw new Error('Database is not initialized');
   return db;
 }
 

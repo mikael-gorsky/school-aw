@@ -6,13 +6,13 @@ This file tells the next session where the work stands. It was written on 31 Oct
 
 The site is a working web application that follows the agreed mockup. Every page of the mockup exists at its own address, and each page works for the 4 kinds of user: the visitor, the student, the demo login and the teacher.
 
-A visitor sees the general form of every section with example screens. A student registers with Google, and the site places the student in the group written beside the address on the teacher's list. The student answers live exercises during a lesson, rates the lesson afterwards, answers the course survey, studies the module pages and practises, asks the tutor, submits project repositories for a check by @reviewer, follows the readiness for the exam and sees personal progress against the group.
+A visitor sees the general form of every section with example screens. A student registers with Google, and the site places the student in the group written beside the address on the teacher's list. The student answers live exercises during a lesson, rates the lesson afterwards, answers the course survey, studies the module pages and practices, asks the tutor, submits project repositories for a check by @reviewer, follows the readiness for the exam and sees personal progress against the group.
 
 The teacher runs a lesson from the Learn in class console: he adds a lesson, starts it, releases each exercise, watches the answers arrive, shows the results to the class and ends the lesson. He sees the class progress, the satisfaction report, the questions that the tutor passed on, the project checks and the readiness of the class. He keeps the list of permitted addresses, uploads a Moodle export, handles refused registrations and messages from Contact SAW, and sees the activity of the agents.
 
 The demo login is a sample student in a demo group of 33 sample students, with 8 lessons held and lesson 9 running. In the demo group @proctor opens the exercises by itself every 2 minutes, so that a visitor with the demo login sees a live lesson at any time. The whole demo group is built again from a fixed seed every night at 03:00 Israel time, and the teacher can also reset it from the Groups and access page.
 
-## How the code is organised
+## How the code is organized
 
 The site needs only Node.js 22.13 or later. It has no packages to install, because it uses the database built into Node (`node:sqlite`) and Node's own HTTP server and test runner.
 
@@ -20,7 +20,7 @@ The site needs only Node.js 22.13 or later. It has no packages to install, becau
 
 `server/db.js` creates the database tables. `server/model.js` computes every figure that the pages show, including the threshold of 5 for ratings. `server/auth.js` handles sessions, Google sign-in, the demo login and the list of permitted addresses. `server/csv.js` reads only the email and group columns of a CSV file. `server/reviewer.js` checks a GitHub repository. `server/ai.js` sends the tutor's questions and the comments for grouping into themes to the Claude API. `server/demo.js` builds and resets the demo group.
 
-The content of a programme lives in `content/<programme>/`: `programme.json` holds the description, parts, modules, grade parts, project rules and documents; `module-NN.json` holds a study page; `lessons.json` holds the live exercises of each module; and `rules.md` is the text from which @tutor answers.
+The content of a program lives in `content/<programme>/`: `programme.json` holds the description, parts, modules, grade parts, project rules and documents; `module-NN.json` holds a study page; `lessons.json` holds the live exercises of each module; and `rules.md` is the text from which @tutor answers.
 
 The tests in `test/` cover the rules that protect access and privacy, as CLAUDE.md requires. Run them with `npm test`.
 
@@ -32,7 +32,7 @@ In the pod, run `npm start` as a service that Podway supervises, on the port of 
 
 `SESSION_SECRET` must stay the same for the life of the site. It signs the sessions, and it also makes the one-way keys that let a student find their own anonymous rating. If it changes, every student could rate each lesson again.
 
-The Google sign-in client must list `<BASE_URL>/auth/google/callback` as an authorised redirect address.
+The Google sign-in client must list `<BASE_URL>/auth/google/callback` as an authorized redirect address.
 
 `npm run backup` writes a copy of the database to `backups/`. The copy must also be moved out of the pod, because the pod's workspace is not a backup.
 

@@ -255,7 +255,7 @@ details.data table{min-width:0;width:auto;margin-top:6px}
 .kv dd{margin:0;color:var(--fg2)}
 
 /* 1340px rather than the mockup's 1180px, so that the name in the header fits
-   beside My programme and My progress (decision of 31 October 2026). */
+   beside My program and My progress (decision of 31 October 2026). */
 @container app (max-width:1340px){
   .nav a .lab-l{display:none}
   .nav a .lab-s{display:inline}
@@ -319,10 +319,34 @@ input[type=file].inp{padding:10px 14px}
 /* My account: the user's photo, or initials when there is none. */
 .avatar{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:50%;object-fit:cover;background:var(--surface);border:1px solid var(--line);color:var(--fg2);font-family:var(--mono);font-weight:700}
 .acct .who[href="/account"]{max-width:220px;overflow:hidden;text-overflow:ellipsis}
-/* On a tablet the header keeps only the name; My programme and My progress move
+/* On a tablet the header keeps only the name; My program and My progress move
    into the menu, as on a phone, so that the header never runs off the screen. */
 @container app (max-width:960px){
   .acct .who:not([href="/account"]){display:none}
   .menu-btn{display:inline-flex}
   .drawer.open{display:block}
+}
+/* The helper: a round button with the teacher's photo, and its chat panel. */
+.helper-fab{position:fixed;right:20px;bottom:20px;z-index:60;width:60px;height:60px;padding:0;border-radius:50%;border:2px solid var(--accent);background:var(--surface);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45);overflow:hidden}
+.helper-fab img{width:100%;height:100%;object-fit:cover;display:block}
+.helper-fab[aria-expanded="true"]{display:none}
+.helper{position:fixed;right:20px;bottom:20px;z-index:61;width:min(420px,calc(100vw - 32px));height:min(620px,calc(100vh - 40px));display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.helper[hidden]{display:none}
+.helper-h{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.helper-h img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.helper-h div{flex:1;min-width:0}.helper-h b{display:block;font-size:16px}.helper-h span{display:block;font-size:13px;color:var(--muted)}
+.helper-x{background:none;border:0;color:var(--muted);cursor:pointer;min-width:40px;min-height:40px}
+.helper-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.hm{max-width:88%;padding:10px 13px;border-radius:12px;font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.hm.a{align-self:flex-start;background:var(--deep);border:1px solid var(--line)}
+.hm.u{align-self:flex-end;background:var(--accent);color:#06140d}
+.hm.e{align-self:flex-start;color:var(--warn);border:1px solid var(--warn)}
+.hm.w{align-self:flex-start;color:var(--muted);font-style:italic}
+.helper-f{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.helper-f textarea{min-height:44px;resize:none}
+.helper-n{margin:0;padding:0 14px 10px;font-size:12px;color:var(--muted)}
+/* The helper sits outside .app, so it uses a media query, not the container. */
+@media (max-width:640px){
+  .helper-fab{bottom:84px;right:14px;width:54px;height:54px}
+  .helper{right:8px;left:8px;bottom:8px;width:auto;height:calc(100vh - 16px)}
 }

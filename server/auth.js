@@ -84,7 +84,7 @@ export function demoLogin(login, password) {
   return get("SELECT * FROM users WHERE role = 'demo' AND email = 'demo'") || null;
 }
 
-// Google sign-in, OpenID Connect authorisation code flow.
+// Google sign-in, OpenID Connect authorization code flow.
 export function googleStart(intent) {
   if (!googleConfigured()) return null;
   const state = crypto.randomBytes(24).toString('base64url');
