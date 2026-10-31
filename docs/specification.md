@@ -104,6 +104,8 @@ The teacher sees how many projects are submitted and passing, the most common fa
 
 ### 4.6 Exam finale
 
+A programme without a final exam sets `"exam": false` in its `programme.json`. Its students, the teacher's view of its groups and the visitor's view of the site then show no Exam finale, no exam readiness and no @examiner. ASE has no final exam, so the section below applies only to a programme that has one.
+
 The exam format below is a draft for the owner to correct.
 
 The examiner agent follows each student's readiness against 6 conditions: the modules taught so far are studied; at least 80% of live exercises are answered; practice reaches 70% in each part; the own project passes every check; the Tribunal is submitted and passes every check; at least 1 practice exam is taken. Practice exams have 20 questions on the modules taught so far, take about 30 minutes and never count towards the grade.

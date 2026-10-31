@@ -67,3 +67,11 @@ The list of permitted addresses may carry each student's first and last name in 
 The 44 students of the HIT fall 2026 ASE course were added from the Moodle participants export, with their English names, email addresses and groups 62121-1 and 62121-2, under the institution HIT. The export gives each student a second group, 662121-1 or 662121-2, which was left out because it repeats the first. The Hebrew names were not imported. The export was read once in the pod and is not kept in the repository.
 
 A CSV file of students has 5 columns: first name, last name, email, group and institution. The site reads only these, and never an ID number. Names may be left out, and then they come from the student's Google account. A user can change their own name freely on My account, and once saved, neither the list nor Google changes it again. The teacher set this rule so that one file can carry a whole course, and so that each student decides how their name appears. It replaces the rule of 27 October that only the email and group columns are read.
+
+The syllabus of 31 October 2026 is the full description of the ASE course, and the site follows it where they differ: the 4 parts and 19 modules under their syllabus names, both projects running in parallel from the first lesson, and the grade in 3 equal parts of 33%: class engagement, the Tribunal and the individual project. The rule that only a public GitHub repository is graded stays, although the syllabus does not state it.
+
+ASE has no final exam. Exam finale, exam readiness and @examiner are hidden for a programme without an exam, rather than removed, so that another programme can still have one.
+
+The lessons follow the syllabus lesson plan of 11 content lessons, most of which cover 2 modules. The teacher adds a lesson by choosing it from the plan, and the lesson takes the live exercises of each of its modules. The demo group runs on the same plan.
+
+The study pages and live exercises of all 19 modules are written from the course textbook, with each page naming the chapter and sections it rests on. Where the textbook has no chapter for a module, the page uses only what the book says elsewhere, and does not fill the gap from general knowledge, so that the teacher can see what he still has to supply.

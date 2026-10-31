@@ -54,7 +54,7 @@ The teacher's Study alone page has no chart of the most asked topics, because th
 
 The tutor is not closed during the exam yet.
 
-Only module 1 has a study page and practice exercises, and only modules 1 and 9 have live exercises in `content/ase/lessons.json`. In the demo group the other lessons use sample questions. The content of modules 2 to 19 is an open question in the specification.
+All 19 ASE modules have a study page with practice exercises and 4 live exercises, written from the course textbook. Modules 7, 8, 9, 18 and 19 have no chapter of their own in the textbook, so their pages rest on passages from other chapters and are thinner; the teacher adds the rest. Module 17 has no material on governance, and module 12 none on permissions, which module 5 covers.
 
 The grade weights, the exam settings, the dates and the period for which data is kept are still placeholders. The teacher enters the weights and exam settings on the teacher's Exam finale page.
 
