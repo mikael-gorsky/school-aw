@@ -1,0 +1,17 @@
+{
+  "name": "school-of-agentic-work",
+  "version": "0.1.0",
+  "description": "School of Agentic Work: a teaching platform that supports students during and between live lessons, run by named agents under the teacher.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node --no-warnings server/main.js",
+    "dev": "DEV_LOGIN=1 node --no-warnings --watch server/main.js",
+    "seed-demo": "node --no-warnings scripts/seed-demo.js",
+    "backup": "node --no-warnings scripts/backup.js",
+    "test": "node --no-warnings --test test/*.test.js"
+  }
+}

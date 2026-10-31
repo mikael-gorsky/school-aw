@@ -1,0 +1,57 @@
+{
+  "id": "ase",
+  "title": "Agentic software engineering",
+  "description": [
+    "Agentic software engineering taught as a discipline, not a tool. The course teaches how to build good software by directing AI agents, and it measures good against industry standards: software that is functionally suitable, reliable, secure, maintainable, and fit for the person who uses it.",
+    "From module 6 to the end, you build one running project and carry it from a rough intent to a finished system."
+  ],
+  "parts": [
+    { "n": 1, "title": "Building the ontology", "from": 1, "to": 5, "text": "The models the rest of the course depends on, built before there is anything to construct." },
+    { "n": 2, "title": "Setting up the environment", "from": 6, "to": 9, "text": "The setup for building, together with the first conception of the running project." },
+    { "n": 3, "title": "The craft of the build", "from": 10, "to": 17, "text": "The heart of the discipline, each module adding one dimension to a turn of the running project." },
+    { "n": 4, "title": "The changed market", "from": 18, "to": 19, "text": "The economic and career ground the discipline lands on." }
+  ],
+  "modules": [
+    { "n": 1, "title": "What is agentic software engineering?", "summary": "Sets the subject as a discipline, with durable principles, a method that can be learned, and characteristic faults." },
+    { "n": 2, "title": "The human role: what erodes and what compounds", "summary": "What the human still owns once the agent writes most of the code." },
+    { "n": 3, "title": "Mental models of the agent", "summary": "A working picture of how the agent operates, so that it can be directed well." },
+    { "n": 4, "title": "The anatomy of an agentic workflow", "summary": "Any agentic task broken into the same 7 parts, one turn of the work." },
+    { "n": 5, "title": "The typology of agentic development environments", "summary": "A frame for judging any tool, built from 6 pillars." },
+    { "n": 6, "title": "Intent and the discipline of project conception", "summary": "Deciding what to build, and the start of the running project." },
+    { "n": 7, "title": "The architecture of a web application", "summary": "As much web architecture as directing an agent well requires." },
+    { "n": 8, "title": "Interface design and documentation", "summary": "Clarity as a control mechanism, and design that the engineer specifies rather than draws." },
+    { "n": 9, "title": "Cognified software and the economics of a model call", "summary": "Software with a model reasoning inside it, and the price and time of every call." },
+    { "n": 10, "title": "Specification and the co-evolution spiral", "summary": "The quality of the work placed in the specification, and the spiral in which problem and solution evolve together." },
+    { "n": 11, "title": "Context engineering: the agent's briefing", "summary": "Context as a budgeted resource, and the context file as a designed artefact." },
+    { "n": 12, "title": "Version control, and keeping a session on course", "summary": "Version control as the way back, and reading the drift in a session before it compounds." },
+    { "n": 13, "title": "Verification before trust", "summary": "Verification as a whole category, and the rule of no gate, no merge." },
+    { "n": 14, "title": "Multi-agent decomposition and orchestration", "summary": "Decomposition as an engineering activity, and 5 workflow patterns." },
+    { "n": 15, "title": "Designing multi-agent workflows", "summary": "Coordination between agents as a designed artefact." },
+    { "n": 16, "title": "Review and quality, and the onboarding of legacy code", "summary": "Review at the centre of the discipline, the Merge-Readiness Pack in full, and legacy code." },
+    { "n": 17, "title": "Building secure software", "summary": "Security as a built-in quality, including the prompt injection peculiar to a cognified product." },
+    { "n": 18, "title": "Entrepreneurship in the age of AI coding", "summary": "How cheap building moved the bottleneck, and the unit economics of a cognified product." },
+    { "n": 19, "title": "Where software work is going", "summary": "A world model for the cognified economy, and the skills that compound." }
+  ],
+  "grade": [
+    { "key": "live", "title": "live engagement", "text": "Answers to the warm-up quizzes and the exercises after each block.", "weight": "[%]" },
+    { "key": "own", "title": "own project", "text": "Your running project, in a public repository.", "weight": "[%]" },
+    { "key": "tribunal", "title": "tribunal", "text": "The second project, in a public repository.", "weight": "[%]" },
+    { "key": "exam", "title": "final exam", "text": "2 parts, at the end of the course.", "weight": "[%]" }
+  ],
+  "projects": [
+    { "kind": "own", "title": "Own project" },
+    { "kind": "tribunal", "title": "Tribunal" }
+  ],
+  "projectRules": [
+    "Only code in a public GitHub repository is graded. You may open a separate GitHub account for the course.",
+    "Keep a context file from the first day of the project.",
+    "Build along the course schedule and commit as you work, with messages that say what changed.",
+    "Write tests and keep them passing."
+  ],
+  "documents": [
+    { "title": "Programme 2-pager", "url": "" },
+    { "title": "Full curriculum", "url": "" },
+    { "title": "Project rules", "url": "" },
+    { "title": "Grading rules", "url": "" }
+  ]
+}

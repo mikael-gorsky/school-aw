@@ -1,0 +1,67 @@
+{
+  "_note": "Exercises for the live lessons, keyed by module number. When the teacher adds a lesson for a module, the site copies these items into it. A null 'correct' marks a question with no right answer. The teacher can add more items during a lesson.",
+  "1": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Which way of producing code have you used most so far?",
+      "options": [["a", "Writing it all by hand."], ["b", "Copying from examples and forums."], ["c", "Asking a chat assistant for snippets."], ["d", "Directing an agent that edits the project."]],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "How does this course treat agentic software engineering?",
+      "options": [["a", "As a discipline with durable principles, a method that can be learned, and characteristic faults."], ["b", "As a set of tools that write code faster than a person can."], ["c", "As a way to replace programmers with agents."], ["d", "As a style of writing prompts."]],
+      "correct": "a"
+    },
+    {
+      "label": "After block 2",
+      "question": "What does the long line of handovers describe?",
+      "options": [["a", "How programming moved from hand-written code to directing an agent."], ["b", "How code passes from developers to testers."], ["c", "How projects move between companies."], ["d", "How a team divides a project into tasks."]],
+      "correct": "a"
+    },
+    {
+      "label": "After block 3",
+      "question": "What rhythm does the course set for every piece of work?",
+      "options": [["a", "Equip the agent, then verify its work."], ["b", "Write the code, then ask the agent to explain it."], ["c", "Plan for a week, then build for a week."], ["d", "Let the agent work, and review only if the tests fail."]],
+      "correct": "a"
+    },
+    {
+      "label": "After block 4",
+      "question": "Which tension does this course set out to answer?",
+      "options": [["a", "The speed of production has outrun our ability to trust the result."], ["b", "Models are still too expensive for everyday coding."], ["c", "Most developers refuse to hand work to an agent."], ["d", "Agents cannot yet write code that compiles."]],
+      "correct": "a"
+    }
+  ],
+  "9": [
+    {
+      "label": "Warm-up quiz",
+      "question": "In module 8, who supplies the why of an interface specification?",
+      "options": [["a", "The engineer."], ["b", "The agent."], ["c", "The end user."], ["d", "The framework."]],
+      "correct": "a"
+    },
+    {
+      "label": "After block 1",
+      "question": "What does the course call cognified software?",
+      "options": [["a", "Software with a model reasoning inside it."], ["b", "Software written by an agent."], ["c", "Software that learns from its users' clicks."], ["d", "Software with a chat window."]],
+      "correct": "a"
+    },
+    {
+      "label": "After block 2",
+      "question": "What does module 9 ask you to make visible for every model call?",
+      "options": [["a", "Its price and its time."], ["b", "The source code of the model."], ["c", "The name of the person who wrote the prompt."], ["d", "The number of agents in the session."]],
+      "correct": "a"
+    },
+    {
+      "label": "After block 3",
+      "question": "Why does a product that calls a model need a ceiling?",
+      "options": [["a", "To stop a runaway process before it spends too much money and time."], ["b", "To keep the model's answers short."], ["c", "To meet a legal limit on model use."], ["d", "To make the agent work faster."]],
+      "correct": "a"
+    },
+    {
+      "label": "After block 4",
+      "question": "What groundwork does module 9 lay for the rest of the course?",
+      "options": [["a", "The economic groundwork for building anything that calls a model."], ["b", "The security model of the running project."], ["c", "The rules for grading projects."], ["d", "The design of the user interface."]],
+      "correct": "a"
+    }
+  ]
+}

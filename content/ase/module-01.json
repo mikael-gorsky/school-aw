@@ -1,0 +1,49 @@
+{
+  "n": 1,
+  "intro": "This module sets the subject as a discipline. It traces the long line of handovers from hand-written code to directing an agent, asks how much of the decision the agent now makes, and sets the course rhythm of equipping the agent and then verifying its work.",
+  "ideas": [
+    { "title": "A discipline, not a tool", "text": "Agentic software engineering is a body of practice with durable principles, a method that can be learned, and characteristic faults that a practitioner learns to see." },
+    { "title": "A long line of handovers", "text": "Programming has moved from hand-written code to directing an agent. Each step hands more of the decision to the machine." },
+    { "title": "The course rhythm", "text": "Each piece of work follows the same rhythm: equip the agent, then verify its work." },
+    { "title": "The central tension", "text": "The speed of production has outrun our ability to trust the result. The whole course answers this tension." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "Which tension does this course set out to answer?",
+      "options": [
+        ["a", "The speed of production has outrun our ability to trust the result."],
+        ["b", "Models are still too expensive for everyday coding."],
+        ["c", "Most developers refuse to hand work to an agent."],
+        ["d", "Agents cannot yet write code that compiles."]
+      ],
+      "correct": "a",
+      "right": "Correct. Module 1 names this tension, and the rest of the course answers it.",
+      "wrong": "Not quite. Read idea 4 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "How does this course describe agentic software engineering?",
+      "options": [
+        ["a", "A discipline with durable principles, a method that can be learned, and characteristic faults."],
+        ["b", "A set of tools that write code faster than a person can."],
+        ["c", "A way to replace programmers with agents."],
+        ["d", "A style of writing prompts for coding assistants."]
+      ],
+      "correct": "a",
+      "right": "Correct. The course treats it as a discipline, not as a tool.",
+      "wrong": "Not quite. Read idea 1 again."
+    },
+    {
+      "id": "e3",
+      "kind": "short",
+      "question": "In 2 or 3 sentences, explain why fast production of code creates a problem of trust.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "Agents now write code faster than a person can read and check it. If the engineer cannot verify the result, more speed only produces more code that nobody can trust. The course therefore teaches how to equip the agent and then verify its work."
+    }
+  ]
+}

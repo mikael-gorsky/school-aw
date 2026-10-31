@@ -1,0 +1,6 @@
+# The database and its exports hold student data and stay out of Git.
+data/
+backups/
+.env
+node_modules/
+*.log
