@@ -254,7 +254,9 @@ details.data table{min-width:0;width:auto;margin-top:6px}
 .kv dt{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-top:2px}
 .kv dd{margin:0;color:var(--fg2)}
 
-@container app (max-width:1180px){
+/* 1340px rather than the mockup's 1180px, so that the name in the header fits
+   beside My programme and My progress (decision of 31 October 2026). */
+@container app (max-width:1340px){
   .nav a .lab-l{display:none}
   .nav a .lab-s{display:inline}
 }
@@ -314,3 +316,13 @@ label.tog:has(input:focus-visible){outline:2px solid var(--accent);outline-offse
 @container app (max-width:640px){ .survey-row{grid-template-columns:1fr} }
 select.inp{appearance:auto;background:var(--deep)}
 input[type=file].inp{padding:10px 14px}
+/* My account: the user's photo, or initials when there is none. */
+.avatar{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:50%;object-fit:cover;background:var(--surface);border:1px solid var(--line);color:var(--fg2);font-family:var(--mono);font-weight:700}
+.acct .who[href="/account"]{max-width:220px;overflow:hidden;text-overflow:ellipsis}
+/* On a tablet the header keeps only the name; My programme and My progress move
+   into the menu, as on a phone, so that the header never runs off the screen. */
+@container app (max-width:960px){
+  .acct .who:not([href="/account"]){display:none}
+  .menu-btn{display:inline-flex}
+  .drawer.open{display:block}
+}

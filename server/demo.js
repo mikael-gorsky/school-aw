@@ -58,13 +58,18 @@ function clear() {
   }
 }
 
+// Made-up names for the demo login and the sample students, so that the demo
+// shows My account and the teacher's lists as they look with real students.
+const FIRST = ['Noa', 'Daniel', 'Maya', 'Yonatan', 'Tamar', 'Omer', 'Shira', 'Ariel', 'Yael', 'Itai', 'Michal', 'Eitan', 'Roni', 'Amit', 'Lior', 'Hila', 'Gal', 'Nadav', 'Dana', 'Tomer', 'Adi', 'Ido', 'Neta', 'Alon', 'Rotem', 'Yuval', 'Inbar', 'Guy', 'Sapir', 'Oren', 'Liat', 'Ran', 'Efrat', 'Avi'];
+const LAST = ['Cohen', 'Levi', 'Mizrahi', 'Peretz', 'Biton', 'Friedman', 'Azulay', 'Katz', 'Shapiro', 'Dahan', 'Avraham', 'Golan', 'Ben-David', 'Klein', 'Rosen', 'Halevi', 'Amar', 'Barak', 'Segal', 'Weiss', 'Ohana', 'Gabay', 'Malka', 'Navon', 'Sasson', 'Tal', 'Harel', 'Stern', 'Carmi', 'Erez', 'Mor', 'Paz', 'Shalom', 'Yosef'];
+
 function build() {
   const r = rng(20261031);
   const pick = a => a[Math.floor(r() * a.length)];
   const t0 = now();
   run('INSERT INTO groups(institution, code, programme, is_demo, created_at) VALUES(?, ?, ?, 1, ?)', DEMO.institution, DEMO.code, DEMO.programme, t0);
   const g = demoGroup();
-  run("INSERT INTO users(email, role, group_id, registered_at) VALUES('demo', 'demo', ?, ?)", g.id, t0);
+  run("INSERT INTO users(email, role, group_id, registered_at, first_name, last_name) VALUES('demo', 'demo', ?, ?, ?, ?)", g.id, t0, FIRST[0], LAST[0]);
   const demo = get("SELECT * FROM users WHERE role = 'demo'");
 
   // Each sample student has a steady habit of answering and a level of accuracy.
@@ -72,7 +77,7 @@ function build() {
   const people = [{ id: demo.id, p: 0.96, q: 0.78, fade: 0 }];
   for (let i = 1; i <= SAMPLES; i++) {
     const email = `student${String(i).padStart(2, '0')}@example.org`;
-    run("INSERT INTO users(email, role, group_id, registered_at, last_seen) VALUES(?, 'sample', ?, ?, ?)", email, g.id, t0, t0);
+    run("INSERT INTO users(email, role, group_id, registered_at, last_seen, first_name, last_name) VALUES(?, 'sample', ?, ?, ?, ?, ?)", email, g.id, t0, t0, FIRST[i], LAST[i]);
     const u = get('SELECT id FROM users WHERE email = ?', email);
     people.push({ id: u.id, p: 0.62 + r() * 0.38, q: 0.5 + r() * 0.45, fade: i % 9 === 0 ? 0.12 : 0 });
   }

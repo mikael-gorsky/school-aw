@@ -118,6 +118,13 @@ test('module clarity and survey figures stay hidden below 5 answers', async () =
   assert.equal(s.recommend, null);
 });
 
+test('ratings carry no name or photo', () => {
+  for (const t of ['lesson_ratings', 'module_ratings', 'survey_answers', 'tutor_passed']) {
+    const cols = db.all(`PRAGMA table_info("${t}")`).map(c => c.name);
+    for (const c of ['first_name', 'last_name', 'photo']) assert.ok(!cols.includes(c), `${t}.${c}`);
+  }
+});
+
 test('a question to the tutor reaches the AI service without the name or address', async () => {
   const sent = [];
   const original = globalThis.fetch;
@@ -132,12 +139,14 @@ test('a question to the tutor reaches the AI service without the name or address
     const email = 'curious.student@gmail.com';
     await req('POST', '/teacher/access/permit', { jar: teacher.jar, form: { emails: email, institution: 'Test', code: 'tutor', programme: 'ase' } });
     const { jar } = await signInDev(email);
+    db.run('UPDATE users SET first_name = ?, last_name = ?, comment = ? WHERE email = ?', 'Zebulon', 'Quixote', 'works nights', email);
     const r = await req('POST', '/api/tutor', { jar, json: { question: 'Does my repository have to be public?' } });
     assert.equal(r.status, 200);
     assert.equal(r.json().answer, 'Only public repositories are graded.');
     assert.equal(sent.length, 1);
     assert.ok(!sent[0].includes(email));
     assert.ok(!sent[0].includes('curious'));
+    for (const w of ['Zebulon', 'Quixote', 'works nights']) assert.ok(!sent[0].includes(w), w);
   } finally {
     globalThis.fetch = original;
   }

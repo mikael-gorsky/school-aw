@@ -188,7 +188,25 @@ export function initDb(file) {
   db.exec('PRAGMA foreign_keys = ON;');
   if (target !== ':memory:') db.exec('PRAGMA journal_mode = WAL;');
   db.exec(SCHEMA);
+  migrate();
   return db;
+}
+
+// Columns added after the first version. CREATE TABLE IF NOT EXISTS does not add
+// columns to a table that already exists, so they are added here once.
+// Names and the photo come from Google, and the comment is written by the user
+// (decision of 31 October 2026).
+function migrate() {
+  const have = new Set(db.prepare('PRAGMA table_info(users)').all().map(c => c.name));
+  for (const col of ['first_name', 'last_name', 'comment']) {
+    if (!have.has(col)) db.exec(`ALTER TABLE users ADD COLUMN ${col} TEXT`);
+  }
+  db.exec(`CREATE TABLE IF NOT EXISTS user_photos(
+    user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    data BLOB NOT NULL,
+    updated_at TEXT NOT NULL
+  )`);
 }
 
 export function getDb() {

@@ -14,7 +14,7 @@ export function members(groupId) {
   return all("SELECT * FROM users WHERE group_id = ? AND role IN ('student','demo','sample') ORDER BY email", groupId);
 }
 export function permittedOf(groupId) {
-  return all(`SELECT p.email, p.added_at, u.id AS user_id, u.registered_at, u.last_seen
+  return all(`SELECT p.email, p.added_at, u.id AS user_id, u.first_name, u.last_name, u.registered_at, u.last_seen
               FROM permitted p LEFT JOIN users u ON u.email = p.email WHERE p.group_id = ? ORDER BY p.email`, groupId);
 }
 export function instShort(name) {

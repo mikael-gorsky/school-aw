@@ -1,5 +1,6 @@
 // The page layout and the small building blocks shared by all pages.
 // Markup and class names follow mockup/index.html, the agreed design.
+import { displayName } from './auth.js';
 
 export const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const pad = n => String(n).padStart(2, '0');
@@ -96,14 +97,18 @@ function header(ctx) {
   const nav = MAIN.map(m => `<a href="${href(m.k)}"${isCur(m.k) ? ' aria-current="page"' : ''}>${I[m.ic]}<span class="lab-l">${m.t}</span><span class="lab-s">${m.s}</span></a>`).join('');
   let drawer = `<p class="lbl">${r === 'teacher' ? 'teacher' : 'your course'}</p>` + MAIN.map(m => `<a href="${href(m.k)}"${isCur(m.k) ? ' aria-current="page"' : ''}>${I[m.ic]}${m.t}</a>`).join('');
   let acct = '', sub = '';
+  // The last name and the status open My account, which holds Sign out
+  // (decision of 31 October 2026).
+  const me = r === 'visitor' ? '' : `<a class="who" href="/account"${cur('/account')} title="My account"><span class="dot${r === 'student' ? '' : ' h'}"></span>${esc(displayName(ctx.user))} · ${r}</a>`;
   if (r === 'visitor') {
     acct = `<a class="who" href="/register"${cur('/register')}>Register</a><a class="btn out" href="/signin" style="min-height:40px">Sign in</a>`;
     drawer += `<p class="lbl">you</p><a href="/programme"${cur('/programme')}>My programme</a><a href="/progress"${cur('/progress')}>My progress</a><a href="/signin"${cur('/signin')}>Sign in</a><a href="/register"${cur('/register')}>Register to use the service</a>`;
   } else if (r === 'student' || r === 'demo') {
-    acct = `<a class="who" href="/programme"${cur('/programme')}>My programme</a><a class="who" href="/progress"${cur('/progress')}><span class="dot${r === 'demo' ? ' h' : ''}"></span>My progress</a>`;
-    drawer += `<p class="lbl">you · ${esc(ctx.user.email)}</p><a href="/programme"${cur('/programme')}>My programme</a><a href="/progress"${cur('/progress')}>My progress</a>`;
+    acct = `<a class="who" href="/programme"${cur('/programme')}>My programme</a><a class="who" href="/progress"${cur('/progress')}>My progress</a>${me}`;
+    drawer += `<p class="lbl">you · ${esc(ctx.user.email)}</p><a href="/account"${cur('/account')}>My account · ${esc(displayName(ctx.user))}</a><a href="/programme"${cur('/programme')}>My programme</a><a href="/progress"${cur('/progress')}>My progress</a>`;
   } else {
-    acct = '<span class="who"><span class="dot h"></span>teacher</span>';
+    acct = me;
+    drawer += `<p class="lbl">you · ${esc(ctx.user.email)}</p><a href="/account"${cur('/account')}>My account · ${esc(displayName(ctx.user))}</a>`;
     const T = [['/teacher/progress', 'Class progress'], ['/teacher/satisfaction', 'Satisfaction'], ['/teacher/access', 'Groups and access'], ['/teacher/agents', 'Agents']];
     sub = `<div class="subnav"><div class="wrap in">${T.map(a => `<a href="${a[0]}${ctx.groupQuery || ''}"${p === a[0] ? ' aria-current="page"' : ''}>${a[1].toLowerCase()}</a>`).join('')}</div></div>`;
     drawer += '<p class="lbl">reports and admin</p>' + T.map(a => `<a href="${a[0]}"${cur(a[0])}>${a[1]}</a>`).join('');

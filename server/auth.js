@@ -91,7 +91,8 @@ export function googleStart(intent) {
     client_id: config.google.clientId,
     redirect_uri: `${config.baseUrl}/auth/google/callback`,
     response_type: 'code',
-    scope: 'openid email',
+    // "profile" gives the name and photo shown on My account (decision of 31 October 2026).
+    scope: 'openid email profile',
     state,
     prompt: 'select_account',
   });
@@ -123,5 +124,39 @@ export async function googleFinish(query) {
   if (!issOk || payload.aud !== config.google.clientId || !payload.email || payload.email_verified === false) {
     throw new Error('Google did not confirm the email address.');
   }
-  return { email: normEmail(payload.email), intent: row.intent };
+  return {
+    email: normEmail(payload.email), intent: row.intent,
+    profile: { first: payload.given_name || '', last: payload.family_name || '', picture: payload.picture || '' },
+  };
 }
+
+// Names from Google fill only empty fields, so a name the user corrected on
+// My account stays. The photo is copied at every sign-in and served by the
+// site itself, because Google's photo addresses can change.
+export async function applyProfile(userId, profile) {
+  if (!profile) return;
+  const clip = v => String(v || '').trim().slice(0, 80) || null;
+  run('UPDATE users SET first_name = COALESCE(first_name, ?), last_name = COALESCE(last_name, ?) WHERE id = ?', clip(profile.first), clip(profile.last), userId);
+  const photo = await fetchPhoto(profile.picture);
+  if (photo) {
+    run(`INSERT INTO user_photos(user_id, type, data, updated_at) VALUES(?, ?, ?, ?)
+         ON CONFLICT(user_id) DO UPDATE SET type = excluded.type, data = excluded.data, updated_at = excluded.updated_at`, userId, photo.type, photo.data, now());
+  }
+}
+
+const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+async function fetchPhoto(url) {
+  try {
+    const u = new URL(url);
+    if (u.protocol !== 'https:' || !u.hostname.endsWith('.googleusercontent.com')) return null;
+    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    const type = String(res.headers.get('content-type') || '').split(';')[0].trim();
+    if (!res.ok || !PHOTO_TYPES.includes(type)) return null;
+    const data = new Uint8Array(await res.arrayBuffer());
+    return data.length && data.length <= 300e3 ? { type, data } : null;
+  } catch {
+    return null;
+  }
+}
+
+export const displayName = u => (u ? u.last_name || u.first_name || (u.role === 'demo' ? 'demo' : u.email.split('@')[0]) : '');

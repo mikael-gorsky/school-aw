@@ -5,13 +5,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { config, secureCookies } from './config.js';
 import { all, get, run, now, log, setting, setSetting } from './db.js';
-import { COOKIE, createSession, sessionUser, endSession, admit, demoLogin, googleStart, googleFinish, normEmail } from './auth.js';
+import { COOKIE, createSession, sessionUser, endSession, admit, demoLogin, googleStart, googleFinish, applyProfile, normEmail } from './auth.js';
 import { layout, HOME } from './html.js';
 import { programme } from './content.js';
 import * as M from './model.js';
 import * as P from './pages/public.js';
 import * as S from './pages/student.js';
 import * as T from './pages/teacher.js';
+import * as A from './pages/account.js';
 import { resetDemo } from './demo.js';
 import { readPermitCsv, readPermitList, isEmail } from './csv.js';
 import { parseRepo, checkRepository } from './reviewer.js';
@@ -121,9 +122,11 @@ on('GET', '/register', { title: 'Register' }, ctx => {
 on('GET', '/healthz', {}, () => ({ text: 'ok' }));
 
 // ---------- sign-in ----------
-function signInAs(ctx, email, intent) {
+async function signInAs(ctx, email, intent, profile) {
   const a = admit(email);
   if (a.refused) return { redirect: `/${intent === 'register' ? 'register' : 'signin'}?e=refused` };
+  // The profile is stored only for an address that was admitted.
+  await applyProfile(a.user.id, profile);
   const token = createSession(a.user.id);
   const role = a.user.role === 'teacher' ? 'teacher' : 'student';
   return { redirect: a.isNew ? '/register?done=1' : HOME[role], cookies: [cookie(COOKIE, token, 30 * 86400)] };
@@ -135,8 +138,8 @@ on('GET', '/auth/google', {}, ctx => {
 on('GET', '/auth/google/callback', {}, async ctx => {
   if (ctx.query.error) return { redirect: `/signin?e=${encodeURIComponent('Google sign-in was cancelled.')}` };
   try {
-    const { email, intent } = await googleFinish(ctx.query);
-    return signInAs(ctx, email, intent);
+    const { email, intent, profile } = await googleFinish(ctx.query);
+    return await signInAs(ctx, email, intent, profile);
   } catch (e) {
     return { redirect: `/signin?e=${encodeURIComponent(e.message)}` };
   }
@@ -151,6 +154,23 @@ on('POST', '/auth/demo', {}, ctx => {
   if (!user) return { redirect: '/signin?e=demo' };
   run('INSERT INTO demo_visits(path, at) VALUES(?, ?)', '/auth/demo', now());
   return { redirect: '/programme', cookies: [cookie(COOKIE, createSession(user.id), 30 * 86400)] };
+});
+// ---------- my account ----------
+// The name in the header opens this page, which also holds Sign out
+// (decision of 31 October 2026).
+on('GET', '/account', { title: 'My account' }, ctx => A.accountPage(ctx));
+on('POST', '/account', { roles: ['student', 'demo', 'teacher'] }, ctx => {
+  const clip = (v, n) => str(v, n) || null;
+  run('UPDATE users SET first_name = ?, last_name = ?, comment = ? WHERE id = ?',
+    clip(ctx.form.first_name, 80), clip(ctx.form.last_name, 80), clip(ctx.form.comment, A.COMMENT_MAX), ctx.user.id);
+  return { redirect: '/account', flash: 'Your account is saved.' };
+});
+// A photo is open to its owner and to the teacher, and to nobody else.
+on('GET', /^\/photo\/(\d+)$/, { roles: ['student', 'demo', 'teacher'] }, (ctx, id) => {
+  if (ctx.role !== 'teacher' && Number(id) !== ctx.user.id) return { status: 404, title: 'Not found', body: P.notFound() };
+  const ph = get('SELECT type, data FROM user_photos WHERE user_id = ?', Number(id));
+  if (!ph) return { status: 404, text: 'No photo' };
+  return { text: Buffer.from(ph.data), type: ph.type, headers: { 'cache-control': 'private, max-age=3600' } };
 });
 on('POST', '/auth/signout', {}, ctx => {
   endSession(ctx.cookies[COOKIE]);
@@ -256,6 +276,7 @@ on('GET', '/teacher/progress', { roles: TEACHER, title: 'Class progress' }, ctx 
 on('GET', '/teacher/satisfaction', { roles: TEACHER, title: 'Satisfaction' }, ctx => T.tSatisfaction(ctx));
 on('GET', '/teacher/access', { roles: TEACHER, title: 'Groups and access' }, ctx => T.tAccess(ctx));
 on('GET', '/teacher/agents', { roles: TEACHER, title: 'Agents' }, ctx => T.tAgents(ctx));
+on('GET', /^\/teacher\/student\/(\d+)$/, { roles: TEACHER, title: 'Student' }, (ctx, id) => A.teacherStudentPage(ctx, Number(id)));
 on('GET', '/teacher/export.csv', { roles: TEACHER }, ctx => {
   if (!ctx.group) return { redirect: '/teacher/access' };
   return { text: T.exportCsv(ctx), type: 'text/csv; charset=utf-8', headers: { 'content-disposition': `attachment; filename="saw-engagement-${ctx.group.code.replace(/[^\w-]/g, '')}.csv"` } };
