@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>School of Agentic Work</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: one dark console shell; container queries switch desktop (>1024), tablet (641-1024) and phone (<=640) */
+:root{
+  --outer:#05070A; --bg:#0D1117; --deep:#0A0D12; --surface:#161B22; --surface2:#1C232C;
+  --line:#30363D; --line2:#21262D;
+  --fg:#E6EDF3; --fg2:#C9D1D9; --muted:#9DA7B3; --dim:#8B949E;
+  --accent:#3DDC97; --accent-ink:#06281A; --accent-wash:#0D2B20; --accent-line:#1F5C44;
+  --warn:#F2CC60; --warn-line:#6B5A1E; --bad:#FF7B72; --bad-line:#6E2B28;
+  --seq1:#14382B; --seq2:#18573F; --seq3:#1F7E57; --seq4:#2BAF77; --seq5:#3DDC97;
+  --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans:Manrope, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --gut:32px;
+  color-scheme:dark;
+}
+html{background:var(--outer)}
+body{background:var(--outer);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--outer)}
+a{color:var(--accent)} a:hover{color:#7CEBB9}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3{text-wrap:balance}
+.mono{font-family:var(--mono)}
+button{font:inherit}
+
+/* prototype bar */
+.proto{background:var(--outer);border-bottom:1px solid var(--line2);font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.proto .in{max-width:1400px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.proto b{color:var(--fg2);font-weight:500}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{background:transparent;color:var(--fg2);border:0;font-family:var(--mono);font-size:12.5px;padding:0 12px;min-height:40px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+
+/* stage and device preview */
+.app{container:app / inline-size;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;position:relative}
+.stage[data-device="tablet"] .app{max-width:834px;margin-inline:auto;border-inline:1px solid var(--line)}
+.stage[data-device="phone"] .app{max-width:390px;margin-inline:auto;border-inline:1px solid var(--line)}
+.wrap{width:100%;max-width:1240px;margin-inline:auto;padding-left:max(var(--gut),env(safe-area-inset-left,0px));padding-right:max(var(--gut),env(safe-area-inset-right,0px));box-sizing:border-box}
+.main{flex:1 0 auto}
+
+/* header */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:rgba(13,17,23,.97);border-bottom:1px solid var(--line)}
+.hdr .bar{display:flex;align-items:center;gap:12px;min-height:64px}
+.brand{font-family:var(--mono);font-weight:500;font-size:15px;color:var(--fg);text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;min-height:44px}
+.brand .p{color:var(--accent)} .brand .short{display:none}
+.nav{display:flex;align-items:center;gap:2px;margin-left:auto}
+.nav a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border-radius:8px;color:var(--fg2);text-decoration:none;font-size:14.5px;font-weight:700;white-space:nowrap}
+.nav a:hover{background:var(--surface);color:var(--fg)}
+.nav a[aria-current="page"]{color:var(--accent);background:var(--accent-wash)}
+.nav svg{width:18px;height:18px;flex:0 0 18px}
+.nav a .lab-s{display:none}
+.acct{display:flex;align-items:center;gap:8px;margin-left:8px}
+.who{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:22px;color:var(--fg2);text-decoration:none;font-family:var(--mono);font-size:13px;white-space:nowrap}
+.who:hover{border-color:var(--accent);color:var(--fg)}
+.who[aria-current="page"]{border-color:var(--accent);color:var(--accent)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:0 0 8px}
+.dot.h{background:var(--warn)}
+.menu-btn{display:none;margin-left:auto;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--fg);cursor:pointer}
+.subnav{border-top:1px solid var(--line2)}
+.subnav .in{display:flex;gap:4px;overflow-x:auto;min-height:46px;align-items:center}
+.subnav a{font-family:var(--mono);font-size:13px;color:var(--muted);text-decoration:none;padding:0 12px;min-height:40px;display:inline-flex;align-items:center;border-radius:6px;white-space:nowrap}
+.subnav a[aria-current="page"]{color:var(--accent);background:var(--accent-wash)}
+.drawer{display:none;border-top:1px solid var(--line2);padding-block:8px 14px}
+.drawer a{display:flex;align-items:center;gap:10px;min-height:46px;color:var(--fg2);text-decoration:none;font-weight:700;border-bottom:1px solid var(--line2)}
+.drawer a[aria-current="page"]{color:var(--accent)}
+.drawer .lbl{font-family:var(--mono);font-size:12px;color:var(--muted);margin:12px 0 2px}
+.demo-bar{background:#221E0E;border-bottom:1px solid var(--warn-line);color:var(--fg2);font-size:14px}
+.demo-bar .in{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding-block:9px}
+.demo-bar .tag{font-family:var(--mono);font-size:12.5px;color:#0D1117;background:var(--warn);border-radius:4px;padding:1px 8px;font-weight:700}
+.demo-bar a{color:var(--warn);min-height:32px;display:inline-flex;align-items:center}
+
+/* phone tab bar */
+.tabbar{display:none;position:sticky;bottom:0;z-index:6;background:rgba(13,17,23,.98);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.tabbar .in{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:60px;color:var(--muted);text-decoration:none;font-size:11.5px;font-weight:700}
+.tabbar a svg{width:22px;height:22px}
+.tabbar a[aria-current="page"]{color:var(--accent)}
+
+/* type and blocks */
+.page{padding-block:40px 80px}
+.eyebrow{font-family:var(--mono);font-size:14px;color:var(--muted);margin:0 0 12px}
+.eyebrow .p{color:var(--accent)}
+.h1{font-size:40px;line-height:1.08;letter-spacing:-.025em;font-weight:800;margin:0 0 12px}
+.h2{font-size:28px;line-height:1.15;letter-spacing:-.02em;font-weight:800;margin:0 0 10px}
+.h3{font-size:19px;line-height:1.3;font-weight:800;margin:0 0 6px}
+.lede{font-size:18px;color:var(--fg2);max-width:64ch;margin:0}
+.small{font-size:14px;color:var(--muted);margin:0}
+.muted{color:var(--muted)} .fg2{color:var(--fg2)}
+.pagehead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px 24px;margin-bottom:28px}
+.pagehead > div{min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.section{margin-top:40px}
+.sechead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px;margin-bottom:14px}
+.sechead .h2,.sechead .h3{margin:0}
+.cols{display:flex;flex-wrap:wrap;gap:20px;align-items:stretch}
+.cols > *{flex:1 1 var(--b,320px);min-width:0}
+.stack{display:flex;flex-direction:column;gap:20px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;box-sizing:border-box}
+.card.hl{border-color:var(--accent)}
+.card.flat{background:var(--deep)}
+.card.dash{background:transparent;border-style:dashed;border-color:#484F58}
+.card.warnb{border-color:var(--warn-line)}
+.ch{font-family:var(--mono);font-size:12.5px;color:var(--accent);margin:0 0 12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ch .r{color:var(--muted)}
+.note{font-size:13.5px;color:var(--muted);margin:12px 0 0}
+
+/* controls */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:8px;font-family:var(--sans);font-weight:800;font-size:15px;cursor:pointer;text-decoration:none;border:1px solid transparent;box-sizing:border-box;text-align:center}
+.btn.pri{background:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{background:#5BE6A9;color:var(--accent-ink)}
+.btn.sec{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn.sec:hover{border-color:var(--fg2);color:var(--fg)}
+.btn.out{background:transparent;color:var(--accent);border-color:var(--accent);font-family:var(--mono);font-weight:500;font-size:13.5px}
+.btn.wide{width:100%}
+.btn svg{width:18px;height:18px}
+.chip{font-family:var(--mono);font-size:12.5px;border:1px solid var(--line);border-radius:20px;padding:2px 10px;color:var(--fg2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;line-height:1.6}
+.chip.solid{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:500}
+.chip.ok{color:var(--accent);border-color:var(--accent-line)}
+.chip.warn{color:var(--warn);border-color:var(--warn-line)}
+.chip.bad{color:var(--bad);border-color:var(--bad-line)}
+.chip.none{color:var(--muted)}
+.chip svg{width:13px;height:13px}
+.sample{font-family:var(--mono);font-size:11.5px;color:var(--warn);border:1px dashed var(--warn-line);border-radius:4px;padding:1px 7px;white-space:nowrap}
+.agent{font-family:var(--mono);font-size:13px;color:var(--accent);display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
+.agent::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);flex:0 0 8px}
+.human{font-family:var(--mono);font-size:13px;color:var(--warn);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.human::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--warn);flex:0 0 8px}
+label.f{display:block;font-family:var(--mono);font-size:12.5px;color:var(--accent);margin:0 0 8px}
+.inp{width:100%;box-sizing:border-box;min-height:48px;background:var(--deep);border:1px solid var(--line);border-radius:8px;color:var(--fg);font-family:inherit;font-size:16px;padding:0 14px}
+textarea.inp{padding:12px 14px;line-height:1.5;resize:vertical;min-height:96px}
+select.inp{appearance:auto}
+.inp::placeholder{color:var(--dim)}
+.inp[readonly]{background:var(--surface);color:var(--muted);font-family:var(--mono);font-size:14.5px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;box-sizing:border-box;margin:0 0 8px;padding:13px 14px;border:1px solid var(--line);background:var(--deep);border-radius:8px;font-size:15px;line-height:1.4;color:var(--fg);cursor:pointer;min-height:44px}
+.opt .k{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--muted);flex:0 0 auto}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:#103224}
+.opt[aria-pressed="true"] .k{color:var(--accent)}
+.opt.wrong{border-color:var(--bad);background:#2A1515}
+.scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.scale button{min-height:52px;border:1px solid var(--line);background:var(--deep);color:var(--fg);border-radius:8px;cursor:pointer;font-family:var(--mono);font-size:18px;font-weight:700}
+.scale button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.scale-lbl{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:6px;font-family:var(--mono)}
+.tog{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:20px;background:transparent;color:var(--fg2);cursor:pointer;font-size:14px;font-weight:600}
+.tog[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-wash)}
+.status{display:flex;gap:8px;align-items:center;font-size:15px}
+.status svg{width:18px;height:18px;flex:0 0 18px}
+
+/* visitor form of a section */
+.ex{border:1px dashed var(--warn-line);border-radius:14px;padding:12px;background:rgba(242,204,96,0.03);min-width:0;box-sizing:border-box}
+.ex-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--warn);margin:2px 4px 10px}
+.ex-b{pointer-events:none;user-select:none}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
+.step .n{font-family:var(--mono);font-size:12.5px;color:var(--accent);border:1px solid var(--accent-line);border-radius:20px;padding:1px 9px;display:inline-block;margin-bottom:10px}
+.step h3{margin:0 0 6px;font-size:17px;font-weight:800}
+.step p{margin:0;color:var(--fg2);font-size:15px}
+.ticks{display:flex;flex-direction:column;gap:9px;margin:0 0 18px}
+.ticks p{display:flex;gap:10px;align-items:flex-start;margin:0;color:var(--fg2);font-size:15.5px}
+.ticks p svg{color:var(--accent);flex:0 0 18px;margin-top:3px}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.tile .k{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0 0 8px}
+.tile .v{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0}
+.tile .v small{font-size:15px;color:var(--muted);font-weight:600;letter-spacing:0}
+.tile .s{font-size:13px;color:var(--muted);margin:6px 0 0}
+.tile .s.up{color:var(--accent)} .tile .s.down{color:var(--warn)}
+
+/* lists and tables */
+.list{display:flex;flex-direction:column}
+.li{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line2)}
+.li:last-child{border-bottom:0}
+.li .n{font-family:var(--mono);font-size:13px;color:var(--muted);flex:0 0 26px}
+.li .t{flex:999 1 260px;min-width:0}
+.li .t b{display:block;font-size:15.5px}
+.li .t span{display:block;font-size:14px;color:var(--muted)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.tbl{width:100%;min-width:760px;border-collapse:collapse;font-size:14px}
+.tbl th{font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:400;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 12px;border-bottom:1px solid var(--line2);vertical-align:middle}
+.tbl td.m{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.mini{display:inline-flex;align-items:center;gap:8px}
+.mini i{display:block;width:64px;height:8px;background:var(--line2);border-radius:0 3px 3px 0;position:relative}
+.mini i b{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:0 3px 3px 0}
+.log{font-family:var(--mono);font-size:13.5px;line-height:1.5}
+.log .l{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:7px 0;border-bottom:1px solid var(--line2)}
+.log .l:last-child{border-bottom:0}
+.log .l .a{color:var(--accent)} .log .l .a.h{color:var(--warn)}
+.log .l .x{color:var(--fg2)}
+.term{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.term .top{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--muted)}
+.term .top i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.term .body{padding:12px 18px 16px}
+
+/* charts */
+.chart{width:100%;min-height:40px}
+.chart svg{display:block;overflow:visible}
+.chart svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.chart svg text.lbl{fill:var(--fg2);font-size:12px}
+.chart svg text.q{fill:var(--fg2);font-size:11.5px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:12.5px;color:var(--fg2);margin:0 0 10px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;background:var(--accent)}
+.legend i.ref{background:repeating-linear-gradient(90deg,var(--dim) 0 5px,transparent 5px 9px)}
+.legend i.sq{width:10px;height:10px;border-radius:2px}
+.hbars{display:flex;flex-direction:column;gap:6px}
+.hb{display:grid;grid-template-columns:minmax(96px,32%) minmax(0,1fr) 58px;gap:12px;align-items:center;min-height:34px;font-size:14px}
+.hb-l{color:var(--fg2);min-width:0}
+.hb-t{position:relative;height:12px;background:var(--line2);border-radius:0 4px 4px 0}
+.hb-f{display:block;height:12px;background:var(--accent);border-radius:0 4px 4px 0}
+.hb-f.w{background:var(--warn)}
+.hb-p{position:absolute;top:-5px;width:2px;height:22px;background:var(--fg2);border-radius:1px}
+.hb-v{font-family:var(--mono);font-size:13px;color:var(--fg);text-align:right;font-variant-numeric:tabular-nums}
+.colchart{display:flex;align-items:stretch;gap:3px}
+.cc{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center}
+.cc-v{font-family:var(--mono);font-size:11px;color:var(--fg2);height:16px;line-height:16px;white-space:nowrap}
+.cc-t{flex:1 1 auto;width:100%;display:flex;align-items:flex-end;justify-content:center;border-bottom:1px solid var(--line)}
+.cc-b{width:100%;max-width:24px;border-radius:4px 4px 0 0;min-height:2px;background:var(--accent)}
+.cc-l{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;height:15px;white-space:nowrap}
+.heat{display:grid;gap:3px;font-size:13px}
+.heat .hd{font-family:var(--mono);font-size:12px;color:var(--muted);padding:4px 6px;align-self:end}
+.heat .rl{color:var(--fg2);padding:0 8px 0 0;display:flex;align-items:center;min-width:0}
+.heat .cell{min-height:38px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.heatkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:12px}
+.heatkey span{display:inline-flex;align-items:center;gap:6px}
+.heatkey i{width:14px;height:14px;border-radius:3px;display:inline-block}
+.squares{display:flex;gap:5px;flex-wrap:wrap}
+.squares i{width:14px;height:14px;border-radius:3px;background:var(--accent);display:block}
+.squares i.e{background:transparent;border:1px solid #6E7681;box-sizing:border-box}
+.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+.mods a,.mods span{min-height:46px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;text-decoration:none;box-sizing:border-box}
+.m-done{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.m-now{border:2px solid var(--accent);color:var(--accent)}
+.m-open{border:1px solid var(--line);color:var(--fg2)}
+details.data{margin-top:12px}
+details.data summary{font-family:var(--mono);font-size:12.5px;color:var(--muted);cursor:pointer;min-height:36px;display:flex;align-items:center}
+details.data table{min-width:0;width:auto;margin-top:6px}
+
+/* hero */
+.hero{border-bottom:1px solid var(--line)}
+.hero .in{display:flex;flex-wrap:wrap;gap:40px;align-items:center;padding-block:72px 64px}
+.hero .txt{flex:999 1 520px;min-width:0}
+.hero .term{flex:1 1 360px;min-width:0}
+.display{font-size:clamp(40px,6cqi,72px);line-height:1.02;letter-spacing:-.035em;font-weight:800;margin:0 0 20px}
+.band{border-bottom:1px solid var(--line)}
+.band.deep{background:var(--deep)}
+.band .in{padding-block:64px}
+
+/* misc */
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:var(--fg);color:var(--bg);font-weight:700;font-size:14.5px;padding:10px 18px;border-radius:10px;max-width:min(92vw,520px);box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#tip{position:fixed;z-index:50;pointer-events:none;background:#0A0D12;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:var(--mono);font-size:12.5px;color:var(--fg);max-width:260px;white-space:pre-line;box-shadow:0 6px 20px rgba(0,0,0,.55)}
+.foot{border-top:1px solid var(--line);background:var(--deep)}
+.foot .in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px 24px;padding-block:26px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.foot a{color:var(--fg2)}
+.photo{background:var(--surface);border:1px dashed #484F58;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.ph{aspect-ratio:16/9;max-width:100%;background:var(--surface);border:1px dashed #484F58;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.bubble-me{align-self:flex-end;max-width:80%;background:var(--accent-wash);border:1px solid var(--accent-line);border-radius:12px 12px 4px 12px;padding:11px 15px;font-size:15px}
+.bubble-ag{align-self:flex-start;max-width:88%}
+.bubble-ag .b{background:var(--deep);border:1px solid var(--line);border-radius:12px 12px 12px 4px;padding:12px 15px;font-size:15px;color:var(--fg2)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:24px;overflow-x:auto}
+.tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);font-family:var(--mono);font-size:14px;min-height:46px;padding:0 16px;cursor:pointer;margin-bottom:-1px;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.kv{display:grid;grid-template-columns:minmax(120px,38%) minmax(0,1fr);gap:8px 16px;font-size:15px}
+.kv dt{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-top:2px}
+.kv dd{margin:0;color:var(--fg2)}
+
+@container app (max-width:1180px){
+  .nav a .lab-l{display:none}
+  .nav a .lab-s{display:inline}
+}
+/* tablet */
+@container app (max-width:1024px){
+  .wrap{--gut:24px}
+  .brand .long{display:none} .brand .short{display:inline}
+  .nav a{padding:0 10px;font-size:14px}
+  .h1{font-size:34px}
+}
+/* phone */
+@container app (max-width:640px){
+  .wrap{--gut:16px}
+  .nav,.acct{display:none}
+  .menu-btn{display:inline-flex}
+  .drawer.open{display:block}
+  .tabbar{display:block}
+  .subnav{display:none}
+  .page{padding-block:28px 56px}
+  .h1{font-size:30px}
+  .h2{font-size:23px}
+  .lede{font-size:16.5px}
+  .card{padding:18px}
+  .hero .in{padding-block:44px 40px}
+  .band .in{padding-block:44px}
+  .hb{grid-template-columns:minmax(80px,34%) minmax(0,1fr) 46px;gap:8px}
+  .log .l{grid-template-columns:1fr;gap:0}
+  .kv{grid-template-columns:1fr}
+  .tile .v{font-size:26px}
+}
+@media (prefers-reduced-motion:no-preference){ .toast{animation:tin .2s ease-out} @keyframes tin{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}} }
+</style>
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<div class="proto" aria-label="Prototype controls">
+  <div class="in">
+    <span><b>Prototype</b> · sample data</span>
+    <span class="row" style="gap:8px">View as
+      <span class="seg" id="roleSeg">
+        <button type="button" data-role="visitor">Visitor</button>
+        <button type="button" data-role="student">Student</button>
+        <button type="button" data-role="demo">Demo login</button>
+        <button type="button" data-role="teacher">Teacher</button>
+      </span>
+    </span>
+    <span class="row" style="gap:8px">Screen
+      <span class="seg" id="devSeg">
+        <button type="button" data-dev="full">Full width</button>
+        <button type="button" data-dev="tablet">Tablet</button>
+        <button type="button" data-dev="phone">Phone</button>
+      </span>
+    </span>
+  </div>
+</div>
+<div class="stage" id="stage" data-device="full">
+  <div class="app" id="app"></div>
+</div>
+<div id="tip" role="tooltip" hidden></div>
+<div id="toastHost"></div>
+
+<script>
+(function(){
+"use strict";
+var app = document.getElementById('app');
+var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+var pad = function(n){ return String(n).padStart(2,'0'); };
+var avg = function(a){ var v=a.filter(function(x){return x!=null;}); return v.reduce(function(s,x){return s+x;},0)/v.length; };
+var r1 = function(x){ return (Math.round(x*10)/10).toFixed(1); };
+
+/* ---------- icons ---------- */
+function svg(p, w){ return '<svg viewBox="0 0 24 24" width="'+(w||18)+'" height="'+(w||18)+'" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>'; }
+var I = {
+  klass: svg('<rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4M7 9h5M7 12h8"></path>'),
+  study: svg('<path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4z"></path><path d="M20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"></path>'),
+  projects: svg('<circle cx="6" cy="6" r="2"></circle><circle cx="6" cy="18" r="2"></circle><circle cx="18" cy="8" r="2"></circle><path d="M6 8v8M18 10c0 4-6 3-10 7"></path>'),
+  exam: svg('<path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path>'),
+  check: svg('<path d="M5 12l5 5 9-10"></path>'),
+  x: svg('<path d="M6 6l12 12M18 6L6 18"></path>'),
+  warn: svg('<path d="M12 4l9 16H3z"></path><path d="M12 10v4M12 17v.5"></path>'),
+  dash: svg('<path d="M6 12h12"></path>'),
+  menu: svg('<path d="M4 7h16M4 12h16M4 17h16"></path>', 22),
+  close: svg('<path d="M6 6l12 12M18 6L6 18"></path>', 22),
+  up: svg('<path d="M7 14l5-5 5 5"></path>', 14),
+  down: svg('<path d="M7 10l5 5 5-5"></path>', 14),
+  flat: svg('<path d="M6 12h12"></path>', 14),
+  play: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#3DDC97"></path></svg>'
+};
+function stat(kind, label){
+  var ic = {ok:I.check, warn:I.warn, bad:I.x, none:I.dash}[kind];
+  return '<span class="chip '+kind+'">'+ic.replace('width="18" height="18"','width="13" height="13"')+esc(label)+'</span>';
+}
+function ag(id){ return '<a class="agent" href="#agents">@'+id+'</a>'; }
+function agS(id){ return '<span class="agent">@'+id+'</span>'; }
+
+/* ---------- content ---------- */
+var MODULES = [
+ ['What is agentic software engineering?','Sets the subject as a discipline, with durable principles, a method that can be learned, and characteristic faults.'],
+ ['The human role: what erodes and what compounds','What the human still owns once the agent writes most of the code.'],
+ ['Mental models of the agent','A working picture of how the agent operates, so that it can be directed well.'],
+ ['The anatomy of an agentic workflow','Any agentic task broken into the same 7 parts, one turn of the work.'],
+ ['The typology of agentic development environments','A frame for judging any tool, built from 6 pillars.'],
+ ['Intent and the discipline of project conception','Deciding what to build, and the start of the running project.'],
+ ['The architecture of a web application','As much web architecture as directing an agent well requires.'],
+ ['Interface design and documentation','Clarity as a control mechanism, and design that the engineer specifies rather than draws.'],
+ ['Cognified software and the economics of a model call','Software with a model reasoning inside it, and the price and time of every call.'],
+ ['Specification and the co-evolution spiral','The quality of the work placed in the specification, and the spiral in which problem and solution evolve together.'],
+ ["Context engineering: the agent's briefing",'Context as a budgeted resource, and the context file as a designed artefact.'],
+ ['Version control, and keeping a session on course','Version control as the way back, and reading the drift in a session before it compounds.'],
+ ['Verification before trust','Verification as a whole category, and the rule of no gate, no merge.'],
+ ['Multi-agent decomposition and orchestration','Decomposition as an engineering activity, and 5 workflow patterns.'],
+ ['Designing multi-agent workflows','Coordination between agents as a designed artefact.'],
+ ['Review and quality, and the onboarding of legacy code','Review at the centre of the discipline, the Merge-Readiness Pack in full, and legacy code.'],
+ ['Building secure software','Security as a built-in quality, including the prompt injection peculiar to a cognified product.'],
+ ['Entrepreneurship in the age of AI coding','How cheap building moved the bottleneck, and the unit economics of a cognified product.'],
+ ['Where software work is going','A world model for the cognified economy, and the skills that compound.']
+];
+var PARTS = [
+ {n:1,t:'Building the ontology',a:1,b:5,d:'The models the rest of the course depends on, built before there is anything to construct.'},
+ {n:2,t:'Setting up the environment',a:6,b:9,d:'The setup for building, together with the first conception of the running project.'},
+ {n:3,t:'The craft of the build',a:10,b:17,d:'The heart of the discipline, each module adding one dimension to a turn of the running project.'},
+ {n:4,t:'The changed market',a:18,b:19,d:'The economic and career ground the discipline lands on.'}
+];
+var AGENTS = [
+ {id:'steward', role:'Coordinator', where:'Behind every part of the school',
+  does:'Assigns work to the other agents, checks that each task is finished, passes messages from Contact SAW to the teacher and prepares the teacher’s daily brief.',
+  never:'It never changes a grade, a rule or a group list on its own.'},
+ {id:'registrar', role:'Access', where:'Registration and sign-in',
+  does:'Checks each registration against the list of permitted addresses that the teacher keeps, and places each student in the right institution and group.',
+  never:'It never adds an address to the list. The teacher does that.'},
+ {id:'proctor', role:'Live lessons', where:'Learn in class',
+  does:'Opens the warm-up quiz before the lecture, releases each exercise when the teacher says, times it, records the answers and shows the class results.',
+  never:'It never releases an exercise without the teacher.'},
+ {id:'tutor', role:'Self-study', where:'Study alone',
+  does:'Guides students through study pages and practice exercises, answers questions about the course rules, the lessons and the site, and suggests what to review.',
+  never:'It never writes project code for a student and never sees grades.'},
+ {id:'reviewer', role:'Project checks', where:'Submit projects',
+  does:'Checks each submitted repository for public access, a context file, a steady history and tests, and explains every failed check.',
+  never:'It never grades. The teacher grades the work itself.'},
+ {id:'examiner', role:'Final exam', where:'Exam finale',
+  does:'Tracks each student’s readiness, runs practice exams and the exam session, and marks the closed questions.',
+  never:'It never sets a final mark. The teacher reviews every exam.'},
+ {id:'analyst', role:'Progress and satisfaction', where:'My progress and the teacher’s reports',
+  does:'Collects lesson ratings and survey answers, shows each student their own progress, shows the teacher the class picture and groups written comments into themes.',
+  never:'It never shows the teacher ratings from fewer than 5 students, and ratings never affect grades.'}
+];
+var MAIN = [
+ {k:'class', t:'Learn in class', s:'Class', ic:'klass', ag:'proctor'},
+ {k:'study', t:'Study alone', s:'Study', ic:'study', ag:'tutor'},
+ {k:'projects', t:'Submit projects', s:'Projects', ic:'projects', ag:'reviewer'},
+ {k:'exam', t:'Exam finale', s:'Exam', ic:'exam', ag:'examiner'}
+];
+
+/* ---------- sample data ---------- */
+function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+var R = rng(20261029);
+var NL = 8; /* lessons held so far */
+var CLASS_SCORE = [78,74,81,69,72,66,75,79];
+var ME_SCORE = [80,80,100,60,80,40,80,100];
+var ME_PRACT = [90,80,85,70,85,50,65,77];
+var ME_RATE = [5,4,5,3,4,3,4,null];
+var RATING = [4.3,4.1,4.4,3.9,4.2,3.6,4.0,4.3];
+var RESP = [29,27,30,25,26,24,27,28];
+var CLASS_PRACT = [84,79,77,71,74,58,66,72,63];
+var STUD = [];
+(function(){
+  var own = ['passed','warning','failed','none'], trib = ['passed','warning','failed','none'];
+  for (var i=0;i<34;i++){
+    var p = 0.42 + R()*0.56;
+    var les = []; for (var l=0;l<NL;l++){ var a=0; for (var k=0;k<5;k++){ if (R() < Math.min(.98, p+.18)) a++; } les.push(a); }
+    var ans = les.reduce(function(s,x){return s+x;},0);
+    var o = p>.8 ? (R()<.7?0:1) : p>.6 ? Math.floor(R()*3) : (R()<.5?2:3);
+    var t = p>.85 ? (R()<.5?0:1) : p>.65 ? (R()<.5?1:3) : 3;
+    var mods = Math.max(3, Math.min(10, Math.round(3 + p*6 + R()*2)));
+    var first = (les[0]+les[1]+les[2])/3, last = (les[5]+les[6]+les[7])/3;
+    var trend = last-first > .6 ? 'up' : first-last > .6 ? 'down' : 'flat';
+    var ready = Math.max(0, Math.min(6, Math.round(p*6 - (o>1?1:0) - (t===3?1:0) + (R()-.5))));
+    STUD.push({email:'student'+pad(i+1)+'@gmail.com', group: i<18 ? '62121-31' : '62121-32', reg:true, les:les, ans:ans, eng:Math.round(ans/(NL*5)*100), score:Math.round(52+p*38+(R()-.5)*8), pract:Math.round(50+p*40+(R()-.5)*10), mods:mods, own:own[o], trib:trib[t], ready:ready, trend:trend});
+  }
+  var me = STUD[6];
+  me.les=[5,5,5,4,5,5,5,4]; me.ans=38; me.eng=95; me.score=Math.round(avg(ME_SCORE)); me.pract=Math.round(avg(ME_PRACT)); me.mods=8; me.own='failed'; me.trib='none'; me.ready=3; me.trend='flat';
+  var nr = STUD[19];
+  nr.reg=false; nr.les=[0,0,0,0,0,0,0,0]; nr.ans=0; nr.eng=0; nr.score=null; nr.pract=null; nr.mods=0; nr.own='none'; nr.trib='none'; nr.ready=0; nr.trend='flat';
+  STUD.forEach(function(s){
+    s.flag = !s.reg ? 'Has not registered on the site yet' : s.eng < 60 ? 'Answers fewer than 60% of live exercises' : (s.trend==='down' && s.own!=='passed') ? 'Engagement falling and own project not passing' : (s.own==='none' && s.mods < 6) ? 'No project submitted and behind on modules' : '';
+  });
+})();
+var CLASS_RATE = []; for (var li=0; li<NL; li++){ var sum=0; STUD.forEach(function(s){ sum+=s.les[li]; }); CLASS_RATE.push(Math.round(sum/(33*5)*100)); }
+var DIMS = [
+ {d:'Clarity', v:4.2, prev:4.0, imp:.61, dx:10, dy:-10, an:'start'},
+ {d:'Pace', v:3.4, prev:3.7, imp:.58, dx:10, dy:-10, an:'start'},
+ {d:'Usefulness for work', v:4.5, prev:4.4, imp:.44, dx:-10, dy:-10, an:'end'},
+ {d:'Interest', v:4.3, prev:4.3, imp:.39, dx:10, dy:16, an:'start'},
+ {d:'Support from agents', v:3.8, prev:3.5, imp:.33, dx:10, dy:-12, an:'start'},
+ {d:'Manageable workload', v:3.3, prev:3.6, imp:.55, dx:10, dy:20, an:'start'}
+];
+var HEAT = [[4.4,4.0,4.3],[4.3,3.9,4.5],[4.1,3.6,4.4],[4.4,3.8,4.6],[3.9,3.5,4.0],[3.6,2.9,4.2],[4.0,3.2,4.3],[4.2,3.4,4.6]];
+var REC = [0,0,0,1,1,1,2,4,6,9,5];
+var THEMES = [
+ {t:'Live exercises keep me attentive', n:18, tone:'ok', tl:'positive', q:'The exercise after each block makes me listen to the whole block.'},
+ {t:'The pace of part 2 lessons is too fast', n:14, tone:'bad', tl:'negative', q:'Lesson 6 covered too much in the last half hour.'},
+ {t:'More worked examples, please', n:11, tone:'warn', tl:'request', q:'I would like to see one full session with the agent from start to end.'},
+ {t:'Reviewer feedback shows what to fix', n:9, tone:'ok', tl:'positive', q:'The check told me exactly why my commits were not good enough.'},
+ {t:'Tutor answers are too general', n:7, tone:'bad', tl:'negative', q:'The tutor repeats the rules but does not apply them to my case.'},
+ {t:'Two projects at once is a heavy load', n:6, tone:'bad', tl:'negative', q:'The Tribunal and my own project fall due in the same weeks.'}
+];
+var LIVE_Q = {q:'What does module 9 ask you to make visible for every model call?', o:[['a','Its price and its time.'],['b','The source code of the model.'],['c','The name of the person who wrote the prompt.'],['d','The number of agents in the session.']]};
+var CHECKS = [['ok','The repository is public.',''],['ok','A context file, CLAUDE.md, is in the root folder.',''],['ok','The work is spread over time.','23 commits over 5 weeks, following the module schedule.'],['warn','Commit messages say what changed.','6 of 23 messages are a single word, such as “fix” or “update”.'],['bad','Tests exist.','No test files or test folder were found.'],['ok','A record of the work with the agent is kept in the repository.',''],['ok','The README explains how to run the project.','']];
+var READY = [['ok','Study the modules taught so far','8 of 8 studied'],['ok','Answer at least 80% of live exercises','95% answered'],['warn','Reach 70% in practice for each part','part 1: 82%, part 2: 64%'],['bad','Own project passes every check','1 check failed: tests'],['none','Tribunal submitted and passes every check','not submitted'],['ok','Take at least 1 practice exam','1 taken, score 72%']];
+
+/* ---------- state ---------- */
+var S = { role:'visitor', device:'full', route:'home', menu:false,
+  live:{picked:null, sent:false}, pulse:{r:0, helped:[], blocked:[], text:'', sent:false},
+  prac:{}, model:false, modRate:0, proj:'own', flagged:false, ask:'',
+  regDone:false, contactSent:false };
+try { var sv = JSON.parse(localStorage.getItem('saw-proto')||'{}'); if (sv.device) S.device = sv.device; } catch(e){}
+function signed(){ return S.role==='student' || S.role==='demo'; }
+function me(){ return S.role==='demo'
+  ? {who:'demo', inst:'SAW demo', instS:'SAW demo', group:'demo'}
+  : {who:'student07@gmail.com', inst:'Holon Institute of Technology', instS:'HIT', group:'62121-31'}; }
+
+/* ---------- charts ---------- */
+function lineChart(el, o){
+  var W = Math.max(260, Math.floor(el.clientWidth)), narrow = W < 480, H = o.h || 230;
+  var m = {l:42, r: narrow ? 14 : 116, t:14, b:30}, iw = W-m.l-m.r, ih = H-m.t-m.b, n = o.labels.length;
+  var x = function(i){ return m.l + (n===1 ? iw/2 : i*iw/(n-1)); };
+  var y = function(v){ return m.t + ih - (v-o.min)/(o.max-o.min)*ih; };
+  var f = o.fmt || function(v){ return v; };
+  var s = '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(o.aria)+'">';
+  o.ticks.forEach(function(t){ s += '<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="#21262D" stroke-width="1"></line><text x="'+(m.l-8)+'" y="'+(y(t)+4)+'" text-anchor="end">'+f(t)+'</text>'; });
+  s += '<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+(m.t+ih)+'" y2="'+(m.t+ih)+'" stroke="#30363D" stroke-width="1"></line>';
+  o.labels.forEach(function(lb,i){ s += '<text x="'+x(i)+'" y="'+(H-9)+'" text-anchor="middle">'+lb+'</text>'; });
+  var ends = [];
+  o.series.forEach(function(se){
+    var d = '', pen = false, last = null;
+    se.values.forEach(function(v,i){ if (v==null){ pen=false; return; } d += (pen?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)+' '; pen = true; last = i; });
+    s += '<path d="'+d+'" fill="none" stroke="'+se.color+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"'+(se.dash?' stroke-dasharray="5 4"':'')+'></path>';
+    if (!se.dash){ se.values.forEach(function(v,i){ if (v!=null) s += '<circle cx="'+x(i)+'" cy="'+y(v)+'" r="4" fill="'+se.color+'" stroke="#161B22" stroke-width="2"></circle>'; }); }
+    if (last!=null) ends.push({y:y(se.values[last]), x:x(last), t:se.name+' '+f(se.values[last])});
+  });
+  if (!narrow && ends.length){
+    ends.sort(function(a,b){ return a.y-b.y; });
+    for (var k=1;k<ends.length;k++){ if (ends[k].y - ends[k-1].y < 16){ ends[k].ly = ends[k-1].y + 16; } }
+    ends.forEach(function(e){ var ly = e.ly || e.y; if (e.ly) s += '<line x1="'+(e.x+5)+'" y1="'+e.y+'" x2="'+(e.x+12)+'" y2="'+ly+'" stroke="#8B949E" stroke-width="1"></line>'; s += '<text class="lbl" x="'+(e.x+14)+'" y="'+(ly+4)+'">'+esc(e.t)+'</text>'; });
+  }
+  var cw = n>1 ? iw/(n-1) : iw;
+  o.labels.forEach(function(lb,i){
+    var tip = o.tipT(i) + '\n' + o.series.map(function(se){ return se.name+': '+(se.values[i]==null?'no data':f(se.values[i])); }).join('\n') + (o.tipX ? '\n'+o.tipX(i) : '');
+    s += '<rect x="'+(x(i)-cw/2)+'" y="'+m.t+'" width="'+cw+'" height="'+ih+'" fill="transparent" data-tip="'+esc(tip)+'"></rect>';
+  });
+  el.innerHTML = s + '</svg>';
+}
+function scatter(el){
+  var W = Math.max(260, Math.floor(el.clientWidth)), narrow = W < 480, H = narrow ? 300 : 330;
+  var m = {l:48, r:18, t:18, b:44}, iw=W-m.l-m.r, ih=H-m.t-m.b;
+  var x0=3.0,x1=4.8,y0=.28,y1=.68, mx=4.0, my=.5;
+  var x = function(v){ return m.l + (v-x0)/(x1-x0)*iw; }, y = function(v){ return m.t + ih - (v-y0)/(y1-y0)*ih; };
+  var s = '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Importance and score of 6 satisfaction dimensions. Pace and manageable workload score low and matter most.">';
+  s += '<rect x="'+m.l+'" y="'+m.t+'" width="'+(x(mx)-m.l)+'" height="'+(y(my)-m.t)+'" fill="rgba(242,204,96,0.07)"></rect>';
+  [3.0,3.5,4.0,4.5].forEach(function(t){ s += '<line x1="'+x(t)+'" x2="'+x(t)+'" y1="'+m.t+'" y2="'+(m.t+ih)+'" stroke="#21262D"></line><text x="'+x(t)+'" y="'+(m.t+ih+16)+'" text-anchor="middle">'+t.toFixed(1)+'</text>'; });
+  [.3,.4,.5,.6].forEach(function(t){ s += '<line x1="'+m.l+'" x2="'+(m.l+iw)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="#21262D"></line><text x="'+(m.l-8)+'" y="'+(y(t)+4)+'" text-anchor="end">'+t.toFixed(1)+'</text>'; });
+  s += '<line x1="'+x(mx)+'" x2="'+x(mx)+'" y1="'+m.t+'" y2="'+(m.t+ih)+'" stroke="#484F58"></line><line x1="'+m.l+'" x2="'+(m.l+iw)+'" y1="'+y(my)+'" y2="'+y(my)+'" stroke="#484F58"></line>';
+  s += '<text class="q" x="'+(m.l+8)+'" y="'+(m.t+16)+'">Fix first</text><text class="q" x="'+(m.l+iw-8)+'" y="'+(m.t+16)+'" text-anchor="end">Keep strong</text><text class="q" x="'+(m.l+8)+'" y="'+(m.t+ih-8)+'">Watch</text><text class="q" x="'+(m.l+iw-8)+'" y="'+(m.t+ih-8)+'" text-anchor="end">Lower priority</text>';
+  s += '<text x="'+(m.l+iw/2)+'" y="'+(H-4)+'" text-anchor="middle">average score, 1 to 5</text>';
+  s += '<text x="12" y="'+(m.t+ih/2)+'" text-anchor="middle" transform="rotate(-90 12 '+(m.t+ih/2)+')">importance</text>';
+  DIMS.forEach(function(d){
+    var fix = d.v < mx && d.imp > my, cx = x(d.v), cy = y(d.imp);
+    s += '<circle cx="'+cx+'" cy="'+cy+'" r="6" fill="'+(fix?'#F2CC60':'#3DDC97')+'" stroke="#161B22" stroke-width="2"></circle>';
+    var lab = narrow && d.d.length > 12 ? d.d.split(' ')[0] : d.d;
+    s += '<text class="lbl" x="'+(cx+d.dx)+'" y="'+(cy+d.dy)+'" text-anchor="'+d.an+'">'+esc(lab)+'</text>';
+    s += '<circle cx="'+cx+'" cy="'+cy+'" r="14" fill="transparent" data-tip="'+esc(d.d+'\naverage score '+d.v.toFixed(1)+' of 5\nimportance '+d.imp.toFixed(2)+(fix?'\nquadrant: fix first':''))+'"></circle>';
+  });
+  el.innerHTML = s + '</svg>';
+}
+function hbars(items, o){
+  o = o || {};
+  return '<div class="hbars">' + items.map(function(it){
+    var pct = Math.max(0, Math.min(100, (it.v-(o.min||0))/((o.max||100)-(o.min||0))*100));
+    var pp = it.p!=null ? Math.max(0, Math.min(100, (it.p-(o.min||0))/((o.max||100)-(o.min||0))*100)) : null;
+    return '<div class="hb" data-tip="'+esc(it.tip || (it.l+': '+(o.fmt?o.fmt(it.v):it.v)))+'"><span class="hb-l">'+esc(it.l)+'</span><span class="hb-t"><span class="hb-f'+(it.w?' w':'')+'" style="width:'+pct+'%"></span>'+(pp!=null?'<span class="hb-p" style="left:calc('+pp+'% - 1px)"></span>':'')+'</span><span class="hb-v">'+(o.fmt?o.fmt(it.v):it.v)+'</span></div>';
+  }).join('') + '</div>';
+}
+function cols(items, o){
+  o = o || {}; var max = o.max || Math.max.apply(null, items.map(function(i){return i.v;}));
+  return '<div class="colchart" style="height:'+(o.h||170)+'px" role="img" aria-label="'+esc(o.aria||'')+'">' + items.map(function(it){
+    return '<div class="cc" data-tip="'+esc(it.tip)+'"><span class="cc-v">'+(it.show===false?'':(o.fmt?o.fmt(it.v):it.v))+'</span><span class="cc-t"><span class="cc-b" style="height:'+(max? it.v/max*100 : 0)+'%;'+(it.c?'background:'+it.c:'')+'"></span></span><span class="cc-l">'+it.l+'</span></div>';
+  }).join('') + '</div>';
+}
+function heatColor(v){ var i = v<3 ? 0 : v<3.5 ? 1 : v<4 ? 2 : v<4.5 ? 3 : 4; return ['var(--seq1)','var(--seq2)','var(--seq3)','var(--seq4)','var(--seq5)'][i] + ';color:' + (i>=3 ? 'var(--accent-ink)' : 'var(--fg)'); }
+var CH = {
+  'me-score': function(el){ lineChart(el, {labels:ME_SCORE.map(function(_,i){return 'L'+(i+1);}), min:0, max:100, ticks:[0,25,50,75,100], fmt:function(v){return Math.round(v)+'%';}, aria:'Live exercise score by lesson compared with the group average.', tipT:function(i){return 'Lesson '+(i+1)+', '+MODULES[i][0];}, series:[{name:'You', values:ME_SCORE, color:'#3DDC97'},{name:'Group average', values:CLASS_SCORE, color:'#8B949E', dash:true}]}); },
+  'sat-trend': function(el){ var a = avg(RATING); lineChart(el, {labels:RATING.map(function(_,i){return 'L'+(i+1);}), min:3, max:5, ticks:[3,3.5,4,4.5,5], fmt:function(v){return (+v).toFixed(1);}, aria:'Average lesson rating for lessons 1 to 8, between 3.6 and 4.4 out of 5.', tipT:function(i){return 'Lesson '+(i+1);}, tipX:function(i){return RESP[i]+' of 34 rated';}, series:[{name:'Lesson rating', values:RATING, color:'#3DDC97'},{name:'Course average', values:RATING.map(function(){return a;}), color:'#8B949E', dash:true}]}); },
+  'class-rate': function(el){ lineChart(el, {labels:CLASS_RATE.map(function(_,i){return 'L'+(i+1);}), min:50, max:100, ticks:[50,75,100], fmt:function(v){return Math.round(v)+'%';}, aria:'Share of live exercises answered by the class, per lesson.', tipT:function(i){return 'Lesson '+(i+1);}, series:[{name:'Answered', values:CLASS_RATE, color:'#3DDC97'}]}); },
+  'class-score': function(el){ lineChart(el, {labels:CLASS_SCORE.map(function(_,i){return 'L'+(i+1);}), min:50, max:100, ticks:[50,75,100], fmt:function(v){return Math.round(v)+'%';}, aria:'Average live exercise score of the class, per lesson.', tipT:function(i){return 'Lesson '+(i+1);}, series:[{name:'Average score', values:CLASS_SCORE, color:'#3DDC97'}]}); },
+  'drivers': scatter
+};
+function drawCharts(){
+  Array.prototype.forEach.call(app.querySelectorAll('[data-chart]'), function(el){ var f = CH[el.getAttribute('data-chart')]; if (f) f(el); });
+}
+var ro = window.ResizeObserver ? new ResizeObserver(function(){ clearTimeout(ro.t); ro.t = setTimeout(drawCharts, 60); }) : null;
+if (ro) ro.observe(app);
+
+/* ---------- shell ---------- */
+function rt(k){ return S.role==='teacher' ? 't-'+k : k; }
+function cur(r){ return S.route===r ? ' aria-current="page"' : ''; }
+function isCur(k){ var r=S.route; return r===k || r==='t-'+k || (k==='study' && r==='module'); }
+function header(){
+  var r = S.role, acct = '', drawer = '', sub = '';
+  var nav = MAIN.map(function(m){ return '<a href="#'+rt(m.k)+'"'+(isCur(m.k)?' aria-current="page"':'')+'>'+I[m.ic]+'<span class="lab-l">'+m.t+'</span><span class="lab-s">'+m.s+'</span></a>'; }).join('');
+  drawer = '<p class="lbl">'+(r==='teacher'?'teacher':'your course')+'</p>' + MAIN.map(function(m){ return '<a href="#'+rt(m.k)+'"'+(isCur(m.k)?' aria-current="page"':'')+'>'+I[m.ic]+m.t+'</a>'; }).join('');
+  if (r==='visitor'){
+    acct = '<a class="who" href="#register"'+cur('register')+'>Register</a><a class="btn out" href="#signin" style="min-height:40px">Sign in</a>';
+    drawer += '<p class="lbl">you</p><a href="#programme"'+cur('programme')+'>My programme</a><a href="#progress"'+cur('progress')+'>My progress</a><a href="#signin"'+cur('signin')+'>Sign in</a><a href="#register"'+cur('register')+'>Register to use the service</a>';
+  } else if (signed()){
+    acct = '<a class="who" href="#programme"'+cur('programme')+'>My programme</a><a class="who" href="#progress"'+cur('progress')+'><span class="dot'+(r==='demo'?' h':'')+'"></span>My progress</a>';
+    drawer += '<p class="lbl">you · '+esc(me().who)+'</p><a href="#programme"'+cur('programme')+'>My programme</a><a href="#progress"'+cur('progress')+'>My progress</a>';
+  } else {
+    acct = '<span class="who"><span class="dot h"></span>teacher</span>';
+    var T = [['t-progress','Class progress'],['t-satisfaction','Satisfaction'],['t-access','Groups and access'],['t-agents','Agents']];
+    sub = '<div class="subnav"><div class="wrap in">' + T.map(function(a){ return '<a href="#'+a[0]+'"'+cur(a[0])+'>'+a[1].toLowerCase()+'</a>'; }).join('') + '</div></div>';
+    drawer += '<p class="lbl">reports and admin</p>' + T.map(function(a){ return '<a href="#'+a[0]+'"'+cur(a[0])+'>'+a[1]+'</a>'; }).join('');
+  }
+  drawer += '<p class="lbl">school</p><a href="#home"'+cur('home')+'>Home</a><a href="#agents"'+cur('agents')+'>The agents</a><a href="#contact"'+cur('contact')+'>Contact SAW</a><a href="#privacy"'+cur('privacy')+'>Privacy notice</a>';
+  return '<header class="hdr"><div class="wrap bar">'
+    + '<a class="brand" href="#'+HOME[r]+'"><span class="p">~/</span><span class="long">school-of-agentic-work</span><span class="short">saw</span></a>'
+    + '<nav class="nav" aria-label="Main">'+nav+'</nav><div class="acct">'+acct+'</div>'
+    + '<button type="button" class="menu-btn" data-act="menu" aria-expanded="'+S.menu+'" aria-label="'+(S.menu?'Close menu':'Open menu')+'">'+(S.menu?I.close:I.menu)+'</button>'
+    + '</div>' + sub + '<div class="drawer'+(S.menu?' open':'')+'"><div class="wrap">'+drawer+'</div></div></header>'
+    + (S.role==='demo' ? '<div class="demo-bar"><div class="wrap in"><span class="tag">demo</span><span>You are signed in as <b style="color:var(--fg)">demo</b>, a sample student of the SAW demo group. Nothing you do here is saved, and the demo group is reset every night.</span><a href="#" data-act="signout">Sign out</a></div></div>' : '');
+}
+function tabbar(){
+  return '<nav class="tabbar" aria-label="Main"><div class="in">' + MAIN.map(function(m){
+    return '<a href="#'+rt(m.k)+'"'+(isCur(m.k)?' aria-current="page"':'')+'>'+I[m.ic].replace('width="18" height="18"','width="22" height="22"')+m.s+'</a>';
+  }).join('') + '</div></nav>';
+}
+function footer(){
+  return '<footer class="foot"><div class="wrap in"><span>~/school-of-agentic-work</span><span class="row" style="gap:18px"><a href="#agents">the agents</a><a href="#contact">contact SAW</a><a href="#privacy">privacy notice</a>'+(S.role!=='visitor'?'<a href="#" data-act="signout">sign out</a>':'')+'<span>© 2026</span></span></div></footer>';
+}
+function head(ey, title, sub, chips){
+  return '<div class="pagehead"><div><p class="eyebrow"><span class="p">$</span> '+ey+'</p><h1 class="h1">'+title+'</h1>'+(sub?'<p class="lede">'+sub+'</p>':'')+'</div>'+(chips?'<div class="chips">'+chips+'</div>':'')+'</div>';
+}
+function logLines(rows){ return rows.map(function(l){ return '<div class="l"><span class="a'+(l[2]?' h':'')+'">'+(l[2]?l[0]:'@'+l[0])+'</span><span class="x">'+esc(l[1])+'</span></div>'; }).join(''); }
+function squares(n, of){ var h='<span class="squares" aria-label="'+n+' of '+of+' answered">'; for (var i=0;i<of;i++) h += '<i'+(i<n?'':' class="e"')+'></i>'; return h+'</span>'; }
+
+/* ---------- visitor form helpers ---------- */
+function exFrame(label, inner){ return '<div class="ex"><p class="ex-h"><span>example screen</span><span>'+label+'</span></p><div class="ex-b" inert>'+inner+'</div></div>'; }
+function steps(arr){ return '<div class="steps">' + arr.map(function(s,i){ return '<div class="step"><span class="n">'+(i+1)+'</span><h3>'+s[0]+'</h3><p>'+s[1]+'</p></div>'; }).join('') + '</div>'; }
+function signStrip(title, items){
+  return '<div class="card hl section"><p class="ch">after you sign in</p><h2 class="h3" style="font-size:21px;margin-bottom:14px">'+title+'</h2><div class="ticks">'
+   + items.map(function(t){ return '<p>'+I.check+'<span>'+t+'</span></p>'; }).join('')
+   + '</div><div class="row"><a class="btn pri" href="#signin">Sign in</a><a class="btn sec" href="#register">Register to use the service</a></div><p class="note">Register once, with the email address you gave your course organiser.</p></div>';
+}
+
+/* ---------- shared pieces ---------- */
+function liveCard(L){
+  var opts = LIVE_Q.o.map(function(o){ return '<button type="button" class="opt" aria-pressed="'+(L.picked===o[0])+'" data-act="live-pick" data-v="'+o[0]+'"><span class="k">['+o[0].toUpperCase()+']</span><span>'+esc(o[1])+'</span></button>'; }).join('');
+  return '<div class="card hl"><p class="ch">exercise after block 2 · choose one <span class="r" style="color:var(--accent);font-size:20px;font-weight:700">01:42</span></p>'
+   + '<p class="mono small" style="margin:0 0 8px">module 09 · '+esc(MODULES[8][0])+'</p><h2 class="h2" style="font-size:24px;margin-bottom:16px">'+LIVE_Q.q+'</h2>' + opts
+   + (L.sent ? '<p class="status" role="status" style="margin-top:12px"><span style="color:var(--accent)">'+I.check+'</span>Answer recorded. You can change it until the time runs out.</p>' : '<button type="button" class="btn pri wide" data-act="live-send" style="margin-top:8px">Submit answer</button>')
+   + '<p class="note">Your answer counts towards engagement. The class sees the results when the teacher shows them.</p></div>';
+}
+function pulseCard(p, id){
+  var helped = ['Live exercises','Examples','Slides','Pace','Questions and answers'], blocked = ['Too fast','Too slow','Unclear slides','Sound or video','Too much at once'];
+  if (p.sent) return '<div class="card hl"><p class="ch">rate lesson 8 <span class="r">@analyst</span></p><p class="status" style="font-size:16px"><span style="color:var(--accent)">'+I.check+'</span>Thank you. Your rating of '+p.r+' is recorded.</p><p class="note">The rating is anonymous. The teacher sees only totals from 5 or more students, and ratings never affect grades.</p></div>';
+  return '<div class="card"><p class="ch">rate lesson 8 · anonymous <span class="r">@analyst</span></p><h3 class="h3">How was lesson 8, '+esc(MODULES[7][0])+'?</h3>'
+    + '<div class="scale" role="group" aria-label="Rating from 1 to 5" style="margin-top:12px">' + [1,2,3,4,5].map(function(n){ return '<button type="button" aria-pressed="'+(p.r===n)+'" data-act="pulse-r" data-v="'+n+'">'+n+'</button>'; }).join('') + '</div><div class="scale-lbl"><span>poor</span><span>excellent</span></div>'
+    + '<p class="mono small" style="margin:18px 0 8px">what helped you most</p><div class="row">' + helped.map(function(h){ return '<button type="button" class="tog" aria-pressed="'+(p.helped.indexOf(h)>=0)+'" data-act="pulse-h" data-v="'+h+'">'+h+'</button>'; }).join('') + '</div>'
+    + '<p class="mono small" style="margin:16px 0 8px">what got in the way</p><div class="row">' + blocked.map(function(h){ return '<button type="button" class="tog" aria-pressed="'+(p.blocked.indexOf(h)>=0)+'" data-act="pulse-b" data-v="'+h+'">'+h+'</button>'; }).join('') + '</div>'
+    + '<label class="f" for="'+id+'" style="margin-top:18px">comment (optional)</label><textarea class="inp" id="'+id+'" rows="2" placeholder="One sentence is enough.">'+esc(p.text)+'</textarea>'
+    + '<div class="row" style="margin-top:14px"><button type="button" class="btn pri" data-act="pulse-send">Send rating</button><span class="small">Anonymous. Never affects grades.</span></div></div>';
+}
+function tutorCard(id){
+  var extra = S.ask && id==='ask' ? '<div class="bubble-me">'+esc(S.ask)+'</div><div class="bubble-ag"><p class="agent" style="margin:0 0 6px">@tutor</p><div class="b">This prototype does not send questions anywhere. In the real site I answer from the course rules and the lesson materials, and I name the source of each answer.</div></div>' : '';
+  return '<div class="card" style="display:flex;flex-direction:column;gap:14px"><p class="ch" style="margin:0">ask the tutor <span class="r">questions left today: 18 of 20</span></p>'
+   + '<div class="bubble-me">Does my repository have to be public?</div>'
+   + '<div class="bubble-ag"><p class="agent" style="margin:0 0 6px">@tutor</p><div class="b">Yes. Only code in a public GitHub repository is graded, and until the code is public the grade is a fail. You may open a separate GitHub account for the course. <span class="chip" style="margin-top:8px">source: project rules</span></div></div>'
+   + extra
+   + '<form data-form="ask" style="display:flex;gap:8px;align-items:flex-end"><label class="sr" for="'+id+'">Your question</label><input class="inp" id="'+id+'" placeholder="Ask about the rules, the lessons or the site"><button class="btn pri" type="submit">Ask</button></form>'
+   + '<p class="small" style="font-size:13px;margin:0">Do not write personal matters here. Questions go to the AI service without your name or email address.</p></div>';
+}
+function checkLog(){
+  var lbl = {ok:'passed', warn:'warning', bad:'failed'};
+  return '<div class="card" style="padding:0;overflow:hidden"><div class="row" style="justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line)"><span class="mono small">check.log · [date, time] · @reviewer</span><span class="row" style="gap:8px">'+stat('ok','5 passed')+stat('warn','1 warning')+stat('bad','1 failed')+'</span></div>'
+   + CHECKS.map(function(c){ return '<div class="row" style="flex-wrap:nowrap;align-items:flex-start;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line2)"><span style="flex:0 0 auto">'+stat(c[0], lbl[c[0]])+'</span><div style="min-width:0"><p style="margin:0;font-weight:700">'+c[1]+'</p>'+(c[2]?'<p class="small" style="margin:2px 0 0">'+c[2]+'</p>':'')+'</div></div>'; }).join('') + '</div>';
+}
+function readyCard(){
+  var met = READY.filter(function(r){ return r[0]==='ok'; }).length;
+  return '<div class="card hl"><p class="ch">readiness <span class="r">checked by @examiner</span></p>'
+   + '<p style="margin:0;font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1">'+met+' <span style="font-size:20px;color:var(--muted);font-weight:600">of 6 conditions met</span></p>'
+   + '<div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin:16px 0 8px" aria-hidden="true">' + READY.map(function(r){ return '<span style="height:8px;border-radius:2px;background:'+(r[0]==='ok'?'var(--accent)':'var(--line)')+'"></span>'; }).join('') + '</div>'
+   + READY.map(function(r){ return '<div class="li"><div class="t"><b style="font-size:15px">'+r[1]+'</b><span>'+r[2]+'</span></div>'+stat(r[0], {ok:'met',warn:'needs work',bad:'not met',none:'not yet'}[r[0]])+'</div>'; }).join('')
+   + '<p class="note">These conditions are a draft. The teacher sets the final conditions.</p></div>';
+}
+function progressTiles(){
+  var tiles = [
+    ['live exercises answered', '38<small> of 40</small>', '95% · group average 85%'],
+    ['live exercise score', Math.round(avg(ME_SCORE))+'%', 'group average '+Math.round(avg(CLASS_SCORE))+'%'],
+    ['practice accuracy', Math.round(avg(ME_PRACT))+'%', 'part 1: 82% · part 2: 64%'],
+    ['modules studied', '8<small> of 19</small>', 'module 9 in progress'],
+    ['projects passing', '0<small> of 2</small>', 'own: 1 failed · tribunal: not yet'],
+    ['exam readiness', '3<small> of 6</small>', 'conditions met']
+  ];
+  return '<div class="tiles">' + tiles.map(function(t){ return '<div class="tile"><p class="k">'+t[0]+'</p><p class="v">'+t[1]+'</p><p class="s">'+t[2]+'</p></div>'; }).join('') + '</div>';
+}
+
+/* ---------- public pages ---------- */
+function vHome(){
+  var log = [['proctor','opened the warm-up quiz for lesson 9'],['proctor','released the exercise after block 2'],['tutor','answered 12 questions about module 8'],['reviewer','checked 6 repositories and explained 9 failed checks'],['registrar','registered 2 students of group 62121-32'],['analyst','sent the weekly satisfaction report'],['steward','prepared the teacher’s daily brief']];
+  var comp = [
+    ['class','klass','Learn in class','In class or on Zoom, you answer a warm-up quiz before the lecture and a short exercise after each 15-minute block.','proctor'],
+    ['study','study','Study alone','Each module has a study page and practice exercises, and a tutor answers your questions about the course and the site.','tutor'],
+    ['projects','projects','Submit projects','You link the public repository of each project. The reviewer checks its structure and history and explains every failed check.','reviewer'],
+    ['exam','exam','Exam finale','You follow your readiness for the final exam, take practice exams, and then sit the exam itself.','examiner']
+  ];
+  var cta = signed()
+    ? '<a class="btn pri" href="#programme">Go to my programme</a><a class="btn sec" href="#progress">My progress</a>'
+    : '<a class="btn pri" href="#signin">Sign in</a><a class="btn sec" href="#register">Register to use the service</a>';
+  return '<section class="hero"><div class="wrap in"><div class="txt">'
+   + '<p class="eyebrow"><span class="p">$</span> whoami</p>'
+   + '<h1 class="display">School of Agentic Work</h1>'
+   + '<p class="lede">This is where you work on your course, during lessons and between them. Your teacher teaches every lesson and sets every grade. A team of named agents runs the exercises, checks your projects, answers your questions and shows you your progress.</p>'
+   + '<div class="row" style="margin-top:28px">'+cta+'</div>'
+   + (signed() ? '' : '<p class="small" style="margin-top:14px">First time here? Register with the email address you gave your course organiser. <a href="#class">See how a lesson runs</a>.</p>')
+   + '</div><div class="term"><div class="top"><i></i><i></i><i></i><span style="margin-left:6px">school.log</span><span class="sample" style="margin-left:auto">sample</span></div><div class="body log">'+logLines(log)+'</div></div>'
+   + '</div></section>'
+   + '<section class="band deep"><div class="wrap in"><div class="sechead"><h2 class="h2">What you do here</h2><p class="small">4 sections, each run by one agent under your teacher</p></div>'
+   + '<div class="cols" style="--b:240px">' + comp.map(function(c){ return '<a class="card" href="#'+c[0]+'" style="display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit"><span style="color:var(--accent)">'+I[c[1]].replace('width="18" height="18"','width="26" height="26"')+'</span><h3 class="h3" style="margin:0">'+c[2]+'</h3><p class="fg2" style="margin:0;font-size:15px">'+c[3]+'</p><span class="row" style="margin-top:auto;justify-content:space-between">'+agS(c[4])+'<span class="mono small" style="color:var(--accent)">how it works</span></span></a>'; }).join('') + '</div></div></section>'
+   + '<section class="band"><div class="wrap in"><div class="sechead"><h2 class="h2">Your programme and your progress</h2></div>'
+   + '<div class="cols" style="--b:260px">'
+   + '<a class="card" href="#programme" style="text-decoration:none;color:inherit"><p class="ch">my programme</p><h3 class="h3">You see your whole programme</h3><p class="fg2" style="margin:0;font-size:15px">The site knows your institution and group from the address you register with, and it shows the curriculum, the lesson calendar and the rules of your programme.</p></a>'
+   + '<a class="card" href="#progress" style="text-decoration:none;color:inherit"><p class="ch">my progress</p><h3 class="h3">You see your own progress</h3><p class="fg2" style="margin:0;font-size:15px">Every answer, module, project check and your readiness for the exam, set against the average of your group.</p></a>'
+   + '<div class="card"><p class="ch">your ratings</p><h3 class="h3">Your ratings stay anonymous</h3><p class="fg2" style="margin:0;font-size:15px">You rate each lesson in a few seconds. Your teacher sees ratings only from groups of 5 or more, and ratings never affect grades.</p></div>'
+   + '</div></div></section>'
+   + '<section class="band deep"><div class="wrap in"><div class="sechead"><h2 class="h2">The agents</h2><a class="mono" href="#agents" style="min-height:44px;display:inline-flex;align-items:center">what each agent does and never does</a></div>'
+   + '<div class="cols" style="--b:220px">' + AGENTS.map(function(a){ return '<a class="card" href="#agents" style="text-decoration:none;color:inherit;padding:16px 18px"><span class="agent">@'+a.id+'</span><p style="margin:8px 0 2px;font-weight:800">'+a.role+'</p><p class="small">'+a.where+'</p></a>'; }).join('') + '</div></div></section>'
+   + '<section class="band"><div class="wrap in" style="display:flex;flex-wrap:wrap;gap:36px;align-items:center">'
+   + '<div class="photo" role="img" aria-label="Photo placeholder" style="flex:0 0 220px;height:260px;max-width:100%">photo</div>'
+   + '<div style="flex:999 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> teacher</p><h2 class="h2" style="font-size:34px">Mikael Gorsky</h2>'
+   + '<p class="fg2" style="margin:0 0 10px;font-size:17px;max-width:62ch">Mikael Gorsky teaches every programme on this site. He is a senior researcher at the School of Computer Science, Holon Institute of Technology.</p>'
+   + '<p class="fg2" style="margin:0 0 10px;font-size:17px;max-width:62ch">He wrote the textbook on agentic software engineering that the course follows, forthcoming from Springer.</p>'
+   + '<p class="fg2" style="margin:0;font-size:17px;max-width:62ch">He builds software with AI agents himself, after 30 years leading consulting, software implementation and book publishing organisations.</p></div>'
+   + '</div></section>'
+   + '<section class="band deep"><div class="wrap in" style="display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between">'
+   + '<div style="flex:1 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> contact</p><h2 class="h2">Contact SAW</h2><p class="fg2" style="margin:0;font-size:17px">Questions about registration, signing in or your programme? Write to us, and your teacher answers by email.</p></div>'
+   + '<a class="btn pri" href="#contact">Write to SAW</a></div></section>';
+}
+function vAgents(){
+  return '<div class="wrap page">' + head('ls agents/', 'The agents', 'Your teacher works with a team of 7 named agents. Each agent has one role and works in one part of the school. Each agent also has limits, and this page lists them.', '<span class="chip">7 agents</span><span class="chip">1 teacher</span>')
+   + '<div class="card warnb" style="margin-bottom:20px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-start"><div style="flex:1 1 220px"><span class="human">teacher</span><p style="margin:8px 0 0;font-weight:800;font-size:19px">Mikael Gorsky</p></div><p class="fg2" style="flex:999 1 420px;margin:0;font-size:15.5px">Teaches the lessons, writes the exercises and the rules, keeps the list of addresses permitted to register and sets every grade. Each agent reports to him, and every decision about a person waits for his approval.</p></div>'
+   + '<div class="cols" style="--b:340px">' + AGENTS.map(function(a){ return '<article class="card" style="display:flex;flex-direction:column;gap:12px"><div class="row" style="justify-content:space-between"><span class="agent" style="font-size:15px">@'+a.id+'</span><span class="chip">'+a.role+'</span></div><dl class="kv" style="margin:0"><dt>works in</dt><dd>'+a.where+'</dd><dt>does</dt><dd>'+a.does+'</dd><dt>never</dt><dd>'+a.never+'</dd></dl></article>'; }).join('') + '</div>'
+   + '<div class="section"><div class="sechead"><h2 class="h2">A lesson day in the log</h2><span class="sample">sample</span></div><div class="card log">'
+   + logLines([['steward','asked @proctor to prepare lesson 9 from the teacher’s plan'],['proctor','opened the warm-up quiz, 33 of 34 students answered'],['teacher','started the lecture on Zoom',true],['proctor','released the exercise after block 1 on the teacher’s signal'],['tutor','answered 7 questions about module 9 after the lesson'],['reviewer','checked 4 repositories pushed after the lesson'],['analyst','closed the lesson rating with 28 answers and grouped 11 comments'],['steward','put 2 messages from Contact SAW and 1 exam draft in the teacher’s brief']])
+   + '</div></div></div>';
+}
+function vPrivacy(){
+  return '<div class="wrap page" style="max-width:820px">' + head('cat privacy.txt','Privacy notice','This summary tells you what the school keeps about you and why.')
+   + '<div class="stack">'
+   + '<div class="card"><h2 class="h3">Who is responsible</h2><p class="fg2" style="margin:0">Mikael Gorsky runs this site and is responsible for the data it keeps. You can ask him to show, correct or delete your data at any time through <a href="#contact">Contact SAW</a>.</p></div>'
+   + '<div class="card"><h2 class="h3">What the site keeps</h2><p class="fg2" style="margin:0">The email address you register with, and the institution, group and programme that your teacher wrote beside it on the list of permitted addresses. The site also keeps your answers to exercises, your project links and the results of their checks, and the messages you send through Contact SAW. It does not keep your name or photo from Google, and it never asks for an ID number.</p></div>'
+   + '<div class="card"><h2 class="h3">Ratings and surveys</h2><p class="fg2" style="margin:0">Lesson ratings and survey answers are anonymous to the teacher. He sees them only as totals from groups of 5 or more students, and they never affect any grade.</p></div>'
+   + '<div class="card"><h2 class="h3">Services that process the data</h2><p class="fg2" style="margin:0">The site runs on [hosting service] in [region]. Questions to @tutor go to an AI service without your name or email address. Do not write personal matters in those questions.</p></div>'
+   + '<div class="card"><h2 class="h3">How long it is kept</h2><p class="fg2" style="margin:0">Course data is deleted [period] after the end of the course, once the time for grade appeals has passed.</p></div>'
+   + '<div class="card"><h2 class="h3">The demo login</h2><p class="fg2" style="margin:0">The demo login belongs to no person. The site records when it is used and which pages are opened, and it deletes everything entered under it every night.</p></div>'
+   + '<div class="card"><h2 class="h3">If you do not want to use the site</h2><p class="fg2" style="margin:0">You can do the lesson exercises in another way, for example by email to the teacher. Tell him at the start of the course.</p></div>'
+   + '</div></div>';
+}
+function vSignin(){
+  return '<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">'
+   + '<div style="--b:340px"><p class="eyebrow"><span class="p">$</span> sign-in</p><h1 class="h1">Sign in</h1><p class="lede" style="margin-bottom:22px">Sign in with the address you registered with. The site then opens your programme.</p>'
+   + '<div class="card flat"><p class="ch">not registered yet?</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Register once, with the email address you gave your course organiser.</p><a class="btn sec" href="#register">Register to use the service</a></div></div>'
+   + '<div class="stack" style="--b:380px">'
+   + '<div class="card" style="padding:26px"><button type="button" class="btn pri wide" data-act="signin" style="min-height:52px;font-size:17px">Sign in with Google</button>'
+   + '<form data-form="emaillink" style="margin-top:18px"><label class="f" for="sie">or get a sign-in link by email</label><div class="row" style="flex-wrap:nowrap"><input class="inp" id="sie" type="email" placeholder="the address you registered with"><button type="submit" class="btn sec">Send</button></div></form>'
+   + '<p class="small" style="margin-top:14px;font-size:13px">If the site does not let you in, write to us through <a href="#contact">Contact SAW</a>.</p></div>'
+   + '<form class="card dash" data-form="demo" style="padding:22px"><p class="ch">demo login</p><p class="fg2" style="margin:0 0 14px;font-size:15px">For people who have received a demo login. It opens the site as a sample student.</p>'
+   + '<div class="cols" style="--b:160px;gap:12px"><div><label class="f" for="dl">login</label><input class="inp" id="dl" autocomplete="username" placeholder="demo"></div><div><label class="f" for="dp">password</label><input class="inp" id="dp" type="password" autocomplete="current-password" placeholder="password"></div></div>'
+   + '<button type="submit" class="btn out" style="margin-top:14px">sign in to the demo</button></form>'
+   + '</div></div></div>';
+}
+function vRegister(){
+  if (S.regDone) return '<div class="wrap page"><div class="card hl" style="max-width:680px;margin:20px auto 0"><p class="eyebrow"><span class="p">$</span> register</p><h1 class="h2">You are registered</h1><p class="fg2" style="margin:0 0 16px">'+agS('registrar')+' found your address on the list your teacher keeps, and placed you in your group.</p>'
+   + '<dl class="kv" style="margin:0 0 20px"><dt>address</dt><dd>student07@gmail.com</dd><dt>institution</dt><dd>Holon Institute of Technology</dd><dt>group</dt><dd>62121-31</dd><dt>programme</dt><dd>Agentic software engineering</dd></dl>'
+   + '<p class="small" style="margin:0 0 18px">From now on, sign in with the same address.</p><button type="button" class="btn pri" data-act="reg-go">Go to my programme</button></div></div>';
+  return '<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">'
+   + '<div style="--b:360px"><p class="eyebrow"><span class="p">$</span> register</p><h1 class="h1">Register to use the service</h1><p class="lede" style="margin-bottom:22px">You register once. After that, you sign in with the same address.</p>'
+   + '<div class="card warnb"><p class="ch" style="color:var(--warn)">use the right address</p><p class="fg2" style="margin:0 0 10px">Register with the email address you gave your course organiser. If it is a Gmail address, register with Google.</p><p class="fg2" style="margin:0">The site accepts only addresses that your teacher has put on a group list. It reads your institution and group from that list, so you do not enter them yourself.</p></div></div>'
+   + '<div class="stack" style="--b:380px"><div class="card" style="padding:26px"><button type="button" class="btn pri wide" data-act="reg-google" style="min-height:52px;font-size:17px">Register with Google</button>'
+   + '<form data-form="emaillink" style="margin-top:18px"><label class="f" for="rge">or register with another email address</label><div class="row" style="flex-wrap:nowrap"><input class="inp" id="rge" type="email" placeholder="the address you gave your course organiser"><button type="submit" class="btn sec">Send link</button></div><p class="small" style="margin-top:6px;font-size:13px">The site sends a link to this address. Open it to finish registering.</p></form>'
+   + '<div style="margin-top:22px;border-top:1px solid var(--line);padding-top:18px"><p class="ch">if the site does not accept your address</p><p class="fg2" style="margin:0;font-size:15px">Check that it is the address you gave your course organiser. If it is, write to us through <a href="#contact">Contact SAW</a>, and say which programme and group you are in.</p></div></div>'
+   + '<div class="card flat"><p class="ch">what the site keeps</p><p class="fg2" style="margin:0 0 6px;font-size:15px">Your email address and the institution and group on your teacher’s list, your answers to exercises and your project links. It does not keep your name or photo from Google.</p><p class="fg2" style="margin:0 0 6px;font-size:15px">Your lesson ratings are anonymous and never affect grades.</p><a href="#privacy" style="min-height:44px;display:inline-flex;align-items:center">Read the privacy notice</a><p class="small" style="font-size:13px">By registering, you confirm that you have read the privacy notice.</p></div>'
+   + '</div></div></div>';
+}
+function vContact(){
+  if (S.contactSent) return '<div class="wrap page"><div class="card hl" style="max-width:640px;margin:20px auto 0"><p class="eyebrow"><span class="p">$</span> contact</p><h1 class="h2">Message sent</h1><p class="fg2" style="margin:0 0 18px">'+agS('steward')+' has passed your message to Mikael Gorsky. He answers by email.</p><a class="btn sec" href="#home">Back to the home page</a></div></div>';
+  var who = signed() ? me().who : '';
+  return '<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">'
+   + '<form data-form="contact" style="--b:480px;flex:999 1 480px;display:flex;flex-direction:column;gap:18px">'
+   + '<div><p class="eyebrow"><span class="p">$</span> contact</p><h1 class="h1">Contact SAW</h1><p class="lede">Write to us about registration, signing in or your programme. Your teacher answers by email.</p></div>'
+   + '<div class="cols" style="--b:220px;gap:16px"><div><label class="f" for="cn">name</label><input class="inp" id="cn" placeholder="Your name"></div><div><label class="f" for="ce">email</label><input class="inp" id="ce" type="email" placeholder="Your email address" value="'+(S.role==='student'?esc(who):'')+'"></div></div>'
+   + '<div><label class="f" for="ct">about</label><select class="inp" id="ct"><option>Registration and signing in</option><option>My programme</option><option>Something else</option></select></div>'
+   + '<div><label class="f" for="cm">message</label><textarea class="inp" id="cm" rows="5" placeholder="Your message"></textarea></div>'
+   + '<div class="row"><button class="btn pri" type="submit">Send message</button><span class="small">Do not send ID numbers or other personal documents.</span></div></form>'
+   + '<aside class="card" style="flex:1 1 280px"><p class="ch">what happens next</p>'
+   + ['@steward passes your message to the teacher.','Mikael Gorsky reads it and answers by email.'].map(function(t,i){ return '<div class="row" style="flex-wrap:nowrap;align-items:flex-start;margin-bottom:14px"><span class="chip" style="flex:0 0 auto">'+(i+1)+'</span><p class="fg2" style="margin:0;font-size:15px">'+esc(t)+'</p></div>'; }).join('')
+   + '</aside></div></div>';
+}
+
+/* ---------- my programme ---------- */
+function programmeOverview(m, interactive){
+  var parts = PARTS.map(function(p){
+    var rows = '';
+    for (var i=p.a;i<=p.b;i++){
+      var st = i<=8 ? stat('ok','taught') : i===9 ? '<span class="chip solid">today</span>' : '<span class="chip">lesson '+i+' · [date]</span>';
+      var title = interactive && i<=9 ? '<a href="#module" style="color:var(--fg);text-decoration:none">'+esc(MODULES[i-1][0])+'</a>' : esc(MODULES[i-1][0]);
+      rows += '<div class="li"><span class="n">'+pad(i)+'</span><div class="t"><b>'+title+'</b><span>'+esc(MODULES[i-1][1])+'</span></div>'+st+'</div>';
+    }
+    return '<div class="section"><div class="row" style="gap:6px 14px;margin-bottom:6px"><span class="mono" style="color:var(--accent);font-size:14px">part-'+p.n+'/</span><h3 class="h3" style="margin:0;font-size:21px">'+p.t+'</h3><span class="mono small">modules '+pad(p.a)+'–'+pad(p.b)+'</span></div><p class="fg2" style="margin:0 0 12px;font-size:15px">'+p.d+'</p><div class="card" style="padding:4px 20px">'+rows+'</div></div>';
+  }).join('');
+  return '<div class="cols" style="align-items:stretch">'
+   + '<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">next lesson <span class="r">[day, date, time]</span></p><h2 class="h2" style="font-size:24px">Lesson 9 · '+esc(MODULES[8][0])+'</h2><p class="fg2" style="margin:0 0 16px">The warm-up quiz opens before the lecture starts. Keep Learn in class open beside Zoom during the lesson.</p><div class="row"><a class="btn pri" href="#class">Open Learn in class</a><a class="btn sec" href="#programme" data-act="note" data-v="The Zoom link opens here in the real site.">Zoom link</a></div></div>'
+   + '<div class="card" style="flex:1 1 300px"><p class="ch">your group</p><dl class="kv" style="margin:0"><dt>institution</dt><dd>'+esc(m.inst)+'</dd><dt>group</dt><dd>'+esc(m.group)+'</dd><dt>teacher</dt><dd>Mikael Gorsky</dd><dt>signed in as</dt><dd class="mono" style="font-size:13.5px">'+esc(m.who)+'</dd></dl><p class="note">The site placed you in this group from the list your teacher keeps.</p></div></div>'
+   + '<div class="section"><h2 class="h2">About the programme</h2><p class="lede" style="margin-bottom:12px">Agentic software engineering taught as a discipline, not a tool. The course teaches how to build good software by directing AI agents, and it measures good against industry standards: software that is functionally suitable, reliable, secure, maintainable, and fit for the person who uses it.</p><p class="lede">From module 6 to the end, you build one running project and carry it from a rough intent to a finished system.</p></div>'
+   + '<div class="cols section" style="--b:260px;gap:14px">'
+   + [['live engagement','Answers to the warm-up quizzes and the exercises after each block.','[%] of the grade'],['own project','Your running project, in a public repository.','[%] of the grade'],['tribunal','The second project, in a public repository.','[%] of the grade'],['final exam','2 parts, at the end of the course.','[%] of the grade']].map(function(a){ return '<div class="card" style="padding:16px 18px"><p class="ch" style="margin-bottom:6px">'+a[0]+' <span class="r">'+a[2]+'</span></p><p style="margin:0;font-size:15px" class="fg2">'+a[1]+'</p></div>'; }).join('')
+   + '</div>'
+   + '<h2 class="h2 section">Curriculum</h2>' + parts
+   + '<div class="cols section"><div class="card" style="--b:320px"><p class="ch">documents</p>'
+   + ['Programme 2-pager','Full curriculum','Project rules','Grading rules'].map(function(d){ return '<a href="#programme" data-act="note" data-v="The PDF opens here in the real site." style="display:flex;justify-content:space-between;min-height:44px;align-items:center;color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line2)"><span>'+d+'</span><span class="chip">PDF</span></a>'; }).join('')
+   + '</div><div class="card" style="--b:320px"><p class="ch">teacher</p><p style="margin:0 0 6px;font-weight:800;font-size:18px">Mikael Gorsky</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Questions about the programme go to your teacher through Contact SAW. Questions about the rules can also go to '+agS('tutor')+'.</p><a class="btn sec" href="#contact">Contact SAW</a></div></div>';
+}
+function vProgramme(){
+  if (S.role==='visitor'){
+    var exM = {inst:'Holon Institute of Technology', group:'62121-31', who:'student@gmail.com'};
+    return '<div class="wrap page">' + head('cat programme','My programme','This page gives you the overview of the programme you are enrolled in: its curriculum, your lesson calendar, the parts of your grade, the rules and the documents.')
+     + steps([['Register once','Register with the email address you gave your course organiser.'],['The site finds your group','The site reads your institution and group from the list your teacher keeps.'],['Your programme opens','This page shows your programme, and the 4 sections show your lessons, modules, projects and exam.']])
+     + '<div class="section">'+exFrame('the overview of a programme', '<div class="card" style="margin-bottom:16px"><p class="mono small" style="margin:0 0 6px">'+esc(exM.inst)+' · group '+exM.group+'</p><h2 class="h1" style="font-size:32px;margin:0">Agentic software engineering</h2></div>' + programmeOverview(exM, false).split('<h2 class="h2 section">Curriculum</h2>')[0])+'</div>'
+     + signStrip('Sign in to see your programme.', ['the curriculum, part by part and module by module','your lesson calendar and the Zoom link','the parts of your grade and the rules for projects and the exam','the programme documents']) + '</div>';
+  }
+  var m = me();
+  return '<div class="wrap page">' + head('cat programme','Agentic software engineering', esc(m.inst)+' · group '+esc(m.group)+' · teacher Mikael Gorsky', '<span class="chip">19 modules · 4 parts</span><span class="sample">sample data</span>')
+   + programmeOverview(m, true) + '</div>';
+}
+
+/* ---------- learn in class ---------- */
+function vClass(){
+  if (S.role==='visitor') return '<div class="wrap page">' + head('learn --in-class','Learn in class','Your lessons run in class or on Zoom. Keep this page open beside the lecture. Before the lecture starts you answer a warm-up quiz, and after each 15-minute block you answer a short exercise.', ag('proctor'))
+   + steps([['Before the lecture','@proctor opens a warm-up quiz on the last lesson.'],['After each block','@proctor opens a short exercise with a timer. You answer on your phone or laptop.'],['Class results','Your teacher shows the answers of the class and discusses them.'],['After the lesson','You rate the lesson in about 20 seconds. Your rating is anonymous.']])
+   + '<div class="cols section" style="align-items:flex-start"><div style="--b:420px;flex:999 1 420px">'+exFrame('an exercise during a lesson', liveCard({picked:'a', sent:false}))+'</div><div style="--b:340px">'+exFrame('the lesson rating', pulseCard({r:4, helped:['Live exercises'], blocked:['Too fast'], text:'', sent:false}, 'pulseEx'))+'</div></div>'
+   + signStrip('Sign in to see your lesson calendar, answer the exercises and see your scores.', ['your lesson calendar and the Zoom link','the live exercise as soon as it opens','your answers and scores for each lesson, set against your group','the rating form for each lesson']) + '</div>';
+  var plan = [['Warm-up quiz','answered','ok'],['Exercise after block 1','answered','ok'],['Exercise after block 2','open now','solid'],['Exercise after block 3','not yet','none'],['Exercise after block 4','not yet','none']];
+  var rows = STUD[6].les.map(function(n,i){ return '<tr><td class="m">'+(i+1)+'</td><td>'+esc(MODULES[i][0])+'</td><td>'+squares(n,5)+'</td><td class="m">'+ME_SCORE[i]+'%</td><td class="m">'+CLASS_SCORE[i]+'%</td><td class="m">'+(ME_RATE[i]!=null?ME_RATE[i]+' / 5':'<a href="#class" data-act="note" data-v="The rating form is above the table.">rate</a>')+'</td></tr>'; }).join('');
+  return '<div class="wrap page">' + head('learn --in-class','Learn in class','Lesson 9 is live now. Keep this page open beside Zoom and answer each exercise when it opens.', '<span class="chip solid">live</span>'+ag('proctor'))
+   + '<div class="cols" style="align-items:flex-start"><div style="--b:520px;flex:999 1 520px">'+liveCard(S.live)+'</div>'
+   + '<div class="stack" style="flex:1 1 300px"><div class="card"><p class="ch">lesson 9 <span class="r">[date]</span></p>' + plan.map(function(x){ return '<div class="li"><span class="t"><b style="font-size:15px;font-weight:600">'+x[0]+'</b></span><span class="chip '+x[2]+'">'+x[1]+'</span></div>'; }).join('')
+   + '<a class="btn sec wide" href="#class" data-act="note" data-v="The Zoom link opens here in the real site." style="margin-top:12px">Zoom link</a></div>'
+   + '<div class="card flat"><p class="ch">study this module</p><p style="margin:0 0 12px;font-weight:700">'+esc(MODULES[8][0])+'</p><a class="btn out" href="#module">open the study page</a></div></div></div>'
+   + '<div class="section">'+pulseCard(S.pulse, 'pulseText')+'</div>'
+   + '<div class="section"><div class="sechead"><h2 class="h2">Your lessons</h2><span class="sample">sample data</span></div><div class="card" style="padding:6px 0"><div class="scroll"><table class="tbl"><thead><tr><th>lesson</th><th>module</th><th>answered</th><th>your score</th><th>group average</th><th>your rating</th></tr></thead><tbody>'+rows+'</tbody></table></div></div></div>'
+   + '</div>';
+}
+
+/* ---------- study alone ---------- */
+function vStudy(){
+  if (S.role==='visitor'){
+    var studyEx = '<div class="card"><p class="mono small" style="margin:0 0 6px">module 01</p><h2 class="h2" style="font-size:23px">'+esc(MODULES[0][0])+'</h2><div class="cols" style="--b:220px;gap:12px;margin:14px 0">'
+      + '<div class="card flat" style="padding:14px"><p class="ch" style="margin-bottom:4px">idea-1</p><p style="margin:0;font-weight:800">A discipline, not a tool</p></div><div class="card flat" style="padding:14px"><p class="ch" style="margin-bottom:4px">idea-4</p><p style="margin:0;font-weight:800">The central tension</p></div></div>'
+      + '<p class="mono small" style="margin:0 0 8px">practice · exercise 1 of 3</p><p style="margin:0 0 10px;font-weight:700">Which tension does this course set out to answer?</p>'
+      + '<button type="button" class="opt" aria-pressed="true"><span class="k">[A]</span><span>The speed of production has outrun our ability to trust the result.</span></button><button type="button" class="opt" aria-pressed="false"><span class="k">[B]</span><span>Models are still too expensive for everyday coding.</span></button>'
+      + '<p class="status" style="margin-top:6px"><span style="color:var(--accent)">'+I.check+'</span>Correct. Module 1 names this tension.</p></div>';
+    return '<div class="wrap page">' + head('study --alone','Study alone','Each module of your programme has a study page with key ideas, slides, the recording of the lesson and practice exercises. '+agS('tutor')+' answers your questions about the course rules, the lessons and the site.', ag('tutor'))
+     + steps([['Read the key ideas','Each study page opens with the 4 or 5 ideas of the module.'],['Watch or review','The slides and the recording of the lesson are on the same page.'],['Practise','Practice exercises show at once whether you were right. They count towards no grade.'],['Ask','@tutor answers questions about the rules, the lessons and the site, up to 20 a day.']])
+     + '<div class="cols section" style="align-items:flex-start"><div style="--b:420px;flex:999 1 420px">'+exFrame('a study page', studyEx)+'</div><div style="--b:340px">'+exFrame('a question to the tutor', tutorCard('askEx'))+'</div></div>'
+     + signStrip('Sign in to study the modules of your programme.', ['the study page of each module taught so far','practice exercises, with your own results kept','questions to @tutor','suggestions on what to review before the next lesson']) + '</div>';
+  }
+  var list = MODULES.map(function(m,i){
+    var n = i+1, st = n<=8 ? stat('ok','practice '+ME_PRACT[i]+'%') : n===9 ? '<span class="chip solid">in progress</span>' : '<span class="chip">not started</span>';
+    return '<div class="li"><span class="n">'+pad(n)+'</span><div class="t"><b><a href="#module" style="color:var(--fg);text-decoration:none">'+esc(m[0])+'</a></b><span>'+esc(m[1])+'</span></div>'+st+'</div>';
+  }).join('');
+  return '<div class="wrap page">' + head('study --alone','Study alone','Work through each module at your own pace. '+agS('tutor')+' answers questions about the course rules, the lessons and the site.', '<span class="sample">sample data</span>')
+   + '<div class="cols" style="align-items:flex-start"><div class="stack" style="--b:420px;flex:999 1 420px">'
+   + '<div class="card hl"><p class="ch">continue <span class="r">module 09</span></p><h2 class="h2" style="font-size:24px">'+esc(MODULES[8][0])+'</h2><p class="fg2" style="margin:0 0 6px">'+esc(MODULES[8][1])+'</p><p class="small" style="margin:0 0 16px">Practice: 0 of 3 exercises done.</p><a class="btn pri" href="#module">Continue studying</a></div>'
+   + '<div class="card flat"><p class="ch">suggestion from @tutor</p><p class="fg2" style="margin:0">Your practice score on module 6 was 50%. Review the section on the framing interview before lesson 10, then try its exercises again.</p></div></div>'
+   + '<div style="flex:1 1 340px">'+tutorCard('ask')+'</div></div>'
+   + '<div class="section"><div class="sechead"><h2 class="h2">Modules</h2><p class="small mono">8 studied · 1 in progress · 10 to come</p></div><div class="card" style="padding:4px 20px">'+list+'</div></div></div>';
+}
+function prac(key, n, q, opts, correct, right, wrong){
+  var st = S.prac[key] || {};
+  var h = '<div class="card"><p class="mono small" style="margin:0 0 8px">exercise '+n+' of 3 · choose one</p><h3 class="h3" style="font-size:19px;margin-bottom:14px">'+q+'</h3>';
+  h += opts.map(function(o){ var on = st.picked===o[0], wr = on && st.checked && o[0]!==correct; return '<button type="button" class="opt'+(wr?' wrong':'')+'" aria-pressed="'+on+'" data-act="prac-pick" data-v="'+key+':'+o[0]+'"><span class="k">['+o[0].toUpperCase()+']</span><span>'+esc(o[1])+'</span></button>'; }).join('');
+  h += '<div class="row" style="margin-top:6px"><button type="button" class="btn out" data-act="prac-check" data-v="'+key+'">check answer</button>';
+  if (st.checked) h += st.picked===correct ? '<p class="status" role="status" style="margin:0"><span style="color:var(--accent)">'+I.check+'</span>'+right+'</p>' : '<p class="status" role="status" style="margin:0"><span style="color:var(--bad)">'+I.x+'</span>'+wrong+'</p>';
+  return h + '</div></div>';
+}
+function vModule(){
+  if (S.role==='visitor') return vStudy();
+  var ideas = [['A discipline, not a tool','Agentic software engineering is a body of practice with durable principles, a method that can be learned, and characteristic faults that a practitioner learns to see.'],['A long line of handovers','Programming has moved from hand-written code to directing an agent. Each step hands more of the decision to the machine.'],['The course rhythm','Each piece of work follows the same rhythm: equip the agent, then verify its work.'],['The central tension','The speed of production has outrun our ability to trust the result. The whole course answers this tension.']];
+  return '<div class="wrap page"><p class="eyebrow"><a href="#study" style="color:var(--muted)">study</a> / module 01</p>'
+   + '<div class="chips" style="margin-bottom:14px">'+stat('ok','studied')+ag('tutor')+'</div>'
+   + '<h1 class="h1">'+esc(MODULES[0][0])+'</h1><p class="lede" style="margin-bottom:32px">This module sets the subject as a discipline. It traces the long line of handovers from hand-written code to directing an agent, asks how much of the decision the agent now makes, and sets the course rhythm of equipping the agent and then verifying its work.</p>'
+   + '<h2 class="h2">Key ideas</h2><div class="cols" style="--b:300px;gap:14px">' + ideas.map(function(d,i){ return '<div class="card"><p class="ch" style="margin-bottom:6px">idea-'+(i+1)+'</p><h3 class="h3">'+d[0]+'</h3><p class="fg2" style="margin:0;font-size:15px">'+d[1]+'</p></div>'; }).join('') + '</div>'
+   + '<div class="section"><h2 class="h2">Slides and recording</h2><div class="cols" style="--b:320px;gap:14px"><div><div class="ph" role="img" aria-label="Slides placeholder">[lesson 1 slides]</div><p class="mono small" style="margin-top:6px">slides · 1 / [N]</p></div><div><div class="ph" role="img" aria-label="Recording placeholder" style="flex-direction:column;gap:10px">'+I.play+'[recording of lesson 1]</div><p class="mono small" style="margin-top:6px">recording · [length]</p></div></div></div>'
+   + '<div class="section"><div class="sechead"><h2 class="h2">Practice exercises</h2><p class="small">Practice answers are saved for you only and count towards no grade.</p></div><div class="stack" style="gap:14px">'
+   + prac('e1',1,'Which tension does this course set out to answer?',[['a','The speed of production has outrun our ability to trust the result.'],['b','Models are still too expensive for everyday coding.'],['c','Most developers refuse to hand work to an agent.'],['d','Agents cannot yet write code that compiles.']],'a','Correct. Module 1 names this tension, and the rest of the course answers it.','Not quite. Read idea 4 again.')
+   + prac('e2',2,'How does this course describe agentic software engineering?',[['a','A discipline with durable principles, a method that can be learned, and characteristic faults.'],['b','A set of tools that write code faster than a person can.'],['c','A way to replace programmers with agents.'],['d','A style of writing prompts for coding assistants.']],'a','Correct. The course treats it as a discipline, not as a tool.','Not quite. Read idea 1 again.')
+   + '<div class="card"><p class="mono small" style="margin:0 0 8px">exercise 3 of 3 · short answer</p><h3 class="h3" style="font-size:19px"><label for="ex3">In 2 or 3 sentences, explain why fast production of code creates a problem of trust.</label></h3><p class="small" style="margin:0 0 12px">Write your own answer first, then compare it with the teacher’s answer.</p><textarea class="inp" id="ex3" rows="3" placeholder="Your answer"></textarea>'
+   + (S.model ? '<div class="card flat" style="margin-top:12px"><p class="ch">teacher’s answer</p><p class="fg2" style="margin:0">Agents now write code faster than a person can read and check it. If the engineer cannot verify the result, more speed only produces more code that nobody can trust. The course therefore teaches how to equip the agent and then verify its work.</p></div>' : '<button type="button" class="btn out" data-act="model" style="margin-top:12px">show the teacher’s answer</button>')
+   + '</div></div></div>'
+   + '<div class="section card"><p class="ch">how clear was this module? <span class="r">anonymous · @analyst</span></p><div class="scale" role="group" aria-label="Clarity from 1 to 5">' + [1,2,3,4,5].map(function(n){ return '<button type="button" aria-pressed="'+(S.modRate===n)+'" data-act="mod-rate" data-v="'+n+'">'+n+'</button>'; }).join('') + '</div><div class="scale-lbl"><span>not clear</span><span>very clear</span></div></div>'
+   + '</div>';
+}
+
+/* ---------- submit projects ---------- */
+function projectRules(){
+  return '<div class="card"><p class="ch">project rules of your programme</p><div class="stack" style="gap:10px;font-size:15px"><p class="fg2" style="margin:0">Only code in a public GitHub repository is graded. You may open a separate GitHub account for the course.</p><p class="fg2" style="margin:0">Keep a context file from the first day of the project.</p><p class="fg2" style="margin:0">Build along the course schedule and commit as you work, with messages that say what changed.</p><p class="fg2" style="margin:0">Write tests and keep them passing.</p></div><a class="mono" href="#projects" data-act="note" data-v="The full rules open here in the real site." style="min-height:44px;display:inline-flex;align-items:center;font-size:13px">read the full project rules</a></div>';
+}
+function vProjects(){
+  if (S.role==='visitor'){
+    return '<div class="wrap page">' + head('check projects','Submit projects','Your programme may ask you to build projects. You link the public repository of each project, '+agS('reviewer')+' checks its structure and history and explains every failed check, and your teacher grades the work itself.', ag('reviewer'))
+     + steps([['Link the repository','Paste the link to the public repository of your project.'],['@reviewer checks it','The check looks at access, the context file, the history of commits, tests and the README.'],['Fix and check again','Every failed check comes with an explanation. You can run the check again at any time.'],['Your teacher grades','The check never grades. Your teacher grades the work itself.']])
+     + '<div class="cols section" style="align-items:flex-start"><div style="--b:460px;flex:999 1 460px">'+exFrame('the result of a check', checkLog())+'</div><div class="card" style="--b:300px"><p class="ch">what @reviewer checks</p>'+CHECKS.map(function(c){ return '<p class="status fg2" style="margin:0 0 10px;align-items:flex-start;font-size:15px"><span style="color:var(--accent);margin-top:2px">'+I.check+'</span>'+c[1]+'</p>'; }).join('')+'</div></div>'
+     + signStrip('Sign in to submit your repositories and see your checks.', ['the project rules of your programme','a check of each repository whenever you ask','feedback from @reviewer on every failed check','the history of your checks']) + '</div>';
+  }
+  var own = '<form style="margin-bottom:20px"><label class="f" for="repo">public repository link</label><div class="row" style="flex-wrap:wrap"><input class="inp mono" id="repo" value="https://github.com/[student]/[project]" style="flex:1 1 300px;width:auto;font-family:var(--mono);font-size:14.5px"><button type="button" class="btn pri" data-act="note" data-v="@reviewer started a new check. It takes about a minute.">Run check</button></div></form>'
+   + checkLog()
+   + '<div class="card flat section" style="margin-top:20px"><p class="ch">feedback from @reviewer</p><p class="fg2" style="margin:0 0 10px">Your repository is public, the context file is in place, and the history shows steady work over several weeks. Several commit messages do not say what changed, so a reader of the history cannot follow your decisions. Write each message as a short sentence about the change.</p><p class="fg2" style="margin:0">The project has no tests. The project rules require them, so add tests before your next check and ask the agent to run them before each commit.</p></div>'
+   + '<p class="small" style="margin-top:12px">The check looks at the structure and history of the repository only. Mikael Gorsky grades the work itself.</p>';
+  var trib = '<form style="margin-bottom:20px"><label class="f" for="repo2">public repository link</label><div class="row"><input class="inp" id="repo2" placeholder="https://github.com/..." style="flex:1 1 300px;width:auto;font-family:var(--mono);font-size:14.5px"><button type="button" class="btn pri" data-act="note" data-v="@reviewer started the first check of your Tribunal.">Submit and check</button></div></form>'
+   + '<div class="card dash"><p class="ch">no check yet</p><p class="fg2" style="margin:0">Submit the link when your Tribunal repository is ready. @reviewer runs the same checks as for your own project.</p></div>';
+  return '<div class="wrap page">' + head('check '+(S.proj==='own'?'own-project':'tribunal'),'Submit projects','Link the public repository of each project. '+agS('reviewer')+' checks its structure and history and explains every failed check. The teacher grades the work itself.','<span class="sample">sample data</span>')
+   + '<div class="tabs" role="tablist" aria-label="Projects"><button type="button" role="tab" aria-selected="'+(S.proj==='own')+'" data-act="proj" data-v="own">own project · 1 failed</button><button type="button" role="tab" aria-selected="'+(S.proj==='trib')+'" data-act="proj" data-v="trib">tribunal · not submitted</button></div>'
+   + '<div class="cols" style="align-items:flex-start;gap:28px"><div style="--b:560px;flex:999 1 560px">'+(S.proj==='own'?own:trib)+'</div><div class="stack" style="flex:1 1 280px">'+projectRules()
+   + '<div class="card"><p class="ch">earlier checks</p><div class="log"><div class="l"><span class="x">[date]</span><span class="muted">4 passed · 1 warning · 2 failed</span></div><div class="l"><span class="x">[date]</span><span class="muted">3 passed · 1 warning · 3 failed</span></div></div></div></div></div></div>';
+}
+
+/* ---------- exam finale ---------- */
+function examCard(){
+  return '<div class="card"><p class="ch">the exam <span class="r">draft format</span></p><dl class="kv" style="margin:0"><dt>date</dt><dd>[date and time]</dd><dt>length</dt><dd>[duration]</dd><dt>part A</dt><dd>Closed questions on all modules, marked by @examiner and reviewed by the teacher.</dd><dt>part B</dt><dd>You direct an agent on a small task and submit the session record. The teacher grades it.</dd><dt>where</dt><dd>[in class or online]</dd></dl></div>';
+}
+function vExam(){
+  if (S.role==='visitor'){
+    return '<div class="wrap page">' + head('exam --status','Exam finale','Your programme ends with a final exam. Before it, '+agS('examiner')+' shows how ready you are, condition by condition, and runs practice exams on the modules taught so far.', ag('examiner'))
+     + steps([['Follow your readiness','@examiner checks your modules, live answers, practice results and projects against the conditions for the exam.'],['Practise','Practice exams of about 20 questions show where you are weak. They never count towards the grade.'],['Sit the exam','Part A has closed questions. In part B you direct an agent on a small task and submit the session record.'],['Your teacher grades','@examiner marks the closed questions. Your teacher reviews every exam and sets the mark.']])
+     + '<div class="cols section" style="align-items:flex-start"><div style="--b:440px;flex:999 1 440px">'+exFrame('readiness for the exam', readyCard())+'</div><div style="--b:320px">'+examCard()+'</div></div>'
+     + signStrip('Sign in to see your readiness and take practice exams.', ['your readiness for the exam, condition by condition','practice exams on the modules taught so far','the date, format and rules of your exam']) + '</div>';
+  }
+  return '<div class="wrap page">' + head('exam --status','Exam finale','Follow your readiness for the final exam, take practice exams, and find everything about the exam day.', ag('examiner')+'<span class="sample">draft format</span>')
+   + '<div class="cols" style="align-items:flex-start"><div style="--b:440px;flex:999 1 440px">'+readyCard()+'</div>'
+   + '<div class="stack" style="flex:1 1 320px">'+examCard()
+   + '<div class="card"><p class="ch">practice exam <span class="r">last result 72%</span></p>'+hbars([{l:'Part 1',v:82},{l:'Part 2',v:64,w:true},{l:'Parts 3 and 4',v:0,tip:'Parts 3 and 4: not taught yet'}],{max:100,fmt:function(v){return v?v+'%':'–';}})
+   + '<button type="button" class="btn pri wide" style="margin-top:16px" data-act="note" data-v="A 20-question practice exam starts here in the real site.">Start a practice exam</button><p class="small" style="margin-top:8px;font-size:13px">20 questions on the modules taught so far, about 30 minutes. Practice scores never count towards the grade.</p></div></div></div>'
+   + '<div class="section card"><p class="ch">rules for the exam day <span class="r">draft</span></p><div class="cols" style="--b:240px;gap:16px">'
+   + [['Sign in','Sign in with the same address you use in the course.'],['Tools','In part B you may use [the agent tools allowed by the teacher].'],['Record','Keep the full record of your session with the agent. It is part of your answer.'],['Questions','During the exam, ask the teacher, not @tutor. The tutor is closed during the exam.']].map(function(x){ return '<div><p style="margin:0 0 4px;font-weight:800">'+x[0]+'</p><p class="fg2" style="margin:0;font-size:15px">'+x[1]+'</p></div>'; }).join('')
+   + '</div></div></div>';
+}
+
+/* ---------- my progress ---------- */
+function vProgress(){
+  if (S.role==='visitor'){
+    var exChart = '<div class="card"><p class="ch">live exercise score by lesson <span class="r">you and your group</span></p><div class="legend"><span><i></i>You</span><span><i class="ref"></i>Group average</span></div><div class="chart" data-chart="me-score" style="height:220px"></div></div>';
+    return '<div class="wrap page">' + head('progress --me','My progress','This page shows how you are doing in your programme, set against the average of your group. Only you see your own figures.', ag('analyst'))
+     + exFrame('the progress of a student', progressTiles() + '<div style="margin-top:16px">'+exChart+'</div>')
+     + '<div class="cols section"><div class="card" style="--b:300px"><p class="ch">what the page shows</p><div class="ticks" style="margin:0"><p>'+I.check+'<span>your answers and scores in each lesson</span></p><p>'+I.check+'<span>the modules you have studied and your practice results</span></p><p>'+I.check+'<span>the checks of your projects</span></p><p>'+I.check+'<span>your readiness for the exam</span></p><p>'+I.check+'<span>messages from your agents on what to do next</span></p></div></div>'
+     + '<div class="card" style="--b:300px"><p class="ch">your ratings</p><h3 class="h3">Your ratings stay anonymous</h3><p class="fg2" style="margin:0;font-size:15px">You see your own lesson ratings beside the group average. Your teacher sees ratings only as totals from 5 or more students, and ratings never affect grades.</p></div></div>'
+     + signStrip('Sign in to see your own progress.', ['your figures for every lesson, module, project and practice exam','your figures set against the average of your group','suggestions from @tutor, @reviewer and @examiner']) + '</div>';
+  }
+  var m = me();
+  var msgs = [['tutor','Your practice score on module 6 was 50%. Review the section on the framing interview before lesson 10.'],['reviewer','Your own project has no tests. Add them before the next check.'],['examiner','You meet 3 of 6 exam conditions. Part 2 practice is the next one to work on.'],['proctor','Lesson 9 is live now. The exercise after block 2 is open.']];
+  if (ME_RATE[7]==null) msgs.push(['analyst','You have not rated lesson 8 yet. It takes a few seconds and stays anonymous.']);
+  var mods = MODULES.map(function(md,i){ var n=i+1, c = n<=8 ? 'm-done' : n===9 ? 'm-now' : 'm-open'; return '<a href="#module" class="'+c+'" data-tip="'+esc('Module '+n+': '+md[0]+'\n'+(n<=8?'studied, practice '+ME_PRACT[i]+'%':n===9?'in progress':'not started'))+'">'+pad(n)+'</a>'; }).join('');
+  var less = STUD[6].les.map(function(n,i){ return '<div class="li" style="padding:9px 0"><span class="n">L'+(i+1)+'</span><span style="flex:1 1 140px;min-width:0">'+squares(n,5)+'</span><span class="mono small">'+n+' / 5 · group '+Math.round(STUD.reduce(function(s,x){return s+x.les[i];},0)/33*10)/10+'</span></div>'; }).join('');
+  var rates = ME_RATE.map(function(r,i){ return '<tr><td class="m">'+(i+1)+'</td><td>'+esc(MODULES[i][0])+'</td><td class="m">'+(r!=null?r+' / 5':'<a href="#class">rate now</a>')+'</td><td class="m">'+RATING[i].toFixed(1)+' / 5</td></tr>'; }).join('');
+  return '<div class="wrap page">' + head('progress --me','My progress',esc(m.who)+' · Agentic software engineering · '+esc(m.instS)+' · group '+esc(m.group), ag('analyst')+'<span class="sample">sample data</span>')
+   + progressTiles()
+   + '<div class="cols section" style="align-items:flex-start"><div class="card" style="--b:520px;flex:999 1 520px"><p class="ch">live exercise score by lesson <span class="r">you and your group</span></p><div class="legend"><span><i></i>You</span><span><i class="ref"></i>Group average</span></div><div class="chart" data-chart="me-score" style="height:230px"></div>'
+   + '<details class="data"><summary>show as a table</summary><div class="scroll"><table class="tbl"><thead><tr><th>lesson</th><th>you</th><th>group average</th></tr></thead><tbody>'+ME_SCORE.map(function(v,i){ return '<tr><td class="m">'+(i+1)+'</td><td class="m">'+v+'%</td><td class="m">'+CLASS_SCORE[i]+'%</td></tr>'; }).join('')+'</tbody></table></div></details>'
+   + '<p class="note">Lesson 6 was your lowest score, 40%, on module 6. '+agS('tutor')+' has suggested a review.</p></div>'
+   + '<div class="card" style="flex:1 1 320px"><p class="ch">from your agents</p><div class="log">' + msgs.map(function(x){ return '<div class="l"><span class="a">@'+x[0]+'</span><span class="x">'+esc(x[1])+'</span></div>'; }).join('') + '</div></div></div>'
+   + '<div class="cols section" style="align-items:flex-start"><div class="card" style="--b:360px"><p class="ch">modules <span class="r">19</span></p><div class="mods">'+mods+'</div><div class="heatkey"><span><i style="background:var(--accent)"></i>studied</span><span><i style="border:2px solid var(--accent);box-sizing:border-box"></i>in progress</span><span><i style="border:1px solid var(--line);box-sizing:border-box"></i>not started</span></div></div>'
+   + '<div class="card" style="--b:360px"><p class="ch">live exercises answered <span class="r">warm-up + 4 blocks</span></p>'+less+'</div></div>'
+   + '<div class="section card"><p class="ch">your lesson ratings <span class="r">visible only to you</span></p><p class="fg2" style="margin:0 0 12px;font-size:15px">Your ratings stay anonymous to the teacher. Here you can compare them with the average of your group for each lesson.</p><div class="scroll"><table class="tbl" style="min-width:560px"><thead><tr><th>lesson</th><th>module</th><th>your rating</th><th>group average</th></tr></thead><tbody>'+rates+'</tbody></table></div></div>'
+   + '</div>';
+}
+
+/* ---------- teacher views ---------- */
+var GRP = 'HIT · groups 62121-31 and 62121-32';
+function tiles(arr){ return '<div class="tiles">' + arr.map(function(t){ return '<div class="tile"><p class="k">'+t[0]+'</p><p class="v">'+t[1]+'</p>'+(t[2]?'<p class="s'+(t[3]?' '+t[3]:'')+'">'+t[2]+'</p>':'')+'</div>'; }).join('') + '</div>'; }
+function trendIc(t){ return '<span style="color:'+(t==='up'?'var(--accent)':t==='down'?'var(--warn)':'var(--muted)')+'" aria-label="'+t+'">'+I[t]+'</span>'; }
+function projStat(v){ return v==='passed'?stat('ok','passed'):v==='warning'?stat('warn','1 warning'):v==='failed'?stat('bad','1 failed'):stat('none','not submitted'); }
+function vTClass(){
+  var dist = [{l:'[A] Its price and its time',v:24,tip:'A · Its price and its time\n24 answers · correct'},{l:'[B] The source code',v:3},{l:'[C] The person who wrote the prompt',v:2},{l:'[D] The number of agents',v:1}];
+  var plan = [['Warm-up quiz','closed · 33'],['After block 1','closed · 33'],['After block 2','open · 01:42'],['After block 3','ready'],['After block 4','ready']];
+  return '<div class="wrap page">' + head('proctor --live','Learn in class','Lesson 9 · '+esc(MODULES[8][0])+' · '+GRP, '<span class="chip solid">live</span><span class="chip">33 of 34 signed in</span>'+ag('proctor'))
+   + '<div class="cols" style="align-items:flex-start">'
+   + '<div class="card" style="--b:240px;flex:1 1 240px;padding:16px 12px"><p class="ch" style="padding:0 8px">lesson plan</p>' + plan.map(function(p,i){ return '<div class="row" style="justify-content:space-between;flex-wrap:nowrap;padding:10px 8px;border-radius:8px;'+(i===2?'background:var(--accent-wash);border:1px solid var(--accent-line)':'')+'"><span style="font-weight:'+(i===2?800:600)+';font-size:14.5px">'+p[0]+'</span><span class="mono" style="font-size:12.5px;color:'+(i===2?'var(--accent)':'var(--muted)')+'">'+p[1]+'</span></div>'; }).join('')
+   + '<button type="button" class="btn sec wide" style="margin-top:10px;border-style:dashed;font-family:var(--mono);font-weight:500;font-size:13px" data-act="note" data-v="You can add a question during the lesson. @proctor times it like the others.">+ add an item</button></div>'
+   + '<div class="card" style="--b:480px;flex:999 1 480px"><div class="row" style="justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div style="flex:1 1 300px"><p class="mono small" style="margin:0 0 6px">exercise after block 2 · choose one</p><h2 class="h2" style="font-size:23px;margin:0">'+LIVE_Q.q+'</h2></div><div style="text-align:right"><p class="mono" style="margin:0;font-size:38px;font-weight:700;color:var(--accent);line-height:1">01:42</p><p class="mono small" style="margin:6px 0 0">30 of 33 answered</p></div></div>'
+   + '<div style="border-top:1px solid var(--line);padding-top:16px">'+hbars(dist,{max:30,fmt:function(v){return v;}})+'</div><p class="status small" style="margin-top:10px"><span style="color:var(--accent)">'+I.check+'</span>A is the correct answer. 80% of those who answered chose it.</p>'
+   + '<div class="row" style="margin-top:18px;border-top:1px solid var(--line);padding-top:16px"><button type="button" class="btn pri" data-act="note" data-v="@proctor showed the results to the class.">Show results to the class</button><button type="button" class="btn sec" data-act="note" data-v="@proctor closed the exercise.">Close now</button><button type="button" class="btn sec" data-act="note" data-v="@proctor added 1 minute.">Add 1 minute</button><button type="button" class="btn out" data-act="note" data-v="@proctor released the exercise after block 3.">release next</button></div></div>'
+   + '<div class="stack" style="flex:1 1 260px"><div class="card"><p class="ch">not answered yet</p><p style="margin:0;font-size:32px;font-weight:800;line-height:1">3</p><p class="small" style="margin-top:6px">of the 33 students signed in now</p></div>'
+   + '<div class="card"><p class="ch">what the class sees</p><p class="fg2" style="margin:0;font-size:14.5px">The question, the 4 options and the timer. The results appear when you show them.</p></div>'
+   + '<div class="card"><p class="ch">after the lesson</p><p class="fg2" style="margin:0 0 10px;font-size:14.5px">'+agS('analyst')+' opens the lesson rating when you end the lesson. Lesson 8 got 4.3 of 5 from 28 students.</p><a class="mono" href="#t-satisfaction" style="font-size:13px;min-height:40px;display:inline-flex;align-items:center">open the satisfaction report</a></div></div>'
+   + '</div></div>';
+}
+function vTStudy(){
+  var pm = CLASS_PRACT.map(function(v,i){ return {l:pad(i+1)+' '+MODULES[i][0], v:v, w:v<65, tip:'Module '+(i+1)+': '+MODULES[i][0]+'\nclass practice accuracy '+v+'%'+(i===8?'\nfew attempts so far':'')}; });
+  var q = [['Can I use another coding agent instead of the one used in class for my own project?','asked by 4 students'],['Does the Tribunal need a database, or can it keep its data in files?','asked by 3 students'],['Will the exam ask about tools by name?','asked by 2 students']];
+  return '<div class="wrap page">' + head('tutor --report','Study alone','How the class studies between lessons, and what '+agS('tutor')+' could not answer.', '<span class="sample">sample data</span>')
+   + tiles([['practice sessions this week','146'],['questions to @tutor','58','this week'],['passed to you','3','questions outside the rules','down'],['weakest module','06','practice accuracy 58%','down']])
+   + '<div class="cols section" style="align-items:flex-start"><div class="card" style="--b:460px;flex:999 1 460px"><p class="ch">practice accuracy by module <span class="r">class average</span></p>'+hbars(pm,{max:100,fmt:function(v){return v+'%';}})+'<p class="note">Bars in yellow are below 65%. Module 9 has few attempts so far.</p></div>'
+   + '<div class="card" style="flex:1 1 340px"><p class="ch">questions @tutor passed to you</p>' + q.map(function(x){ return '<div style="padding:12px 0;border-bottom:1px solid var(--line2)"><p style="margin:0 0 4px;font-weight:700">'+esc(x[0])+'</p><p class="small" style="margin:0 0 10px">'+x[1]+'</p><div class="row"><button type="button" class="btn sec" style="min-height:40px;font-size:14px" data-act="note" data-v="Your answer goes to the students who asked.">Answer</button><button type="button" class="btn out" style="min-height:40px" data-act="note" data-v="@tutor will use this answer from now on.">add to the rules</button></div></div>'; }).join('') + '</div></div>'
+   + '<div class="section card"><p class="ch">most asked topics this week</p>'+hbars([{l:'Project rules: public repository',v:14},{l:'What goes into CLAUDE.md',v:11},{l:'Module 9: price of a model call',v:9},{l:'Exam format',v:8},{l:'Tribunal deadlines',v:6}],{max:14,fmt:function(v){return v;}})+'</div></div>';
+}
+function vTProjects(){
+  var ownSub = STUD.filter(function(s){return s.own!=='none';}).length, ownPass = STUD.filter(function(s){return s.own==='passed';}).length;
+  var trSub = STUD.filter(function(s){return s.trib!=='none';}).length, trPass = STUD.filter(function(s){return s.trib==='passed';}).length;
+  var rows = STUD.map(function(s){ return '<tr><td class="m">'+s.email+'</td><td class="m">'+s.group+'</td><td>'+projStat(s.own)+'</td><td>'+projStat(s.trib)+'</td><td class="m">'+(s.own==='none'?'–':'[date]')+'</td><td>'+(s.own==='none'?'':'<a href="#t-projects" data-act="note" data-v="The repository opens on GitHub in the real site." class="mono" style="font-size:13px">open repository</a>')+'</td></tr>'; }).join('');
+  return '<div class="wrap page">' + head('reviewer --report','Submit projects','Repository checks for '+GRP+'. '+agS('reviewer')+' checks the repositories, and you grade the work.', '<span class="sample">sample data</span>')
+   + tiles([['own projects submitted', ownSub+'<small> of 34</small>'],['own projects passing', ownPass+'<small> of '+ownSub+'</small>','every check passed'],['tribunals submitted', trSub+'<small> of 34</small>'],['tribunals passing', trPass+'<small> of '+trSub+'</small>','every check passed']])
+   + '<div class="cols section" style="align-items:flex-start"><div class="card" style="--b:440px;flex:999 1 440px"><p class="ch">most common failed checks <span class="r">repositories</span></p>'+hbars([{l:'Tests missing',v:14,w:true},{l:'One-word commit messages',v:9},{l:'README without run steps',v:5},{l:'No context file',v:4},{l:'Repository not public',v:2}],{max:14,fmt:function(v){return v;}})+'</div>'
+   + '<div class="card flat" style="flex:1 1 320px"><p class="ch">note from @reviewer</p><p class="fg2" style="margin:0">Tests are missing in 14 repositories, more than any other failed check. A short demonstration of asking the agent to write tests first could help before the next round of checks.</p></div></div>'
+   + '<div class="section card" style="padding:6px 0"><div class="scroll"><table class="tbl"><thead><tr><th>student</th><th>group</th><th>own project</th><th>tribunal</th><th>last check</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div></div></div>';
+}
+function vTExam(){
+  var ready = STUD.filter(function(s){return s.ready>=5;}).length, nearly = STUD.filter(function(s){return s.ready>=3 && s.ready<5;}).length, notyet = 34-ready-nearly;
+  return '<div class="wrap page">' + head('examiner --report','Exam finale','Readiness of the class and the exam settings. '+agS('examiner')+' prepares and runs the exam; you approve it and grade it.', '<span class="sample">draft format</span><span class="sample">sample data</span>')
+   + '<div class="cols" style="align-items:flex-start"><div class="card" style="--b:380px"><p class="ch">readiness of the class <span class="r">34 students</span></p>'
+   + cols([{l:'ready',v:ready,tip:'Ready: 5 or 6 of 6 conditions met\n'+ready+' students'},{l:'nearly',v:nearly,tip:'Nearly ready: 3 or 4 conditions met\n'+nearly+' students',c:'var(--seq4)'},{l:'not yet',v:notyet,tip:'Not yet: 2 or fewer conditions met\n'+notyet+' students',c:'var(--seq2)'}],{h:180,aria:'Students by exam readiness'})
+   + '<p class="note">Most students cannot meet every condition yet, because 11 modules are still to come.</p></div>'
+   + '<div class="card hl" style="--b:340px"><p class="ch">waiting for you</p><p style="margin:0 0 6px;font-weight:800;font-size:18px">Draft of part A</p><p class="fg2" style="margin:0 0 16px">'+agS('examiner')+' drafted 30 closed questions across modules 1 to 19, with the answer key and the module each question tests.</p><div class="row"><button type="button" class="btn pri" data-act="note" data-v="The draft opens here in the real site.">Review the draft</button><button type="button" class="btn sec" data-act="note" data-v="You can change the 6 readiness conditions here.">Edit the conditions</button></div></div></div>'
+   + '<div class="cols section" style="align-items:flex-start"><form class="card" style="--b:420px" data-form="examsave"><p class="ch">exam settings</p><div class="cols" style="--b:200px;gap:14px"><div><label class="f" for="ed">date</label><input class="inp" id="ed" type="date"></div><div><label class="f" for="el">length in minutes</label><input class="inp" id="el" placeholder="[duration]"></div><div><label class="f" for="ea">part A weight</label><input class="inp" id="ea" placeholder="[%]"></div><div><label class="f" for="eb">part B weight</label><input class="inp" id="eb" placeholder="[%]"></div></div><button class="btn pri" type="submit" style="margin-top:16px">Save settings</button></form>'
+   + '<div class="card" style="--b:340px"><p class="ch">practice exams <span class="r">21 of 34 took one</span></p>'+hbars([{l:'Part 1',v:74},{l:'Part 2',v:61,w:true}],{max:100,fmt:function(v){return v+'%';}})+'<p class="note">Class average by part. Part 2 is below the 70% condition.</p></div></div></div>';
+}
+function vTProgress(){
+  var regd = STUD.filter(function(s){return s.reg;});
+  var eng = Math.round(avg(regd.map(function(s){return s.eng;})));
+  var sorted = regd.map(function(s){return s.mods;}).sort(function(a,b){return a-b;}), med = sorted[Math.floor(sorted.length/2)];
+  var ownPass = STUD.filter(function(s){return s.own==='passed';}).length, ready = STUD.filter(function(s){return s.ready>=5;}).length;
+  var flagged = STUD.filter(function(s){return s.flag;});
+  var bands = [['under 50%',0,49],['50–69%',50,69],['70–84%',70,84],['85–100%',85,100]].map(function(b,i){ var n = regd.filter(function(s){return s.eng>=b[1] && s.eng<=b[2];}).length; return {l:b[0],v:n,tip:b[0]+' of live exercises answered\n'+n+' students',c:['var(--seq2)','var(--seq3)','var(--seq4)','var(--seq5)'][i]}; });
+  var mc = MODULES.map(function(md,i){ var n = STUD.filter(function(s){return s.mods>=i+1;}).length; return {l:String(i+1),v:Math.round(n/34*100),show:false,tip:'Module '+(i+1)+': '+md[0]+'\n'+n+' of 34 students studied it'}; });
+  var list = S.flagged ? flagged : STUD;
+  var rows = list.map(function(s){
+    if (!s.reg) return '<tr><td class="m">'+s.email+' <span class="chip warn" style="margin-left:6px">flag</span></td><td class="m">'+s.group+'</td><td colspan="8" class="muted" style="font-size:14px">Not registered on the site yet</td></tr>';
+    return '<tr><td class="m">'+s.email+(s.flag?' <span class="chip warn" style="margin-left:6px">flag</span>':'')+'</td><td class="m">'+s.group+'</td><td><span class="mini"><i><b style="width:'+s.eng+'%"></b></i><span class="mono" style="font-size:13px">'+s.eng+'%</span></span></td><td class="m">'+s.score+'%</td><td class="m">'+s.pract+'%</td><td class="m">'+s.mods+' / 19</td><td>'+projStat(s.own)+'</td><td>'+projStat(s.trib)+'</td><td class="m">'+s.ready+' / 6</td><td>'+trendIc(s.trend)+'</td></tr>'; }).join('');
+  return '<div class="wrap page">' + head('analyst --class','Class progress','Agentic software engineering · '+GRP+' · 34 students · 8 lessons held', ag('analyst')+'<span class="sample">sample data</span>')
+   + tiles([['live exercises answered', eng+'%', 'average of registered students'],['live exercise score', Math.round(avg(CLASS_SCORE))+'%', 'lessons 1 to 8'],['modules studied', med+'<small> of 19</small>', 'median student'],['own projects passing', ownPass+'<small> of 34</small>'],['exam ready', ready+'<small> of 34</small>', '5 or 6 conditions met'],['flagged by @analyst', String(flagged.length), 'need your attention', 'down']])
+   + '<div class="cols section"><div class="card" style="--b:380px"><p class="ch">live exercises answered <span class="r">per lesson</span></p><div class="chart" data-chart="class-rate" style="height:210px"></div></div><div class="card" style="--b:380px"><p class="ch">live exercise score <span class="r">per lesson</span></p><div class="chart" data-chart="class-score" style="height:210px"></div></div></div>'
+   + '<div class="cols section"><div class="card" style="--b:300px"><p class="ch">students by live engagement</p>'+cols(bands,{h:180,aria:'Students by share of live exercises answered'})+'</div><div class="card" style="--b:440px;flex:999 1 440px"><p class="ch">modules studied by the class <span class="r">% of students</span></p>'+cols(mc,{h:180,max:100,aria:'Share of students who studied each module'})+'<p class="note">Modules 1 to 8 have been taught. The share falls from module 5, where self-study runs behind the lessons.</p></div></div>'
+   + '<div class="section card"><p class="ch">flags from @analyst <span class="r">'+flagged.length+' students</span></p>' + flagged.slice(0,5).map(function(s){ return '<div class="li"><div class="t"><b class="mono" style="font-size:14px">'+s.email+' · '+s.group+'</b><span>'+s.flag+'</span></div><button type="button" class="btn sec" style="min-height:40px;font-size:14px" data-act="note" data-v="@steward will send your message to '+s.email+'.">Message</button></div>'; }).join('') + '</div>'
+   + '<div class="section"><div class="sechead"><h2 class="h2">Students</h2><button type="button" class="tog" aria-pressed="'+S.flagged+'" data-act="flagged">show flagged only</button></div><div class="card" style="padding:6px 0"><div class="scroll"><table class="tbl" style="min-width:980px"><thead><tr><th>student</th><th>group</th><th>answered</th><th>score</th><th>practice</th><th>modules</th><th>own project</th><th>tribunal</th><th>exam</th><th>trend</th></tr></thead><tbody>'+rows+'</tbody></table></div></div></div></div>';
+}
+function vTSat(){
+  var a = avg(RATING), first = avg(RATING.slice(0,4)), last = avg(RATING.slice(4));
+  var idx = Math.round((a-1)/4*100), rr = Math.round(RESP.reduce(function(s,x){return s+x;},0)/(34*NL)*100);
+  var tot = REC.reduce(function(s,x){return s+x;},0), prom = REC[9]+REC[10], det = REC.slice(0,7).reduce(function(s,x){return s+x;},0), nps = Math.round((prom-det)/tot*100);
+  var comments = THEMES.reduce(function(s,t){return s+t.n;},0);
+  var cmax = Math.max.apply(null, THEMES.map(function(t){return t.n;}));
+  var heat = '<div class="heat" style="grid-template-columns:minmax(120px,2.2fr) repeat(3,minmax(54px,1fr))"><span></span><span class="hd">clarity</span><span class="hd">pace</span><span class="hd">usefulness</span>'
+    + HEAT.map(function(r,i){ return '<span class="rl"><span><span class="mono muted">'+pad(i+1)+'</span> '+esc(MODULES[i][0].length>34?MODULES[i][0].slice(0,32)+'…':MODULES[i][0])+'</span></span>' + r.map(function(v,j){ return '<span class="cell" style="background:'+heatColor(v)+'" data-tip="'+esc('Module '+(i+1)+': '+MODULES[i][0]+'\n'+['clarity','pace','usefulness'][j]+' '+v.toFixed(1)+' of 5')+'">'+v.toFixed(1)+'</span>'; }).join(''); }).join('') + '</div>'
+    + '<div class="heatkey"><span><i style="background:var(--seq1)"></i>under 3.0</span><span><i style="background:var(--seq2)"></i>3.0–3.4</span><span><i style="background:var(--seq3)"></i>3.5–3.9</span><span><i style="background:var(--seq4)"></i>4.0–4.4</span><span><i style="background:var(--seq5)"></i>4.5 and over</span></div>';
+  var rec = REC.map(function(n,i){ return {l:String(i), v:n, c: i<=6 ? 'var(--bad)' : i<=8 ? '#8B949E' : 'var(--accent)', tip:'Score '+i+': '+n+' students\n'+(i<=6?'detractor':i<=8?'passive':'promoter')}; });
+  return '<div class="wrap page">' + head('analyst --satisfaction','Student satisfaction','Lessons 1 to 8 · '+GRP+' · 34 students. Ratings are anonymous and shown only for groups of 5 or more.', ag('analyst')+'<span class="sample">sample data</span>')
+   + tiles([['satisfaction index', idx+'<small> of 100</small>', 'from lesson ratings'],['average lesson rating', r1(a)+'<small> of 5</small>', 'lessons 5–8: '+r1(last)+', lessons 1–4: '+r1(first), last<first?'down':'up'],['response rate', rr+'%', 'of possible lesson ratings'],['recommend score', (nps>0?'+':'')+nps, Math.round(prom/tot*100)+'% promoters · '+Math.round(det/tot*100)+'% detractors'],['weakest dimension','Pace','3.4 of 5, down from 3.7','down'],['written comments', String(comments), THEMES.length+' themes found by @analyst']])
+   + '<div class="section card hl"><p class="ch">what @analyst found <span class="r">weekly report · [date]</span></p><div class="stack" style="gap:10px">'
+   + ['Satisfaction is high but has slipped a little. Lessons 1 to 4 averaged '+r1(first)+' of 5, and lessons 5 to 8 averaged '+r1(last)+'.','Pace and manageable workload are the 2 weakest dimensions, and they move the overall rating most. Work on these 2 first.','Lesson 6 got the lowest rating, 3.6, and 7 of its 11 comments are about pace.','Support from agents rose from 3.5 to 3.8 between the first survey and the mid-course survey.'].map(function(t,i){ return '<p class="row" style="flex-wrap:nowrap;align-items:flex-start;margin:0;font-size:15.5px"><span class="chip" style="flex:0 0 auto">'+(i+1)+'</span><span class="fg2">'+t+'</span></p>'; }).join('')
+   + '</div></div>'
+   + '<div class="cols section"><div class="card" style="--b:440px;flex:999 1 440px"><p class="ch">lesson rating <span class="r">average of 1 to 5</span></p><div class="legend"><span><i></i>Lesson rating</span><span><i class="ref"></i>Course average '+r1(a)+'</span></div><div class="chart" data-chart="sat-trend" style="height:230px"></div>'
+   + '<details class="data"><summary>show as a table</summary><div class="scroll"><table class="tbl"><thead><tr><th>lesson</th><th>rating</th><th>answers</th></tr></thead><tbody>'+RATING.map(function(v,i){ return '<tr><td class="m">'+(i+1)+'</td><td class="m">'+v.toFixed(1)+'</td><td class="m">'+RESP[i]+' of 34</td></tr>'; }).join('')+'</tbody></table></div></details></div>'
+   + '<div class="card" style="flex:1 1 320px"><p class="ch">response rate <span class="r">% of the class</span></p>'+cols(RESP.map(function(n,i){ return {l:'L'+(i+1), v:Math.round(n/34*100), tip:'Lesson '+(i+1)+'\n'+n+' of 34 rated ('+Math.round(n/34*100)+'%)'}; }),{h:200,max:100,fmt:function(v){return v;},aria:'Response rate per lesson'})+'<p class="note">Below 60% the report would mark a lesson as uncertain. No lesson is below it.</p></div></div>'
+   + '<div class="cols section"><div class="card" style="--b:420px"><p class="ch">dimensions <span class="r">mid-course survey · 29 answers</span></p><div class="legend"><span><i class="sq"></i>mid-course survey</span><span><i style="width:2px;height:14px;background:var(--fg2)"></i>first survey</span></div>'
+   + hbars(DIMS.map(function(d){ return {l:d.d, v:d.v, p:d.prev, w:d.v<3.5, tip:d.d+'\nmid-course '+d.v.toFixed(1)+' · first survey '+d.prev.toFixed(1)}; }),{min:1,max:5,fmt:function(v){return v.toFixed(1);}})+'<p class="note">Scale from 1 to 5. Yellow bars are below 3.5.</p></div>'
+   + '<div class="card" style="--b:420px"><p class="ch">what drives satisfaction <span class="r">importance against score</span></p><div class="chart" data-chart="drivers" style="min-height:300px"></div><p class="note">Importance is how strongly each dimension moves with the overall rating. Dimensions in the shaded corner matter most and score lowest.</p></div></div>'
+   + '<div class="cols section"><div class="card" style="--b:440px;flex:999 1 440px"><p class="ch">ratings by module <span class="r">module clarity checks</span></p>'+heat+'</div>'
+   + '<div class="card" style="flex:1 1 320px"><p class="ch">would recommend the course <span class="r">0 to 10 · 29 answers</span></p><div class="legend"><span><i class="sq" style="background:var(--bad)"></i>detractors 0–6</span><span><i class="sq" style="background:#8B949E"></i>passives 7–8</span><span><i class="sq"></i>promoters 9–10</span></div>'+cols(rec,{h:170,fmt:function(v){return v||'';},aria:'Answers to would you recommend the course, from 0 to 10'})+'<p class="note">Recommend score '+(nps>0?'+':'')+nps+': '+Math.round(prom/tot*100)+'% promoters minus '+Math.round(det/tot*100)+'% detractors.</p></div></div>'
+   + '<div class="section card" style="padding:6px 0"><p class="ch" style="padding:16px 20px 0">themes in written comments <span class="r">'+comments+' comments · grouped by @analyst</span></p><div class="scroll"><table class="tbl" style="min-width:820px"><thead><tr><th>theme</th><th>comments</th><th>tone</th><th>example comment</th></tr></thead><tbody>'
+   + THEMES.map(function(t){ return '<tr><td style="font-weight:700">'+t.t+'</td><td><span class="mini"><i><b style="width:'+(t.n/cmax*100)+'%"></b></i><span class="mono" style="font-size:13px">'+t.n+'</span></span></td><td>'+stat(t.tone, t.tl)+'</td><td class="fg2" style="font-size:14px">“'+t.q+'”</td></tr>'; }).join('')
+   + '</tbody></table></div></div>'
+   + '<div class="section card flat"><p class="ch">how satisfaction is measured</p><div class="cols" style="--b:220px;gap:18px">'
+   + [['After each lesson','A rating from 1 to 5, what helped, what got in the way, and an optional comment. It takes about 20 seconds.'],['After each module','A clarity rating from 1 to 5 at the end of the study page.'],['Twice per course','A survey of 6 dimensions and the question whether the student would recommend the course.'],['Privacy','All answers are anonymous. The teacher sees results only from 5 or more students, and no answer affects a grade.']].map(function(x){ return '<div><p style="margin:0 0 4px;font-weight:800">'+x[0]+'</p><p class="fg2" style="margin:0;font-size:14.5px">'+x[1]+'</p></div>'; }).join('')
+   + '</div></div></div>';
+}
+function vTAccess(){
+  var groups = [
+    {inst:'Holon Institute of Technology', g:'62121-31', p:'Agentic software engineering', permitted:18, registered:18},
+    {inst:'Holon Institute of Technology', g:'62121-32', p:'Agentic software engineering', permitted:16, registered:15}
+  ];
+  var rows = STUD.slice(0,5).concat(STUD.slice(18,22)).map(function(s){ return '<tr><td class="m">'+s.email+'</td><td>HIT</td><td class="m">'+s.group+'</td><td>Agentic software engineering</td><td>'+(s.reg?stat('ok','registered [date]'):stat('warn','not registered'))+'</td><td class="m">'+(s.reg?'[date]':'–')+'</td><td>'+(s.reg?'':'<button type="button" class="btn out" style="min-height:36px" data-act="note" data-v="@steward will remind '+s.email+' to register.">remind</button>')+'</td></tr>'; }).join('');
+  var msgs = [
+    ['[Name]','[email]','Something else','I received the link to this site from Mikael Gorsky and would like to try it as a student.','Send the demo login'],
+    ['[address 1]','[address 1]','Registration and signing in','I tried to register with my university address, but my course organiser has my Gmail address.','Reply']
+  ];
+  return '<div class="wrap page">' + head('registrar --access','Groups and access','A student can register only with an address on this list. The site places each student in the institution, group and programme written beside the address. '+agS('registrar')+' checks every registration against the list.', '<span class="sample">sample data</span>')
+   + '<div class="cols" style="--b:280px">'
+   + groups.map(function(g){ return '<div class="card"><p class="ch">'+esc(g.p.toLowerCase())+' <span class="r">running</span></p><p style="margin:0 0 4px;font-weight:800;font-size:18px">HIT · group '+g.g+'</p><p class="small" style="margin:0 0 10px">'+g.inst+'</p><p class="mono small" style="margin:0">'+g.permitted+' permitted · '+g.registered+' registered</p></div>'; }).join('')
+   + '<div class="card dash"><p class="ch" style="color:var(--warn)">demo <span class="r">sample group</span></p><p style="margin:0 0 4px;font-weight:800;font-size:18px">SAW demo · group demo</p><p class="small" style="margin:0 0 10px">Agentic software engineering</p><p class="mono small" style="margin:0">1 demo login · reset every night</p></div>'
+   + '</div>'
+   + '<form class="card section" data-form="addmem"><p class="ch">permit addresses</p><div class="cols" style="gap:16px;align-items:flex-start">'
+   + '<div style="--b:320px;flex:999 1 320px"><label class="f" for="pa">email addresses, one per line</label><textarea class="inp" id="pa" rows="5" placeholder="name@gmail.com"></textarea></div>'
+   + '<div class="stack" style="--b:280px;gap:14px"><div><label class="f" for="pi">institution</label><input class="inp" id="pi" value="Holon Institute of Technology"></div><div><label class="f" for="pg">group</label><input class="inp" id="pg" placeholder="62121-31"></div><div><label class="f" for="pp">programme</label><select class="inp" id="pp"><option>Agentic software engineering</option><option>Building Cognified Systems</option><option>Directing AI Agents</option></select></div></div></div>'
+   + '<div class="row" style="margin-top:16px"><button type="submit" class="btn pri">Add to the list</button><button type="button" class="btn sec" data-act="note" data-v="Choose a CSV file. The site reads only the email and group columns.">Upload a CSV</button><span class="small">From a Moodle export the site reads only the email and group columns. It never imports ID numbers.</span></div></form>'
+   + '<div class="card section" style="padding:0"><div class="row" style="justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)"><h2 class="h3" style="margin:0">Permitted addresses</h2><button type="button" class="btn out" data-act="note" data-v="The CSV has 2 columns, email and engagement. Moodle matches rows by email.">export CSV for Moodle</button></div>'
+   + '<div class="scroll"><table class="tbl" style="min-width:860px"><thead><tr><th>email</th><th>institution</th><th>group</th><th>programme</th><th>status</th><th>last sign-in</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="small" style="padding:12px 20px">Showing 9 of 34. The Moodle export has 2 columns, the email address and the engagement figure, and Moodle matches each row by email.</p></div>'
+   + '<div class="cols section" style="align-items:flex-start">'
+   + '<div class="card warnb" style="--b:380px"><p class="ch" style="color:var(--warn)">refused registrations <span class="r">not on any list</span></p>'
+   + [['[address 1]','tried to register [date]'],['[address 2]','tried to register [date]']].map(function(x){ return '<div class="li"><div class="t"><b class="mono" style="font-size:14px">'+x[0]+'</b><span>'+x[1]+'</span></div><div class="row"><button type="button" class="btn out" style="min-height:38px" data-act="note" data-v="Choose the institution, group and programme for this address.">add to a group</button><button type="button" class="btn sec" style="min-height:38px;font-size:14px" data-act="note" data-v="@registrar will ignore this address.">Ignore</button></div></div>'; }).join('')
+   + '</div>'
+   + '<div class="card" style="--b:380px"><p class="ch">demo logins</p><div class="scroll"><table class="tbl" style="min-width:420px"><thead><tr><th>login</th><th>programme</th><th>last used</th><th>this month</th></tr></thead><tbody><tr><td class="m">demo</td><td>Agentic software engineering</td><td class="m">[date]</td><td class="m">7 sign-ins</td></tr></tbody></table></div>'
+   + '<div class="row" style="margin-top:14px"><button type="button" class="btn sec" style="min-height:40px;font-size:14px" data-act="note" data-v="The new password applies to the next sign-in.">Change the password</button><button type="button" class="btn out" style="min-height:40px" data-act="note" data-v="A demo login for another programme needs that programme’s content first.">add a demo login for another programme</button></div>'
+   + '<p class="note">A demo login is a sample student. It sees only the student side, and the demo group is reset every night.</p></div>'
+   + '</div>'
+   + '<div class="section"><div class="sechead"><h2 class="h2">Messages from Contact SAW</h2><span class="mono small">2 waiting · passed by @steward</span></div><div class="stack" style="gap:12px">'
+   + msgs.map(function(x){ return '<article class="card row" style="justify-content:space-between;align-items:center;gap:14px 24px"><div style="flex:999 1 420px;min-width:0"><p class="row" style="gap:6px 14px;margin:0 0 4px"><b style="font-size:16px">'+x[0]+'</b><span class="chip">'+x[2]+'</span><span class="mono small">[date]</span></p><p class="fg2" style="margin:0;font-size:15px">'+x[3]+'</p></div><div class="row" style="flex:1 1 260px;justify-content:flex-end">'+(x[4]==='Reply'?'':'<button type="button" class="btn pri" data-act="note" data-v="@steward will email the demo login and password.">Send the demo login</button>')+'<button type="button" class="btn sec" data-act="note" data-v="Your reply goes by email.">Reply</button></div></article>'; }).join('')
+   + '</div></div></div>';
+}
+function vTAgents(){
+  var perms = {steward:['assign tasks, pass on messages, write the daily brief','nothing; it only reports'],registrar:['check registrations, place students in groups','add an address to the list'],proctor:['open the warm-up quiz, record answers','release an exercise, show results'],tutor:['answer from the rules and the materials','answer a question outside the rules'],reviewer:['run checks, write feedback','nothing; it never grades'],examiner:['run practice exams, mark closed questions','publish an exam, change the conditions'],analyst:['collect ratings, build reports','message a flagged student']};
+  var today = {steward:14,registrar:5,proctor:41,tutor:58,reviewer:9,examiner:6,analyst:12};
+  var wait = [['steward','2 messages from Contact SAW wait for your answer','#t-access'],['registrar','2 addresses tried to register and are not on any list','#t-access'],['examiner','The draft of exam part A waits for your review','#t-exam'],['tutor','3 questions are outside the rules','#t-study'],['analyst','The weekly satisfaction report is ready','#t-satisfaction']];
+  return '<div class="wrap page">' + head('ps agents','Agents','What each agent did today and what waits for your decision.', '<span class="chip">7 running</span><span class="sample">sample data</span>')
+   + '<div class="card hl"><p class="ch">waiting for you <span class="r">from the daily brief by @steward</span></p>' + wait.map(function(w){ return '<div class="li"><span class="agent" style="flex:0 0 110px">@'+w[0]+'</span><span class="t" style="flex:999 1 240px">'+w[1]+'</span><a class="btn out" href="'+w[2]+'">open</a></div>'; }).join('') + '</div>'
+   + '<div class="cols section" style="--b:300px">' + AGENTS.map(function(a){ var p = perms[a.id]; return '<article class="card" style="display:flex;flex-direction:column;gap:10px"><div class="row" style="justify-content:space-between"><span class="agent" style="font-size:15px">@'+a.id+'</span><span class="chip ok"><span class="dot"></span>running</span></div><p class="mono small" style="margin:0">'+a.role+' · '+today[a.id]+' actions today</p><dl class="kv" style="margin:0;font-size:14px"><dt>does alone</dt><dd>'+p[0]+'</dd><dt>asks you first</dt><dd>'+p[1]+'</dd></dl></article>'; }).join('') + '</div>'
+   + '<div class="section card"><p class="ch">activity today</p><div class="log">'
+   + logLines([['steward','[time] put 2 messages from Contact SAW and 1 exam draft in your brief'],['proctor','[time] released the exercise after block 2 on your signal'],['proctor','[time] opened the warm-up quiz, 33 of 34 answered'],['tutor','[time] passed a question about the Tribunal database to you'],['reviewer','[time] checked student14’s own project: 1 failed check'],['analyst','[time] flagged 3 students with falling engagement'],['registrar','[time] registered 2 students of group 62121-32'],['registrar','[time] refused a registration from an address not on any list']])
+   + '</div></div></div>';
+}
+
+/* ---------- router ---------- */
+var ST = ['visitor','student','demo'];
+var ROUTES = {
+  home:{r:'*', v:vHome}, agents:{r:'*', v:vAgents}, privacy:{r:'*', v:vPrivacy}, contact:{r:'*', v:vContact},
+  signin:{r:['visitor'], v:vSignin}, register:{r:['visitor'], v:vRegister},
+  programme:{r:'*', v:vProgramme}, module:{r:['visitor','student','demo','teacher'], v:vModule},
+  'class':{r:ST, v:vClass}, study:{r:ST, v:vStudy}, projects:{r:ST, v:vProjects}, exam:{r:ST, v:vExam}, progress:{r:ST, v:vProgress},
+  't-class':{r:['teacher'], v:vTClass}, 't-study':{r:['teacher'], v:vTStudy}, 't-projects':{r:['teacher'], v:vTProjects}, 't-exam':{r:['teacher'], v:vTExam},
+  't-progress':{r:['teacher'], v:vTProgress}, 't-satisfaction':{r:['teacher'], v:vTSat}, 't-access':{r:['teacher'], v:vTAccess}, 't-agents':{r:['teacher'], v:vTAgents}
+};
+var HOME = {visitor:'home', student:'programme', demo:'programme', teacher:'t-progress'};
+function resolve(){
+  var r = location.hash.replace('#','') || HOME[S.role];
+  if (!ROUTES[r]) r = HOME[S.role];
+  var allow = ROUTES[r].r;
+  if (allow !== '*' && allow.indexOf(S.role) < 0){
+    if (S.role==='teacher' && ROUTES['t-'+r]) r = 't-'+r;
+    else if (r==='progress' && S.role==='teacher') r = 't-progress';
+    else r = HOME[S.role];
+  }
+  return r;
+}
+var lastRoute = null;
+function render(){
+  var r = resolve(); S.route = r;
+  document.getElementById('stage').setAttribute('data-device', S.device);
+  app.innerHTML = header() + '<main class="main" id="main">' + ROUTES[r].v() + '</main>' + footer() + tabbar();
+  drawCharts();
+  Array.prototype.forEach.call(document.querySelectorAll('#roleSeg button'), function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-role')===S.role); });
+  Array.prototype.forEach.call(document.querySelectorAll('#devSeg button'), function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-dev')===S.device); });
+  if (lastRoute !== r){ window.scrollTo(0,0); lastRoute = r; }
+}
+function go(r){ S.menu = false; if (location.hash === '#'+r) render(); else location.hash = r; }
+function toast(t){ var h = document.getElementById('toastHost'); h.innerHTML = '<div class="toast" role="status">'+esc(t)+'</div>'; clearTimeout(toast.t); toast.t = setTimeout(function(){ h.innerHTML=''; }, 2600); }
+window.addEventListener('hashchange', function(){ S.menu = false; render(); });
+document.getElementById('roleSeg').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; S.role = b.getAttribute('data-role'); S.regDone = false; go(HOME[S.role]); });
+document.getElementById('devSeg').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; S.device = b.getAttribute('data-dev'); try { localStorage.setItem('saw-proto', JSON.stringify({device:S.device})); } catch(err){} render(); });
+
+/* ---------- actions ---------- */
+var ACT = {
+  menu: function(){ S.menu = !S.menu; render(); },
+  signin: function(){ S.role = 'student'; go('programme'); toast('Signed in. The site recognised you as a student of HIT, group 62121-31.'); },
+  demo: function(){ S.role = 'demo'; go('programme'); toast('Signed in as demo.'); },
+  'reg-google': function(){ S.regDone = true; render(); },
+  'reg-go': function(){ S.regDone = false; S.role = 'student'; go('programme'); },
+  emaillink: function(){ toast('In the real site, a link goes to this address.'); },
+  contact: function(){ S.contactSent = true; render(); },
+  signout: function(v,t,e){ if (e) e.preventDefault(); S.role = 'visitor'; go('home'); },
+  'live-pick': function(v){ S.live.picked = v; S.live.sent = false; render(); },
+  'live-send': function(){ if (!S.live.picked){ toast('Choose an answer first.'); return; } S.live.sent = true; render(); },
+  'pulse-r': function(v){ S.pulse.r = +v; render(); },
+  'pulse-h': function(v){ var a = S.pulse.helped, i = a.indexOf(v); if (i<0) a.push(v); else a.splice(i,1); render(); },
+  'pulse-b': function(v){ var a = S.pulse.blocked, i = a.indexOf(v); if (i<0) a.push(v); else a.splice(i,1); render(); },
+  'pulse-send': function(){ if (!S.pulse.r){ toast('Choose a rating from 1 to 5 first.'); return; } S.pulse.sent = true; ME_RATE[7] = S.pulse.r; render(); },
+  'prac-pick': function(v){ var p = v.split(':'); S.prac[p[0]] = {picked:p[1], checked:false}; render(); },
+  'prac-check': function(v){ var st = S.prac[v]; if (!st){ toast('Choose an answer first.'); return; } st.checked = true; render(); },
+  model: function(){ S.model = true; render(); },
+  'mod-rate': function(v){ S.modRate = +v; render(); toast('Thank you. Your rating is anonymous.'); },
+  proj: function(v){ S.proj = v; render(); },
+  flagged: function(){ S.flagged = !S.flagged; render(); },
+  ask: function(){ var el = document.getElementById('ask'); S.ask = el ? el.value.trim() : ''; if (!S.ask){ toast('Write a question first.'); return; } render(); },
+  note: function(v){ toast(v); },
+  examsave: function(){ toast('Settings saved. @examiner will use them for the exam.'); },
+  addmem: function(){ toast('@registrar added the addresses to the list.'); }
+};
+app.addEventListener('click', function(e){ var t = e.target.closest('[data-act]'); if (!t) return; var a = t.getAttribute('data-act'); if (ACT[a]){ if (t.tagName==='BUTTON' || t.getAttribute('href')==='#') e.preventDefault(); ACT[a](t.getAttribute('data-v'), t, e); } });
+app.addEventListener('input', function(e){ if (e.target.id==='pulseText') S.pulse.text = e.target.value; });
+app.addEventListener('submit', function(e){ e.preventDefault(); var f = e.target.getAttribute('data-form'); if (f && ACT[f]) ACT[f](null, e.target, e); });
+
+/* ---------- tooltip ---------- */
+var tip = document.getElementById('tip');
+function showTip(t, cx, cy){ tip.textContent = t; tip.hidden = false; var w = tip.offsetWidth, h = tip.offsetHeight; var x = Math.min(window.innerWidth - w - 8, cx + 14), y = cy - h - 12; if (y < 8) y = cy + 16; tip.style.left = Math.max(8,x)+'px'; tip.style.top = y+'px'; }
+document.addEventListener('pointermove', function(e){ var el = e.target.closest && e.target.closest('[data-tip]'); if (el && e.pointerType !== 'touch') showTip(el.getAttribute('data-tip'), e.clientX, e.clientY); else if (e.pointerType !== 'touch') tip.hidden = true; });
+document.addEventListener('pointerdown', function(e){ var el = e.target.closest && e.target.closest('[data-tip]'); if (el && e.pointerType === 'touch'){ showTip(el.getAttribute('data-tip'), e.clientX, e.clientY); clearTimeout(showTip.t); showTip.t = setTimeout(function(){ tip.hidden = true; }, 2500); } });
+window.addEventListener('scroll', function(){ tip.hidden = true; }, {passive:true});
+
+/* ---------- start ---------- */
+(function(){ var h = location.hash.replace('#',''); if (h.indexOf('t-')===0) S.role='teacher'; })();
+render();
+})();
+</script>
+</body>
+</html>
