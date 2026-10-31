@@ -1,6 +1,6 @@
 // Behaviour in the browser: the menu, tooltips, charts, live lessons, the tutor
 // and reading a CSV file. Pages work without it except where they are live.
-import { readPermitCsv } from '/static/csv.js';
+import { readPermitCsv, writePermitCsv } from '/static/csv.js';
 
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -210,17 +210,19 @@ document.addEventListener('submit', async e => {
 });
 
 // ---------- reading a CSV of permitted addresses ----------
-// The file is read here, in the browser. Only the email and group of each row
-// are put into the form, so other columns, such as ID numbers, are never sent.
+// The file is read here, in the browser. Only the names, email, group and
+// institution of each row are put into the form, so other columns, such as ID
+// numbers, are never sent.
 document.addEventListener('change', async e => {
   const input = e.target.closest('input[data-csv-file]');
   if (!input || !input.files[0]) return;
   const f = input.closest('form');
   const text = await input.files[0].text();
   const rows = readPermitCsv(text);
-  f.querySelector('[data-csv-text]').value = ['email,group', ...rows.map(r => `${r.email},${r.group.replace(/,/g, ' ')}`)].join('\n');
+  f.querySelector('[data-csv-text]').value = writePermitCsv(rows);
   const groups = [...new Set(rows.map(r => r.group).filter(Boolean))];
+  const named = rows.filter(r => r.first || r.last).length;
   f.querySelector('[data-csv-status]').textContent = rows.length
-    ? `${rows.length} addresses read from ${input.files[0].name}${groups.length ? ` in ${groups.length} group${groups.length > 1 ? 's' : ''}` : ''}. Only the email and group columns were read. Press "Add to the list" to save them.`
+    ? `${rows.length} addresses read from ${input.files[0].name}${groups.length ? ` in ${groups.length} group${groups.length > 1 ? 's' : ''}` : ''}, ${named} with names. Only the names, email, group and institution columns were read. Press "Add to the list" to save them.`
     : `No email addresses were found in ${input.files[0].name}.`;
 });

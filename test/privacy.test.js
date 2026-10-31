@@ -5,7 +5,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { req, signInDev, stop, db, realFetch } from './helpers.js';
-import { readPermitCsv } from '../server/csv.js';
+import { readPermitCsv, writePermitCsv } from '../server/csv.js';
 import * as M from '../server/model.js';
 
 after(stop);
@@ -20,18 +20,35 @@ function everyStoredText() {
   return tables.flatMap(t => db.all(`SELECT * FROM "${t}"`).flatMap(row => Object.values(row).map(String)));
 }
 
-test('the CSV reader keeps only the email and the group of each row', () => {
+test('the CSV reader keeps only the names, email, group and institution of each row', () => {
   const rows = readPermitCsv(MOODLE);
   assert.deepEqual(rows, [
-    { email: 'dana.levi@gmail.com', group: '62121-31' },
-    { email: 'avi@gmail.com', group: '62121-32' },
+    { email: 'dana.levi@gmail.com', group: '62121-31', institution: '', first: 'Dana', last: 'Levi' },
+    { email: 'avi@gmail.com', group: '62121-32', institution: '', first: 'Cohen, Avi', last: 'Cohen' },
   ]);
-  for (const r of rows) assert.deepEqual(Object.keys(r).sort(), ['email', 'group']);
+  for (const r of rows) assert.deepEqual(Object.keys(r).sort(), ['email', 'first', 'group', 'institution', 'last']);
+  assert.ok(!JSON.stringify(rows).includes(ID));
+});
+
+test('the CSV reader prefers English names and takes the group number from a Moodle cell', () => {
+  const file = 'First name (EN),Last name (EN),First name,Last name,ID number,Email address,Groups,Last access\nDor,Avital,דור,אביטל,${ID},doravital11@gmail.com,"קבוצה 62121-1, קבוצה 662121-1",yesterday\n';
+  assert.deepEqual(readPermitCsv(file.replace('${ID}', ID)), [{ email: 'doravital11@gmail.com', group: '62121-1', institution: '', first: 'Dor', last: 'Avital' }]);
+});
+
+test('the CSV reader reads an institution column, and names may be left out', () => {
+  assert.deepEqual(readPermitCsv('email,group,institution\nA@Gmail.com,2,HIT'), [{ email: 'a@gmail.com', group: '2', institution: 'HIT', first: '', last: '' }]);
 });
 
 test('the CSV reader accepts semicolons and a file without a header', () => {
-  assert.deepEqual(readPermitCsv('Email;Group\nA@Gmail.com;7'), [{ email: 'a@gmail.com', group: '7' }]);
-  assert.deepEqual(readPermitCsv(`${ID},b@gmail.com\n`), [{ email: 'b@gmail.com', group: '' }]);
+  assert.deepEqual(readPermitCsv('Email;Group\nA@Gmail.com;7'), [{ email: 'a@gmail.com', group: '7', institution: '', first: '', last: '' }]);
+  assert.deepEqual(readPermitCsv(`${ID},b@gmail.com\n`), [{ email: 'b@gmail.com', group: '', institution: '', first: '', last: '' }]);
+});
+
+test('what the browser sends back holds only the 5 columns, and reads the same', () => {
+  const rows = readPermitCsv(MOODLE);
+  const sent = writePermitCsv(rows);
+  assert.ok(!sent.includes(ID));
+  assert.deepEqual(readPermitCsv(sent), rows);
 });
 
 test('a Moodle export sent to the server leaves no ID number in the database', async () => {

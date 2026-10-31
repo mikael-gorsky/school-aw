@@ -160,9 +160,10 @@ on('POST', '/auth/demo', {}, ctx => {
 // (decision of 31 October 2026).
 on('GET', '/account', { title: 'My account' }, ctx => A.accountPage(ctx));
 on('POST', '/account', { roles: ['student', 'demo', 'teacher'] }, ctx => {
-  const clip = (v, n) => str(v, n) || null;
+  // Names are saved even when empty, so that neither the list nor Google
+  // fills them again: the user decides their own name.
   run('UPDATE users SET first_name = ?, last_name = ?, comment = ? WHERE id = ?',
-    clip(ctx.form.first_name, 80), clip(ctx.form.last_name, 80), clip(ctx.form.comment, A.COMMENT_MAX), ctx.user.id);
+    str(ctx.form.first_name, 80), str(ctx.form.last_name, 80), str(ctx.form.comment, A.COMMENT_MAX) || null, ctx.user.id);
   return { redirect: '/account', flash: 'Your account is saved.' };
 });
 // A photo is open to its owner and to the teacher, and to nobody else.
@@ -378,8 +379,14 @@ on('POST', '/teacher/satisfaction/themes', { roles: TEACHER }, async ctx => {
   }
 });
 
-function permitTo(groupId, email) {
-  run('INSERT INTO permitted(email, group_id, added_at) VALUES(?, ?, ?) ON CONFLICT(email) DO UPDATE SET group_id = excluded.group_id', email, groupId, now());
+// Names given by the teacher are kept on the list. They fill a user's empty
+// names, and a name the user wrote on My account always stays
+// (decision of 31 October 2026).
+function permitTo(groupId, email, first = '', last = '') {
+  run(`INSERT INTO permitted(email, group_id, added_at, first_name, last_name) VALUES(?, ?, ?, ?, ?)
+       ON CONFLICT(email) DO UPDATE SET group_id = excluded.group_id,
+         first_name = COALESCE(excluded.first_name, permitted.first_name), last_name = COALESCE(excluded.last_name, permitted.last_name)`,
+  email, groupId, now(), first || null, last || null);
   run("UPDATE users SET group_id = ? WHERE email = ? AND role = 'student'", groupId, email);
   run('UPDATE refused SET handled = 1 WHERE email = ?', email);
 }
@@ -387,23 +394,27 @@ on('POST', '/teacher/access/permit', { roles: TEACHER }, ctx => {
   const institution = str(ctx.form.institution, 120), code = str(ctx.form.code, 40);
   const prog = str(ctx.form.programme, 20) || 'ase';
   try { programme(prog); } catch { return back(ctx, '/teacher/access', 'Choose a programme.'); }
-  if (!institution || !code) return back(ctx, '/teacher/access', 'Write the institution and the group.');
-  // Only the email and group of each row are used; nothing else is stored.
-  const rows = [...readPermitList(one(ctx.form.emails)).map(email => ({ email, group: '' })), ...readPermitCsv(one(ctx.form.csv))]
+  // Only the names, email, group and institution of each row are used; nothing else is stored.
+  const rows = [...readPermitList(one(ctx.form.emails)).map(email => ({ email })), ...readPermitCsv(one(ctx.form.csv))]
     .filter(r => r.email !== 'demo' && !config.teacherEmails.includes(r.email));
   if (!rows.length) return back(ctx, '/teacher/access', 'No email addresses were found.');
-  const groupFor = c => {
-    run('INSERT OR IGNORE INTO groups(institution, code, programme, created_at) VALUES(?, ?, ?, ?)', institution, c, prog, now());
-    return get('SELECT * FROM groups WHERE institution = ? AND code = ? AND programme = ?', institution, c, prog);
+  // A group or institution in the file overrides the one in the form.
+  const groupFor = (inst, c) => {
+    run('INSERT OR IGNORE INTO groups(institution, code, programme, created_at) VALUES(?, ?, ?, ?)', inst, c, prog, now());
+    return get('SELECT * FROM groups WHERE institution = ? AND code = ? AND programme = ?', inst, c, prog);
   };
-  let first = null;
+  let first = null, added = 0, missing = 0;
   for (const r of rows) {
-    const g = groupFor(r.group || code);
+    const inst = r.institution || institution, c = r.group || code;
+    if (!inst || !c) { missing++; continue; }
+    const g = groupFor(inst, c);
     if (g.is_demo) continue;
     first = first || g;
-    permitTo(g.id, r.email);
+    permitTo(g.id, r.email, r.first, r.last);
+    added++;
   }
-  return { redirect: `/teacher/access?group=${first ? first.id : ''}`, flash: `${rows.length} address${rows.length > 1 ? 'es are' : ' is'} on the list.` };
+  const msg = [added ? `${added} address${added > 1 ? 'es are' : ' is'} on the list.` : '', missing ? `${missing} address${missing > 1 ? 'es have' : ' has'} no institution or group. Write them in the form and add again.` : ''].filter(Boolean).join(' ');
+  return { redirect: `/teacher/access?group=${first ? first.id : ''}`, flash: msg };
 });
 on('POST', '/teacher/access/remove', { roles: TEACHER }, ctx => {
   const email = normEmail(str(ctx.form.email, 200));

@@ -108,3 +108,27 @@ test('names on the teacher’s list are used at registration, and Google does no
   const after = db.get('SELECT first_name, last_name FROM users WHERE id = ?', u.id);
   assert.deepEqual([after.first_name, after.last_name], ['Dor', 'Avital']);
 });
+
+test('a CSV with names and institution adds students, and the names stay editable', async () => {
+  const csv = 'first name,last name,email,group,institution\nNoa,Bar,noa.bar@gmail.com,9,Test college\n,,nameless@gmail.com,9,Test college';
+  const r = await req('POST', '/teacher/access/permit', { jar: teacher.jar, form: { csv, emails: '', institution: '', code: '', programme: 'ase' } });
+  assert.equal(r.status, 303);
+  const g = db.get("SELECT * FROM groups WHERE institution = 'Test college' AND code = '9'");
+  assert.ok(g);
+  assert.equal(db.get('SELECT first_name FROM permitted WHERE email = ?', 'noa.bar@gmail.com').first_name, 'Noa');
+  assert.equal(db.get('SELECT first_name FROM permitted WHERE email = ?', 'nameless@gmail.com').first_name, null);
+
+  const noa = await signInDev('noa.bar@gmail.com');
+  const id = db.get('SELECT id FROM users WHERE email = ?', 'noa.bar@gmail.com').id;
+  await req('POST', '/account', { jar: noa.jar, form: { first_name: 'Noya', last_name: '', comment: '' } });
+  await signInDev('noa.bar@gmail.com');
+  await applyProfile(id, { first: 'Google', last: 'Name', picture: '' });
+  const u = db.get('SELECT first_name, last_name FROM users WHERE id = ?', id);
+  assert.deepEqual([u.first_name, u.last_name], ['Noya', '']);
+});
+
+test('an address without an institution or group is not added', async () => {
+  const r = await req('POST', '/teacher/access/permit', { jar: teacher.jar, form: { emails: 'lost@gmail.com', institution: '', code: '', programme: 'ase' } });
+  assert.equal(r.status, 303);
+  assert.equal(db.get('SELECT * FROM permitted WHERE email = ?', 'lost@gmail.com'), undefined);
+});
