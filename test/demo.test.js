@@ -66,7 +66,8 @@ test('the nightly reset deletes what was entered under the demo login', async ()
   const { jar } = await signInDemo();
   const user = db.get("SELECT * FROM users WHERE role = 'demo'");
   const g = demo.demoGroup();
-  const lesson8 = db.get('SELECT * FROM lessons WHERE group_id = ? AND number = 8', g.id);
+  // The last lesson that is over is the one the demo login has not rated yet.
+  const lesson8 = db.get("SELECT * FROM lessons WHERE group_id = ? AND state = 'ended' ORDER BY number DESC LIMIT 1", g.id);
   await req('POST', '/class/rate', { jar, form: { lesson: lesson8.id, rating: '2', comment: 'A comment typed by a visitor.' } });
   assert.ok(db.get('SELECT * FROM lesson_ratings WHERE voter = ?', voterKey(user.id, `lesson:${lesson8.id}`)));
   await req('POST', '/study/1/practice', { jar, form: { exercise: 'e3', answer: 'Something typed by a visitor.' } });
@@ -76,10 +77,30 @@ test('the nightly reset deletes what was entered under the demo login', async ()
 
   const after = db.get("SELECT * FROM users WHERE role = 'demo'");
   const g2 = demo.demoGroup();
-  const l8 = db.get('SELECT * FROM lessons WHERE group_id = ? AND number = 8', g2.id);
+  const l8 = db.get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', g2.id, lesson8.number);
   assert.equal(db.get('SELECT * FROM lesson_ratings WHERE voter = ?', voterKey(after.id, `lesson:${l8.id}`)), undefined);
   assert.equal(db.get("SELECT COUNT(*) AS n FROM lesson_ratings WHERE comment = 'A comment typed by a visitor.'").n, 0);
   assert.equal(db.get("SELECT COUNT(*) AS n FROM practice WHERE answer = 'Something typed by a visitor.'").n, 0);
   // The old session ends with the reset.
   assert.equal((await req('GET', '/class/live', { jar })).status, 401);
+});
+
+test('a programme without an exam shows no Exam finale', async () => {
+  const { jar } = await signInDemo();
+  const page = await req('GET', '/programme', { jar });
+  assert.doesNotMatch(page.text, /href="\/exam"/);
+  const exam = await req('GET', '/exam', { jar });
+  assert.equal(exam.status, 200);
+  assert.match(exam.text, /no final exam/i);
+  const visitor = await req('GET', '/');
+  assert.doesNotMatch(visitor.text, /href="\/exam"/);
+});
+
+test('the demo lessons follow the lesson plan, with 2 modules in a lesson', () => {
+  const g = demo.demoGroup();
+  const lessons = db.all('SELECT * FROM lessons WHERE group_id = ? ORDER BY number', g.id);
+  assert.equal(lessons.length, 11);
+  assert.deepEqual(JSON.parse(lessons[2].modules), [4, 6]);
+  const labels = db.all('SELECT label FROM items WHERE lesson_id = ?', lessons[2].id).map(i => i.label);
+  assert.ok(labels.some(l => l.startsWith('Module 4 · ')) && labels.some(l => l.startsWith('Module 6 · ')));
 });

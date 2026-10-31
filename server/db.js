@@ -201,6 +201,10 @@ function migrate() {
   for (const col of ['first_name', 'last_name', 'comment']) {
     if (!have.has(col)) db.exec(`ALTER TABLE users ADD COLUMN ${col} TEXT`);
   }
+  // A lesson may cover 2 modules, as the ASE lesson plan does. "module" keeps the
+  // first one, and "modules" the full list (decision of 31 October 2026).
+  const haveLesson = new Set(db.prepare('PRAGMA table_info(lessons)').all().map(c => c.name));
+  if (!haveLesson.has('modules')) db.exec('ALTER TABLE lessons ADD COLUMN modules TEXT');
   // The teacher may give the English names of students on the list, which the
   // student then sees at registration (decision of 31 October 2026).
   const havePermit = new Set(db.prepare('PRAGMA table_info(permitted)').all().map(c => c.name));

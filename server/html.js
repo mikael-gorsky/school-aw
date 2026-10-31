@@ -1,6 +1,7 @@
 // The page layout and the small building blocks shared by all pages.
 // Markup and class names follow mockup/index.html, the agreed design.
 import { displayName } from './auth.js';
+import { hasExam } from './content.js';
 
 export const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const pad = n => String(n).padStart(2, '0');
@@ -89,8 +90,13 @@ const MAIN = [
 ];
 export const HOME = { visitor: '/', student: '/programme', demo: '/programme', teacher: '/teacher/progress' };
 
+// The menu of the programme in view: the student's own, the group the teacher
+// is looking at, or ASE for a visitor, since ASE is the only programme on the site.
+const menuOf = ctx => (hasExam(ctx.group ? ctx.group.programme : 'ase') ? MAIN : MAIN.filter(m => m.k !== 'exam'));
+
 function header(ctx) {
   const r = ctx.role, p = ctx.path;
+  const MAIN = menuOf(ctx);
   const href = k => (r === 'teacher' ? `/teacher/${k}` : `/${k}`);
   const isCur = k => p === `/${k}` || p.startsWith(`/${k}/`) || p === `/teacher/${k}` || p.startsWith(`/teacher/${k}/`);
   const cur = path => (p === path ? ' aria-current="page"' : '');
@@ -127,6 +133,7 @@ function footer(ctx) {
 
 function tabbar(ctx) {
   const r = ctx.role, p = ctx.path;
+  const MAIN = menuOf(ctx);
   const href = k => (r === 'teacher' ? `/teacher/${k}` : `/${k}`);
   const isCur = k => p === `/${k}` || p.startsWith(`/${k}/`) || p === `/teacher/${k}` || p.startsWith(`/teacher/${k}/`);
   return `<nav class="tabbar" aria-label="Main"><div class="in">${MAIN.map(m => `<a href="${href(m.k)}"${isCur(m.k) ? ' aria-current="page"' : ''}>${I[m.ic].replace('width="18" height="18"', 'width="22" height="22"')}${m.s}</a>`).join('')}</div></nav>`;

@@ -34,6 +34,9 @@ export function demoGroup() {
 }
 
 // Generic items for lessons whose module has no exercises in the content yet.
+function itemsForLesson(modules) {
+  return modules.flatMap(n => itemsFor(n).map(it => (modules.length > 1 ? { ...it, label: `Module ${n} · ${it.label}` } : it)));
+}
 function itemsFor(moduleNo) {
   const real = lessonItems(DEMO.programme, moduleNo);
   if (real.length) return real;
@@ -82,17 +85,22 @@ function build() {
     people.push({ id: u.id, p: 0.62 + r() * 0.38, q: 0.5 + r() * 0.45, fade: i % 9 === 0 ? 0.12 : 0 });
   }
 
-  // Lessons 1 to 8 are over, lesson 9 is running, and lessons 10 to 19 are planned.
+  // The lessons follow the programme's lesson plan. The first half are over, the
+  // middle one is running, and the rest are planned: for ASE, lessons 1 to 5 are
+  // over, lesson 6 is running, and lessons 7 to 11 are planned.
   const prog = programme(DEMO.programme);
+  const plan = prog.lessons || prog.modules.map(m => ({ n: m.n, modules: [m.n] }));
+  const LIVE = Math.ceil(plan.length / 2);
   const nowMs = Date.now();
   const lessons = [];
-  for (const m of prog.modules) {
-    const starts = new Date(nowMs + (m.n - 9) * 7 * 864e5 - 30 * 60000);
+  for (const pl of plan) {
+    const starts = new Date(nowMs + (pl.n - LIVE) * 7 * 864e5 - 30 * 60000);
     starts.setUTCMinutes(0, 0, 0);
-    const state = m.n < 9 ? 'ended' : m.n === 9 ? 'live' : 'planned';
-    run('INSERT INTO lessons(group_id, number, module, starts_at, state) VALUES(?, ?, ?, ?, ?)', g.id, m.n, m.n, starts.toISOString(), state);
-    const l = get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', g.id, m.n);
-    itemsFor(m.n).forEach((it, i) => {
+    const state = pl.n < LIVE ? 'ended' : pl.n === LIVE ? 'live' : 'planned';
+    run('INSERT INTO lessons(group_id, number, module, modules, starts_at, state) VALUES(?, ?, ?, ?, ?, ?)', g.id, pl.n, pl.modules[0], JSON.stringify(pl.modules), starts.toISOString(), state);
+    const l = get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', g.id, pl.n);
+    l.modules_list = pl.modules;
+    itemsForLesson(pl.modules).forEach((it, i) => {
       const done = state === 'ended' || (state === 'live' && i < 2);
       const at = new Date(starts.getTime() + (i * 15 + 5) * 60000).toISOString();
       const closes = state === 'live' ? new Date(nowMs - (2 - i) * 300000).toISOString() : new Date(Date.parse(at) + 120000).toISOString();
@@ -117,13 +125,13 @@ function build() {
     }
   }
 
-  // Lesson ratings. The demo login has rated lessons 1 to 7 and not lesson 8,
-  // so that the rating form is there to try.
+  // Lesson ratings. The demo login has rated every lesson that is over except
+  // the last one, so that the rating form is there to try.
   const means = [4.4, 4.2, 4.3, 4.1, 3.9, 3.6, 4.0, 4.3];
   let c = 0;
   for (const l of lessons.filter(x => x.state === 'ended')) {
     for (const p of people) {
-      if (p.id === demo.id ? l.number === 8 : r() > 0.62 + r() * 0.3) continue;
+      if (p.id === demo.id ? l.number === LIVE - 1 : r() > 0.62 + r() * 0.3) continue;
       const rating = Math.max(1, Math.min(5, Math.round(means[l.number - 1] + (r() - 0.5) * 1.8)));
       const helped = HELPED.filter(() => r() < 0.3);
       const blocked = BLOCKED.filter((b, i) => r() < (l.number === 6 && i === 0 ? 0.55 : 0.12));
@@ -154,8 +162,9 @@ function build() {
     });
   });
 
-  // Practice on the study pages that exist, and clarity ratings for them.
-  for (const n of modulesWithContent(DEMO.programme)) {
+  // Practice on the study pages of the modules taught so far, and clarity ratings for them.
+  const taught = new Set(lessons.filter(l => l.state === 'ended').flatMap(l => l.modules_list));
+  for (const n of modulesWithContent(DEMO.programme).filter(m => taught.has(m))) {
     const mc = moduleContent(DEMO.programme, n);
     for (const p of people) {
       if (p.id !== demo.id && r() > 0.8) continue;

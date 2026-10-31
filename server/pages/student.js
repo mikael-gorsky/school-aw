@@ -2,7 +2,7 @@
 // Each page has a general form for visitors, with example screens that cannot
 // be used, and a form with the student's own data (decision of 31 October 2026).
 import { esc, pad, I, stat, ag, agS, head, squares, exFrame, steps, signStrip, tiles, hbars, chart, fmtDate } from '../html.js';
-import { programme, moduleContent, moduleTitle } from '../content.js';
+import { programme, moduleContent, moduleTitle, hasExam, lessonTitle, lessonModules } from '../content.js';
 import { setting } from '../db.js';
 import { aiAvailable } from '../ai.js';
 import * as M from '../model.js';
@@ -83,14 +83,14 @@ function examMarkup() {
   return `<div class="card"><p class="ch">the exam <span class="r">draft format</span></p><dl class="kv" style="margin:0"><dt>date</dt><dd>${v('date')}</dd><dt>length</dt><dd>${v('length')}</dd><dt>part A</dt><dd>Closed questions on all modules, marked by @examiner and reviewed by the teacher. Weight: ${v('weightA')}.</dd><dt>part B</dt><dd>You direct an agent on a small task and submit the session record. The teacher grades it. Weight: ${v('weightB')}.</dd><dt>where</dt><dd>${v('where')}</dd></dl></div>`;
 }
 
-function tilesMarkup(t) {
+function tilesMarkup(t, exam = true) {
   return tiles([
     ['live exercises answered', t.answered, t.answeredSub],
     ['live exercise score', t.score, t.scoreSub],
     ['practice accuracy', t.practice, t.practiceSub],
     ['modules studied', t.modules, t.modulesSub],
     ['projects passing', t.projects, t.projectsSub],
-    ['exam readiness', t.ready, 'conditions met'],
+    ...(exam ? [['exam readiness', t.ready, 'conditions met']] : []),
   ]);
 }
 
@@ -118,7 +118,7 @@ function groupInfo(ctx) {
 // ---------- My programme ----------
 function programmeBody(prog, info, lessons, interactive, ctx) {
   const byModule = new Map();
-  for (const l of lessons) if (!byModule.has(l.module) || l.state !== 'ended') byModule.set(l.module, l);
+  for (const l of lessons) for (const n of lessonModules(l)) if (!byModule.has(n) || l.state !== 'ended') byModule.set(n, l);
   const next = lessons.find(l => l.state === 'live') || lessons.find(l => l.state === 'planned');
   const parts = prog.parts.map(p => {
     let rows = '';
@@ -133,15 +133,26 @@ function programmeBody(prog, info, lessons, interactive, ctx) {
     return `<div class="section"><div class="row" style="gap:6px 14px;margin-bottom:6px"><span class="mono" style="color:var(--accent);font-size:14px">part-${p.n}/</span><h3 class="h3" style="margin:0;font-size:21px">${esc(p.title)}</h3><span class="mono small">modules ${pad(p.from)}–${pad(p.to)}</span></div><p class="fg2" style="margin:0 0 12px;font-size:15px">${esc(p.text)}</p><div class="card" style="padding:4px 20px">${rows}</div></div>`;
   }).join('');
   const nextCard = next
-    ? `<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">${next.state === 'live' ? 'lesson running now' : 'next lesson'} <span class="r">${esc(fmtDate(next.starts_at))}</span></p><h2 class="h2" style="font-size:24px">Lesson ${next.number} · ${esc(moduleTitle(prog.id, next.module))}</h2><p class="fg2" style="margin:0 0 16px">The warm-up quiz opens before the lecture starts. Keep Learn in class open beside Zoom during the lesson.</p><div class="row"><a class="btn pri" href="/class">Open Learn in class</a>${next.zoom_url ? `<a class="btn sec" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div></div>`
+    ? `<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">${next.state === 'live' ? 'lesson running now' : 'next lesson'} <span class="r">${esc(fmtDate(next.starts_at))}</span></p><h2 class="h2" style="font-size:24px">Lesson ${next.number} · ${esc(lessonTitle(prog.id, next))}</h2><p class="fg2" style="margin:0 0 16px">The warm-up quiz opens before the lecture starts. Keep Learn in class open beside Zoom during the lesson.</p><div class="row"><a class="btn pri" href="/class">Open Learn in class</a>${next.zoom_url ? `<a class="btn sec" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div></div>`
     : '<div class="card" style="--b:420px;flex:999 1 420px"><p class="ch">next lesson</p><p class="fg2" style="margin:0">Your teacher has not set the next lesson yet.</p></div>';
-  const weight = k => esc(setting(`weight_${k}`, '') || '[%]');
+  // A weight set by the teacher wins; otherwise the weight from the syllabus.
+  const weight = k => esc(setting(`weight_${k}`, '') || (prog.grade.find(x => x.key === k) || {}).weight || '[%]');
+  const ticks = arr => `<div class="ticks" style="margin:0">${arr.map(t => `<p>${I.check}<span>${esc(t)}</span></p>`).join('')}</div>`;
+  const extra = [
+    prog.outcomes ? `<div class="section card"><p class="ch">what you will be able to do</p>${ticks(prog.outcomes)}${prog.prerequisites ? `<p class="note">${esc(prog.prerequisites)}</p>` : ''}</div>` : '',
+  ].join('');
+  const after = [
+    prog.gradeNotes ? `<div class="section card"><p class="ch">how your work is graded</p>${prog.gradeNotes.map(t => `<p class="fg2" style="margin:0 0 10px;font-size:15px">${esc(t)}</p>`).join('')}</div>` : '',
+    prog.projects && prog.projects.some(x => x.text) ? `<h2 class="h2 section">Projects</h2><div class="cols" style="--b:320px;align-items:stretch">${prog.projects.map(x => `<div class="card"><p class="ch">${esc(x.title.toLowerCase())}</p><p class="fg2" style="margin:0;font-size:15px">${esc(x.text || '')}</p></div>`).join('')}</div><div class="section card"><p class="ch">project rules</p>${ticks(prog.projectRules)}</div>` : '',
+    prog.policies ? `<h2 class="h2 section">Course policies</h2><div class="cols" style="--b:300px;align-items:stretch">${prog.policies.map(x => `<div class="card"><p class="ch">${esc(x.title.toLowerCase())}</p><p class="fg2" style="margin:0;font-size:15px">${esc(x.text)}</p></div>`).join('')}</div>` : '',
+    prog.reading ? `<div class="section card"><p class="ch">textbook and reading</p><p class="fg2" style="margin:0 0 12px">${esc(prog.reading.textbook)}</p><ul class="fg2" style="margin:0 0 10px;padding-left:20px;font-size:14.5px">${prog.reading.list.map(r => `<li style="margin-bottom:6px">${esc(r)}</li>`).join('')}</ul><p class="small" style="margin:0">${esc(prog.reading.note || '')}</p></div>` : '',
+  ].join('');
   const docs = prog.documents.map(d => d.url ? `<a href="${esc(d.url)}" rel="noopener" style="display:flex;justify-content:space-between;min-height:44px;align-items:center;color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line2)"><span>${esc(d.title)}</span><span class="chip">open</span></a>` : `<div style="display:flex;justify-content:space-between;min-height:44px;align-items:center;border-bottom:1px solid var(--line2)"><span class="fg2">${esc(d.title)}</span><span class="chip none">not published yet</span></div>`).join('');
   return `<div class="cols" style="align-items:stretch">${nextCard}
    <div class="card" style="flex:1 1 300px"><p class="ch">your group</p><dl class="kv" style="margin:0"><dt>institution</dt><dd>${esc(info.inst)}</dd><dt>group</dt><dd>${esc(info.group)}</dd><dt>teacher</dt><dd>Mikael Gorsky</dd><dt>signed in as</dt><dd class="mono" style="font-size:13.5px">${esc(info.who)}</dd></dl><p class="note">The site placed you in this group from the list your teacher keeps.</p></div></div>
-   <div class="section"><h2 class="h2">About the programme</h2>${prog.description.map(p => `<p class="lede" style="margin-bottom:12px">${esc(p)}</p>`).join('')}</div>
+   <div class="section"><h2 class="h2">About the programme</h2>${prog.description.map(p => `<p class="lede" style="margin-bottom:12px">${esc(p)}</p>`).join('')}</div>${extra}
    <div class="cols section" style="--b:260px;gap:14px">${prog.grade.map(a => `<div class="card" style="padding:16px 18px"><p class="ch" style="margin-bottom:6px">${esc(a.title)} <span class="r">${weight(a.key)} of the grade</span></p><p style="margin:0;font-size:15px" class="fg2">${esc(a.text)}</p></div>`).join('')}</div>
-   <h2 class="h2 section">Curriculum</h2>${parts}
+   <h2 class="h2 section">Curriculum</h2>${parts}${after}
    <div class="cols section"><div class="card" style="--b:320px"><p class="ch">documents</p>${docs}</div>
    <div class="card" style="--b:320px"><p class="ch">teacher</p><p style="margin:0 0 6px;font-weight:800;font-size:18px">Mikael Gorsky</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Questions about the programme go to your teacher through Contact SAW. Questions about the rules can also go to ${agS('tutor')}.</p><a class="btn sec" href="/contact">Contact SAW</a></div></div>`;
 }
@@ -154,7 +165,7 @@ export function programmePage(ctx) {
     return `<div class="wrap page">${head('cat programme', 'My programme', 'This page gives you the overview of the programme you are enrolled in: its curriculum, your lesson calendar, the parts of your grade, the rules and the documents.')}
      ${steps([['Register once', 'Register with the email address you gave your course organiser.'], ['The site finds your group', 'The site reads your institution and group from the list your teacher keeps.'], ['Your programme opens', 'This page shows your programme, and the 4 sections show your lessons, modules, projects and exam.']])}
      <div class="section">${exFrame('the overview of a programme', ex)}</div>
-     ${signStrip('Sign in to see your programme.', ['the curriculum, part by part and module by module', 'your lesson calendar and the Zoom link', 'the parts of your grade and the rules for projects and the exam', 'the programme documents'])}</div>`;
+     ${signStrip('Sign in to see your programme.', ['the curriculum, part by part and module by module', 'your lesson calendar and the Zoom link', `the parts of your grade and the rules for projects${hasExam('ase') ? ' and the exam' : ''}`, 'the programme documents'])}</div>`;
   }
   const g = ctx.group, p = programme(g.programme);
   return `<div class="wrap page">${head('cat programme', esc(p.title), `${esc(g.institution)} · group ${esc(g.code)} · teacher Mikael Gorsky`, `<span class="chip">${p.modules.length} modules · ${p.parts.length} parts</span>`)}
@@ -162,6 +173,10 @@ export function programmePage(ctx) {
 }
 
 // ---------- Learn in class ----------
+// In a lesson of 2 modules each item's label starts with its module, for example
+// "Module 4 · After block 1" (decision of 31 October 2026).
+const itemModule = (item, lesson) => { const m = /^Module (\d+) · /.exec(item.label); return m ? Number(m[1]) : lesson.module; };
+const itemLabel = item => item.label.replace(/^Module \d+ · /, '');
 export function livePartial(ctx) {
   const g = ctx.group;
   const lesson = M.liveLesson(g.id);
@@ -172,7 +187,7 @@ export function livePartial(ctx) {
   if (!item) return { key: `wait-${lesson.id}`, html: `<div class="card hl"><p class="ch">lesson ${lesson.number} is running</p><p class="fg2" style="margin:0">The first exercise opens when your teacher releases it. Keep this page open.</p></div>` };
   const mine = ctx.db.get('SELECT choice FROM answers WHERE item_id = ? AND user_id = ?', item.id, ctx.user.id);
   const counts = item.state === 'shown' ? M.answerCounts(item.id) : null;
-  const html = liveCardMarkup({ interactive: true, itemId: item.id, label: item.label, moduleNo: lesson.module, moduleTitle: moduleTitle(g.programme, lesson.module), question: item.question, options: JSON.parse(item.options), picked: mine && mine.choice, state: item.state, closesAt: item.closes_at, correct: item.correct, counts });
+  const html = liveCardMarkup({ interactive: true, itemId: item.id, label: itemLabel(item), moduleNo: itemModule(item, lesson), moduleTitle: moduleTitle(g.programme, itemModule(item, lesson)), question: item.question, options: JSON.parse(item.options), picked: mine && mine.choice, state: item.state, closesAt: item.closes_at, correct: item.correct, counts });
   return { key: `${item.id}-${item.state}-${mine ? mine.choice : ''}`, html };
 }
 
@@ -197,7 +212,7 @@ export function classPage(ctx) {
       return `<div class="li"><span class="t"><b style="font-size:15px;font-weight:600">${esc(x.label)}</b></span>${st}</div>`;
     }).join('')}${lesson.zoom_url ? `<a class="btn sec wide" href="${esc(lesson.zoom_url)}" rel="noopener" style="margin-top:12px">Zoom link</a>` : ''}</div>`;
   } else if (next) {
-    plan = `<div class="card"><p class="ch">next lesson <span class="r">${esc(fmtDate(next.starts_at))}</span></p><p style="margin:0 0 10px;font-weight:700">Lesson ${next.number} · ${esc(moduleTitle(d.g.programme, next.module))}</p>${next.zoom_url ? `<a class="btn sec wide" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div>`;
+    plan = `<div class="card"><p class="ch">next lesson <span class="r">${esc(fmtDate(next.starts_at))}</span></p><p style="margin:0 0 10px;font-weight:700">Lesson ${next.number} · ${esc(lessonTitle(d.g.programme, next))}</p>${next.zoom_url ? `<a class="btn sec wide" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div>`;
   }
   const studyMod = next ? next.module : null;
   const rate = M.lessonToRate(ctx.user);
@@ -206,13 +221,13 @@ export function classPage(ctx) {
   const rows = d.matrix.lessons.map((l, i) => {
     const c = d.live.cells[i];
     const mine = l.state === 'ended' ? M.myLessonRating(ctx.user.id, l.id) : null;
-    return `<tr><td class="m">${l.number}</td><td>${esc(moduleTitle(d.g.programme, l.module))}</td><td>${squares(c.answered, l.opened)}</td><td class="m">${d.live.scores[i] == null ? '–' : d.live.scores[i] + '%'}</td><td class="m">${d.avgs[i].score == null ? '–' : d.avgs[i].score + '%'}</td><td class="m">${mine ? mine.rating + ' / 5' : l.state === 'ended' ? 'not rated' : '–'}</td></tr>`;
+    return `<tr><td class="m">${l.number}</td><td>${esc(lessonTitle(d.g.programme, l))}</td><td>${squares(c.answered, l.opened)}</td><td class="m">${d.live.scores[i] == null ? '–' : d.live.scores[i] + '%'}</td><td class="m">${d.avgs[i].score == null ? '–' : d.avgs[i].score + '%'}</td><td class="m">${mine ? mine.rating + ' / 5' : l.state === 'ended' ? 'not rated' : '–'}</td></tr>`;
   }).join('');
   return `<div class="wrap page">${head('learn --in-class', 'Learn in class', lesson ? `Lesson ${lesson.number} is running now. Keep this page open beside Zoom and answer each exercise when it opens.` : 'When a lesson runs, its exercises appear on this page. Keep it open beside the lecture.', (lesson ? '<span class="chip solid">live</span>' : '') + ag('proctor'))}
    <div class="cols" style="align-items:flex-start"><div style="--b:520px;flex:999 1 520px"><div data-live="/class/live" data-key="${esc(partial.key)}">${partial.html}</div></div>
    <div class="stack" style="flex:1 1 300px">${plan}${studyMod && moduleContent(d.g.programme, studyMod) ? `<div class="card flat"><p class="ch">study this module</p><p style="margin:0 0 12px;font-weight:700">${esc(moduleTitle(d.g.programme, studyMod))}</p><a class="btn out" href="/study/${studyMod}">open the study page</a></div>` : ''}</div></div>
    ${surveyCard}
-   ${rate ? `<div class="section">${pulseMarkup({ lessonId: rate.lesson.id, lessonNo: rate.lesson.number, moduleTitle: moduleTitle(d.g.programme, rate.lesson.module), mine: rate.mine })}</div>` : ''}
+   ${rate ? `<div class="section">${pulseMarkup({ lessonId: rate.lesson.id, lessonNo: rate.lesson.number, moduleTitle: lessonTitle(d.g.programme, rate.lesson), mine: rate.mine })}</div>` : ''}
    ${d.matrix.lessons.length ? `<div class="section"><div class="sechead"><h2 class="h2">Your lessons</h2></div><div class="card" style="padding:6px 0"><div class="scroll"><table class="tbl"><thead><tr><th>lesson</th><th>module</th><th>answered</th><th>your score</th><th>group average</th><th>your rating</th></tr></thead><tbody>${rows}</tbody></table></div></div></div>` : ''}
    </div>`;
 }
@@ -281,7 +296,7 @@ export function modulePage(ctx, n) {
   const media = (url, label) => url ? `<a class="ph" href="${esc(url)}" rel="noopener" style="text-decoration:none">${label === 'recording' ? I.play : ''} open the ${label}</a>` : `<div class="ph" role="img" aria-label="${label} not published yet">${label === 'recording' ? I.play : ''}[${label} not published yet]</div>`;
   return `<div class="wrap page"><p class="eyebrow"><a href="/study" style="color:var(--muted)">study</a> / module ${pad(n)}</p>
    <div class="chips" style="margin-bottom:14px">${prac.studied ? stat('ok', 'studied') : ''}${ag('tutor')}</div>
-   <h1 class="h1">${esc(title)}</h1><p class="lede" style="margin-bottom:32px">${esc(mc.intro)}</p>
+   <h1 class="h1">${esc(title)}</h1><p class="lede" style="margin-bottom:${mc.reading ? 12 : 32}px">${esc(mc.intro)}</p>${mc.reading ? `<p class="mono small" style="margin:0 0 32px"><span style="color:var(--accent)">read</span> · textbook, ${esc(mc.reading.replace(/^Chapter/, 'chapter'))}</p>` : ''}
    <h2 class="h2">Key ideas</h2><div class="cols" style="--b:300px;gap:14px">${mc.ideas.map((d, i) => `<div class="card"><p class="ch" style="margin-bottom:6px">idea-${i + 1}</p><h3 class="h3">${esc(d.title)}</h3><p class="fg2" style="margin:0;font-size:15px">${esc(d.text)}</p></div>`).join('')}</div>
    <div class="section"><h2 class="h2">Slides and recording</h2><div class="cols" style="--b:320px;gap:14px"><div>${media(mc.slides, 'slides')}</div><div>${media(mc.recording, 'recording')}</div></div></div>
    <div class="section"><div class="sechead"><h2 class="h2">Practice exercises</h2><p class="small">Practice answers are kept for you only and count towards no grade.</p></div><div class="stack" style="gap:14px">${exHtml}</div></div>
@@ -323,6 +338,10 @@ export function projectsPage(ctx) {
 }
 
 // ---------- Exam finale ----------
+export function noExamPage(ctx) {
+  const home = ctx.role === 'teacher' ? '/teacher/progress' : '/programme';
+  return `<div class="wrap page" style="max-width:820px">${head('exam --status', 'No final exam', 'Your programme has no final exam. Your grade comes from your class engagement and your 2 projects, as My programme describes.')}<a class="btn sec" href="${home}">Open My programme</a></div>`;
+}
 const SAMPLE_READY = [
   { state: 'ok', title: 'Study the modules taught so far', text: '8 of 8 studied' }, { state: 'ok', title: 'Answer at least 80% of live exercises', text: '95% answered' },
   { state: 'warn', title: 'Reach 70% in practice for each part', text: 'part 1: 82%, part 2: 64%' }, { state: 'bad', title: 'Own project passes every check', text: '1 check failed' },
@@ -348,13 +367,13 @@ export function examPage(ctx) {
 export function progressPage(ctx) {
   if (!signedIn(ctx)) {
     const ME = [80, 80, 100, 60, 80, 40, 80, 100], GRP = [78, 74, 81, 69, 72, 66, 75, 79];
-    const ex = tilesMarkup({ answered: '38<small> of 40</small>', answeredSub: '95% · group average 85%', score: '78%', scoreSub: 'group average 74%', practice: '75%', practiceSub: 'part 1: 82% · part 2: 64%', modules: '8<small> of 19</small>', modulesSub: 'module 9 in progress', projects: '0<small> of 2</small>', projectsSub: 'own: 1 failed · tribunal: not yet', ready: '3<small> of 6</small>' })
+    const ex = tilesMarkup({ answered: '38<small> of 40</small>', answeredSub: '95% · group average 85%', score: '78%', scoreSub: 'group average 74%', practice: '75%', practiceSub: 'part 1: 82% · part 2: 64%', modules: '8<small> of 19</small>', modulesSub: 'module 9 in progress', projects: '0<small> of 2</small>', projectsSub: 'own: 1 failed · tribunal: not yet', ready: '3<small> of 6</small>' }, hasExam('ase'))
       + `<div class="card" style="margin-top:16px"><p class="ch">live exercise score by lesson <span class="r">you and your group</span></p><div class="legend"><span><i></i>You</span><span><i class="ref"></i>Group average</span></div>${scoreChart(ME, GRP, ME.map((_, i) => 'L' + (i + 1)))}</div>`;
     return `<div class="wrap page">${head('progress --me', 'My progress', 'This page shows how you are doing in your programme, set against the average of your group. Only you see your own figures.', ag('analyst'))}
      ${exFrame('the progress of a student', ex)}
      <div class="cols section"><div class="card" style="--b:300px"><p class="ch">what the page shows</p><div class="ticks" style="margin:0">${['your answers and scores in each lesson', 'the modules you have studied and your practice results', 'the checks of your projects', 'your readiness for the exam', 'messages from your agents on what to do next'].map(t => `<p>${I.check}<span>${t}</span></p>`).join('')}</div></div>
      <div class="card" style="--b:300px"><p class="ch">your ratings</p><h3 class="h3">Your ratings stay anonymous</h3><p class="fg2" style="margin:0;font-size:15px">You see your own lesson ratings beside the group average. Your teacher sees ratings only as totals from 5 or more students, and ratings never affect grades.</p></div></div>
-     ${signStrip('Sign in to see your own progress.', ['your figures for every lesson, module, project and practice exam', 'your figures set against the average of your group', 'suggestions from @tutor, @reviewer and @examiner'])}</div>`;
+     ${signStrip('Sign in to see your own progress.', [`your figures for every lesson, module and project${hasExam('ase') ? ' and practice exam' : ''}`, 'your figures set against the average of your group', 'suggestions from @tutor, @reviewer and @examiner'])}</div>`;
   }
   const d = studentData(ctx);
   const info = groupInfo(ctx);
@@ -373,14 +392,14 @@ export function progressPage(ctx) {
     modules: `${studied}<small> of ${d.prog.modules.length}</small>`, modulesSub: `${withContent.length} with study pages so far`,
     projects: `${passing}<small> of 2</small>`, projectsSub: `own: ${own === 'none' ? 'not yet' : own} · tribunal: ${trib === 'none' ? 'not yet' : trib}`,
     ready: `${d.ready.met}<small> of ${d.ready.conds.length}</small>`,
-  });
+  }, hasExam(d.g.programme));
   const labels = d.matrix.lessons.map(l => 'L' + l.number);
   const msgs = [];
   const weak = withContent.filter(n => d.prac[n].accuracy != null && d.prac[n].accuracy < 70)[0];
   if (weak) msgs.push(['tutor', `Your practice score on module ${weak} was ${d.prac[weak].accuracy}%. Read its key ideas again before the next lesson.`]);
   if (d.projs.own.last && d.projs.own.last.failed) msgs.push(['reviewer', `Your own project has ${d.projs.own.last.failed} failed check${d.projs.own.last.failed > 1 ? 's' : ''}. Fix ${d.projs.own.last.failed > 1 ? 'them' : 'it'} and run the check again.`]);
   if (own === 'none') msgs.push(['reviewer', 'You have not submitted your own project yet.']);
-  msgs.push(['examiner', `You meet ${d.ready.met} of ${d.ready.conds.length} exam conditions.`]);
+  if (hasExam(d.g.programme)) msgs.push(['examiner', `You meet ${d.ready.met} of ${d.ready.conds.length} exam conditions.`]);
   const liveL = M.liveLesson(d.g.id);
   if (liveL) msgs.push(['proctor', `Lesson ${liveL.number} is running now. Open Learn in class.`]);
   const toRate = M.lessonToRate(ctx.user);
@@ -393,7 +412,7 @@ export function progressPage(ctx) {
   }).join('');
   const less = d.matrix.lessons.map((l, i) => `<div class="li" style="padding:9px 0"><span class="n">L${l.number}</span><span style="flex:1 1 140px;min-width:0">${squares(d.live.cells[i].answered, l.opened)}</span><span class="mono small">${d.live.cells[i].answered} / ${l.opened} · group ${d.avgs[i].avgAnswered.toFixed(1)}</span></div>`).join('');
   const rated = M.ratingsByLesson(d.g.id);
-  const rates = rated.map(r => { const mine = M.myLessonRating(ctx.user.id, r.id); return `<tr><td class="m">${r.number}</td><td>${esc(moduleTitle(d.g.programme, r.module))}</td><td class="m">${mine ? mine.rating + ' / 5' : '<a href="/class">rate now</a>'}</td><td class="m">${r.n >= M.MIN_GROUP ? r.avg.toFixed(1) + ' / 5' : 'fewer than 5 ratings'}</td></tr>`; }).join('');
+  const rates = rated.map(r => { const mine = M.myLessonRating(ctx.user.id, r.id); return `<tr><td class="m">${r.number}</td><td>${esc(lessonTitle(d.g.programme, r))}</td><td class="m">${mine ? mine.rating + ' / 5' : '<a href="/class">rate now</a>'}</td><td class="m">${r.n >= M.MIN_GROUP ? r.avg.toFixed(1) + ' / 5' : 'fewer than 5 ratings'}</td></tr>`; }).join('');
   return `<div class="wrap page">${head('progress --me', 'My progress', `${esc(info.who)} · ${esc(d.prog.title)} · ${esc(info.instS)} · group ${esc(info.group)}`, ag('analyst'))}
    ${tilesHtml}
    <div class="cols section" style="align-items:flex-start"><div class="card" style="--b:520px;flex:999 1 520px"><p class="ch">live exercise score by lesson <span class="r">you and your group</span></p>

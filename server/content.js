@@ -18,6 +18,14 @@ export function programme(id = 'ase') {
   return readJson(path.join(ROOT, id, 'programme.json'));
 }
 
+// A programme without a final exam sets "exam": false. Its students and the
+// teacher then never see Exam finale or readiness for an exam
+// (decision of 31 October 2026: ASE is graded without an exam).
+export function hasExam(id = 'ase') {
+  const p = programme(id);
+  return Boolean(p) && p.exam !== false;
+}
+
 export function moduleContent(id, n) {
   return readJson(path.join(ROOT, id, `module-${String(n).padStart(2, '0')}.json`));
 }
@@ -37,6 +45,28 @@ export function moduleTitle(id, n) {
   const m = p && p.modules.find(x => x.n === n);
   return m ? m.title : `Module ${n}`;
 }
+
+// The lesson plan of a programme: lesson n covers these modules. A programme
+// without a plan teaches 1 module per lesson.
+export function planLesson(id, n) {
+  const p = programme(id);
+  const l = p && p.lessons && p.lessons.find(x => x.n === n);
+  return l ? { modules: l.modules, note: l.note || '' } : null;
+}
+
+export function lessonModules(l) {
+  try { const m = l.modules ? JSON.parse(l.modules) : null; if (Array.isArray(m) && m.length) return m; } catch { /* fall back */ }
+  return [l.module];
+}
+
+// "Modules 4 and 6" and the module titles, for a lesson row from the database.
+export function lessonTitle(id, l) {
+  const ms = lessonModules(l);
+  const plan = planLesson(id, l.number);
+  const note = plan && plan.note && plan.modules.join() === ms.join() ? `${plan.note} · ` : '';
+  return note + ms.map(n => moduleTitle(id, n)).join(' · ');
+}
+export const lessonModulesLabel = l => { const ms = lessonModules(l); return ms.length > 1 ? `modules ${ms.slice(0, -1).join(', ')} and ${ms[ms.length - 1]}` : `module ${ms[0]}`; };
 
 export function partOf(id, n) {
   const p = programme(id);

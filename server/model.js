@@ -1,6 +1,6 @@
 // Queries and figures shared by the student and teacher pages.
 import { all, get, run, now, log, voterKey } from './db.js';
-import { programme, moduleContent, lessonItems, modulesWithContent, partOf } from './content.js';
+import { programme, moduleContent, lessonItems, modulesWithContent, partOf, planLesson } from './content.js';
 
 export const MIN_GROUP = 5; // ratings are shown only from 5 or more answers (decision of 29 October 2026)
 
@@ -32,15 +32,23 @@ export const liveLesson = groupId => get("SELECT * FROM lessons WHERE group_id =
 export const nextLesson = groupId => get("SELECT * FROM lessons WHERE group_id = ? AND state != 'ended' ORDER BY number LIMIT 1", groupId);
 export const lastEnded = groupId => get("SELECT * FROM lessons WHERE group_id = ? AND state = 'ended' ORDER BY number DESC LIMIT 1", groupId);
 
+// A lesson takes its modules from the programme's lesson plan when there is
+// one, and copies the live exercises of each module in turn.
 export function addLesson(groupId, number, moduleNo, startsAt, zoomUrl) {
   const g = groupById(groupId);
-  run('INSERT INTO lessons(group_id, number, module, starts_at, zoom_url) VALUES(?, ?, ?, ?, ?)', groupId, number, moduleNo, startsAt || null, zoomUrl || null);
+  const plan = planLesson(g.programme, number);
+  const modules = plan ? plan.modules : [moduleNo];
+  run('INSERT INTO lessons(group_id, number, module, modules, starts_at, zoom_url) VALUES(?, ?, ?, ?, ?, ?)', groupId, number, modules[0], JSON.stringify(modules), startsAt || null, zoomUrl || null);
   const lesson = get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', groupId, number);
-  lessonItems(g.programme, moduleNo).forEach((it, i) => {
+  lessonItemsFor(g.programme, modules).forEach((it, i) => {
     run('INSERT INTO items(lesson_id, seq, label, question, options, correct) VALUES(?, ?, ?, ?, ?, ?)',
       lesson.id, i + 1, it.label, it.question, JSON.stringify(it.options), it.correct);
   });
   return lesson;
+}
+// With 2 modules in a lesson, each label says which module the item is from.
+export function lessonItemsFor(progId, modules) {
+  return modules.flatMap(n => lessonItems(progId, n).map(it => (modules.length > 1 ? { ...it, label: `Module ${n} · ${it.label}` } : it)));
 }
 
 // The proctor closes items whose time has run out. In the demo group nobody
@@ -243,7 +251,7 @@ export function readiness(user, ctx) {
 
 // ---------- ratings ----------
 export function ratingsByLesson(groupId) {
-  return all(`SELECT l.id, l.number, l.module, COUNT(r.id) AS n, AVG(r.rating) AS avg
+  return all(`SELECT l.id, l.number, l.module, l.modules, COUNT(r.id) AS n, AVG(r.rating) AS avg
               FROM lessons l LEFT JOIN lesson_ratings r ON r.lesson_id = l.id
               WHERE l.group_id = ? AND l.state = 'ended' GROUP BY l.id ORDER BY l.number`, groupId);
 }

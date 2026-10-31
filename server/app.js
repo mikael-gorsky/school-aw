@@ -7,7 +7,7 @@ import { config, secureCookies } from './config.js';
 import { all, get, run, now, log, setting, setSetting } from './db.js';
 import { COOKIE, createSession, sessionUser, endSession, admit, demoLogin, googleStart, googleFinish, applyProfile, normEmail } from './auth.js';
 import { layout, HOME } from './html.js';
-import { programme } from './content.js';
+import { programme, hasExam, planLesson } from './content.js';
 import * as M from './model.js';
 import * as P from './pages/public.js';
 import * as S from './pages/student.js';
@@ -185,7 +185,8 @@ on('GET', '/programme', { title: 'My programme' }, ctx => toTeacher('progress')(
 on('GET', '/class', { title: 'Learn in class' }, ctx => toTeacher('class')(ctx) || S.classPage(ctx));
 on('GET', '/study', { title: 'Study alone' }, ctx => toTeacher('study')(ctx) || S.studyPage(ctx));
 on('GET', '/projects', { title: 'Submit projects' }, ctx => toTeacher('projects')(ctx) || S.projectsPage(ctx));
-on('GET', '/exam', { title: 'Exam finale' }, ctx => toTeacher('exam')(ctx) || S.examPage(ctx));
+const examProg = ctx => (ctx.group ? ctx.group.programme : 'ase');
+on('GET', '/exam', { title: 'Exam finale' }, ctx => toTeacher('exam')(ctx) || (hasExam(examProg(ctx)) ? S.examPage(ctx) : S.noExamPage(ctx)));
 on('GET', '/progress', { title: 'My progress' }, ctx => toTeacher('progress')(ctx) || S.progressPage(ctx));
 on('GET', /^\/study\/(\d{1,2})$/, { title: 'Study page' }, (ctx, n) => {
   if (ctx.role === 'visitor') return { redirect: '/study' };
@@ -272,7 +273,7 @@ on('GET', '/teacher/class', { roles: TEACHER, title: 'Learn in class' }, ctx => 
 on('GET', '/teacher/class/live', { roles: TEACHER }, ctx => ({ json: ctx.group ? T.consolePartial(ctx) : { key: 'none', html: '' } }));
 on('GET', '/teacher/study', { roles: TEACHER, title: 'Study alone' }, ctx => T.tStudy(ctx));
 on('GET', '/teacher/projects', { roles: TEACHER, title: 'Submit projects' }, ctx => T.tProjects(ctx));
-on('GET', '/teacher/exam', { roles: TEACHER, title: 'Exam finale' }, ctx => T.tExam(ctx));
+on('GET', '/teacher/exam', { roles: TEACHER, title: 'Exam finale' }, ctx => (hasExam(examProg(ctx)) ? T.tExam(ctx) : S.noExamPage(ctx)));
 on('GET', '/teacher/progress', { roles: TEACHER, title: 'Class progress' }, ctx => T.tProgress(ctx));
 on('GET', '/teacher/satisfaction', { roles: TEACHER, title: 'Satisfaction' }, ctx => T.tSatisfaction(ctx));
 on('GET', '/teacher/access', { roles: TEACHER, title: 'Groups and access' }, ctx => T.tAccess(ctx));
@@ -312,9 +313,11 @@ on('POST', '/teacher/class/act', { roles: TEACHER }, ctx => {
       flash = `Lesson ${l.number} has ended. Students can now rate it.`;
     }
   } else if (a === 'add-lesson') {
-    const number = Number(one(f.number)), mod = Number(one(f.module));
+    const number = Number(one(f.number));
+    // With a lesson plan the lesson number decides the modules; otherwise the teacher picks 1.
+    const mod = planLesson(g.programme, number) ? planLesson(g.programme, number).modules[0] : Number(one(f.module));
     const zoom = str(f.zoom, 300);
-    if (!(number >= 1 && number <= 99) || !programme(g.programme).modules.some(m => m.n === mod)) flash = 'Give a lesson number and a module.';
+    if (!(number >= 1 && number <= 99) || !programme(g.programme).modules.some(m => m.n === mod)) flash = programme(g.programme).lessons ? `Choose a lesson from 1 to ${programme(g.programme).lessons.length}.` : 'Give a lesson number and a module.';
     else if (get('SELECT 1 FROM lessons WHERE group_id = ? AND number = ?', g.id, number)) flash = `Lesson ${number} already exists in this group.`;
     else if (zoom && !/^https:\/\/[^\s"<>]+$/.test(zoom)) flash = 'The Zoom link must start with https://.';
     else { M.addLesson(g.id, number, mod, T.fromLocalInput(str(f.starts, 20)), zoom || null); flash = `Lesson ${number} is added.`; }

@@ -2,7 +2,11 @@
 import { esc, I, ag, agS, head, logLines, steps } from '../html.js';
 import { config, googleConfigured } from '../config.js';
 import { groupLabel } from '../model.js';
+import { hasExam } from '../content.js';
 
+// @examiner works only in a programme with a final exam, and ASE has none
+// (decision of 31 October 2026).
+export const activeAgents = () => AGENTS.filter(a => a.id !== 'examiner' || hasExam('ase'));
 export const AGENTS = [
   { id: 'steward', role: 'Coordinator', where: 'Behind every part of the school',
     does: 'Assigns work to the other agents, checks that each task is finished, passes messages from Contact SAW to the teacher and prepares the teacher’s daily brief.',
@@ -36,7 +40,7 @@ export function home(ctx) {
     ['study', 'study', 'Study alone', 'Each module has a study page and practice exercises, and a tutor answers your questions about the course and the site.', 'tutor'],
     ['projects', 'projects', 'Submit projects', 'You link the public repository of each project. The reviewer checks its structure and history and explains every failed check.', 'reviewer'],
     ['exam', 'exam', 'Exam finale', 'You follow your readiness for the final exam, take practice exams, and then sit the exam itself.', 'examiner'],
-  ];
+  ].filter(c => c[0] !== 'exam' || hasExam('ase'));
   const cta = signed(ctx)
     ? '<a class="btn pri" href="/programme">Go to my programme</a><a class="btn sec" href="/progress">My progress</a>'
     : ctx.role === 'teacher' ? '<a class="btn pri" href="/teacher/progress">Open class progress</a>'
@@ -49,7 +53,7 @@ export function home(ctx) {
    ${ctx.role === 'visitor' ? '<p class="small" style="margin-top:14px">First time here? Register with the email address you gave your course organiser. <a href="/class">See how a lesson runs</a>.</p>' : ''}
    </div><div class="term"><div class="top"><i></i><i></i><i></i><span style="margin-left:6px">school.log</span><span class="sample" style="margin-left:auto">example</span></div><div class="body log">${logLines(log)}</div></div>
    </div></section>
-   <section class="band deep"><div class="wrap in"><div class="sechead"><h2 class="h2">What you do here</h2><p class="small">4 sections, each run by one agent under your teacher</p></div>
+   <section class="band deep"><div class="wrap in"><div class="sechead"><h2 class="h2">What you do here</h2><p class="small">${comp.length} sections, each run by one agent under your teacher</p></div>
    <div class="cols" style="--b:240px">${comp.map(c => `<a class="card" href="/${c[0]}" style="display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit"><span style="color:var(--accent)">${I[c[1]].replace('width="18" height="18"', 'width="26" height="26"')}</span><h3 class="h3" style="margin:0">${c[2]}</h3><p class="fg2" style="margin:0;font-size:15px">${c[3]}</p><span class="row" style="margin-top:auto;justify-content:space-between">${agS(c[4])}<span class="mono small" style="color:var(--accent)">how it works</span></span></a>`).join('')}</div></div></section>
    <section class="band"><div class="wrap in"><div class="sechead"><h2 class="h2">Your programme and your progress</h2></div>
    <div class="cols" style="--b:260px">
@@ -58,7 +62,7 @@ export function home(ctx) {
    <div class="card"><p class="ch">your ratings</p><h3 class="h3">Your ratings stay anonymous</h3><p class="fg2" style="margin:0;font-size:15px">You rate each lesson in a few seconds. Your teacher sees ratings only from groups of 5 or more, and ratings never affect grades.</p></div>
    </div></div></section>
    <section class="band deep"><div class="wrap in"><div class="sechead"><h2 class="h2">The agents</h2><a class="mono" href="/agents" style="min-height:44px;display:inline-flex;align-items:center">what each agent does and never does</a></div>
-   <div class="cols" style="--b:220px">${AGENTS.map(a => `<a class="card" href="/agents" style="text-decoration:none;color:inherit;padding:16px 18px"><span class="agent">@${a.id}</span><p style="margin:8px 0 2px;font-weight:800">${a.role}</p><p class="small">${a.where}</p></a>`).join('')}</div></div></section>
+   <div class="cols" style="--b:220px">${activeAgents().map(a => `<a class="card" href="/agents" style="text-decoration:none;color:inherit;padding:16px 18px"><span class="agent">@${a.id}</span><p style="margin:8px 0 2px;font-weight:800">${a.role}</p><p class="small">${a.where}</p></a>`).join('')}</div></div></section>
    <section class="band"><div class="wrap in" style="display:flex;flex-wrap:wrap;gap:36px;align-items:center">
    <div class="photo" role="img" aria-label="Photo placeholder" style="flex:0 0 220px;height:260px;max-width:100%">photo</div>
    <div style="flex:999 1 420px;min-width:0"><p class="eyebrow"><span class="p">$</span> teacher</p><h2 class="h2" style="font-size:34px">Mikael Gorsky</h2>
@@ -74,7 +78,7 @@ export function home(ctx) {
 export function agents() {
   return `<div class="wrap page">${head('ls agents/', 'The agents', 'Your teacher works with a team of 7 named agents. Each agent has one role and works in one part of the school. Each agent also has limits, and this page lists them.', '<span class="chip">7 agents</span><span class="chip">1 teacher</span>')}
    <div class="card warnb" style="margin-bottom:20px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-start"><div style="flex:1 1 220px"><span class="human">teacher</span><p style="margin:8px 0 0;font-weight:800;font-size:19px">Mikael Gorsky</p></div><p class="fg2" style="flex:999 1 420px;margin:0;font-size:15.5px">Teaches the lessons, writes the exercises and the rules, keeps the list of addresses permitted to register and sets every grade. Each agent reports to him, and every decision about a person waits for his approval.</p></div>
-   <div class="cols" style="--b:340px">${AGENTS.map(a => `<article class="card" style="display:flex;flex-direction:column;gap:12px"><div class="row" style="justify-content:space-between"><span class="agent" style="font-size:15px">@${a.id}</span><span class="chip">${a.role}</span></div><dl class="kv" style="margin:0"><dt>works in</dt><dd>${a.where}</dd><dt>does</dt><dd>${a.does}</dd><dt>never</dt><dd>${a.never}</dd></dl></article>`).join('')}</div>
+   <div class="cols" style="--b:340px">${activeAgents().map(a => `<article class="card" style="display:flex;flex-direction:column;gap:12px"><div class="row" style="justify-content:space-between"><span class="agent" style="font-size:15px">@${a.id}</span><span class="chip">${a.role}</span></div><dl class="kv" style="margin:0"><dt>works in</dt><dd>${a.where}</dd><dt>does</dt><dd>${a.does}</dd><dt>never</dt><dd>${a.never}</dd></dl></article>`).join('')}</div>
    <div class="section"><div class="sechead"><h2 class="h2">A lesson day in the log</h2><span class="sample">example</span></div><div class="card log">
    ${logLines([['steward', 'asked @proctor to prepare the lesson from the teacher’s plan'], ['proctor', 'opened the warm-up quiz, 33 of 34 students answered'], ['teacher', 'started the lecture on Zoom', true], ['proctor', 'released the exercise after block 1 on the teacher’s signal'], ['tutor', 'answered 7 questions about the module after the lesson'], ['reviewer', 'checked 4 repositories pushed after the lesson'], ['analyst', 'closed the lesson rating with 28 answers'], ['steward', 'put 2 messages from Contact SAW in the teacher’s brief']])}
    </div></div></div>`;
