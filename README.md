@@ -6,7 +6,7 @@ The site does not offer programmes to the public. Every page addresses the stude
 
 ## Status
 
-The project is at the design stage. The repository holds the agreed specification and a clickable mockup. The implementation has not started yet.
+The first working version of the site is built and follows the agreed mockup. `docs/status.md` describes what is built, how the code is organised, how to run it, and where this version differs from the specification.
 
 ## What is in the repository
 
@@ -16,8 +16,18 @@ The project is at the design stage. The repository holds the agreed specificatio
 
 `mockup/index.html` is the agreed design as a clickable page with sample data. Open it in a browser. The bar at the top switches between the visitor, a student, the demo login and the teacher, and between desktop, tablet and phone widths.
 
+`docs/status.md` describes the state of the build.
+
+`docs/deployment-podway.md` describes how the site runs in the Podway pod.
+
+`server/`, `public/` and `content/` hold the site itself, and `test/` holds its tests.
+
 `CLAUDE.md` is the context file for AI agents that work on this repository.
+
+## Running the site
+
+The site needs Node.js 22.13 or later and no other packages. Run `npm test` to run the tests. Run `npm run dev` with `DEV_LOGIN=1`, `TEACHER_EMAILS` and `DEMO_PASSWORD` set to try it on your own computer at http://localhost:8080. `.env.example` lists every setting.
 
 ## Hosting
 
-The site will be hosted at territorial-mink-85a7.podway.site.
+The site runs in a Podway pod, at territorial-mink-85a7.podway.site.

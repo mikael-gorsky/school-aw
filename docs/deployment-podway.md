@@ -24,6 +24,18 @@ A suspended pod runs nothing, including scheduled work. The site is offline whil
 
 Only the owner adds or changes secrets, through the pod's Secrets panel. When the site needs a credential, such as the Google sign-in client or the Claude API key, record which credential is needed and why, ask the owner to add it in the panel, and continue once it is there. Never commit a `.env` file or a credential to Git, and never print a secret value in logs or in the conversation.
 
-## First steps in the pod
+## Running the site in the pod
 
-Check the pod's live configuration, including the preview port. Clone github.com/mikael-gorsky/school-aw into the persistent workspace. Serve `mockup/index.html` on the preview port, so that the owner can confirm the preview works. Then set out the plan of work to the owner before writing application code, as CLAUDE.md requires.
+The site needs Node.js 22.13 or later and no packages. Check the Node version in the pod first. Clone github.com/mikael-gorsky/school-aw into the persistent workspace and run `npm test`.
+
+Declare one service that Podway supervises. It runs `npm start` in the repository folder, with `PORT` set to the port of the pod's preview and `DATA_DIR` set to a folder in the persistent workspace. The database is a single SQLite file in that folder, so the site needs no separate database service.
+
+Ask the owner to add these secrets in the Secrets panel: `SESSION_SECRET`, a long random string that must never change afterwards; `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, from a Google OAuth client of type "Web application" whose authorised redirect address is `https://territorial-mink-85a7.podway.site/auth/google/callback`; `TEACHER_EMAILS`, the addresses that sign in as the teacher; and `DEMO_PASSWORD`, the password of the demo login. `ANTHROPIC_API_KEY` turns on @tutor and the grouping of comments, and `GITHUB_TOKEN` raises GitHub's limit for repository checks. Set `BASE_URL` to `https://territorial-mink-85a7.podway.site`. Never set `DEV_LOGIN` in the pod.
+
+Before the owner shares the address, test registration, sign-in and the demo login in a signed-out browser.
+
+The site resets the demo group every night at 03:00 Israel time. A pod that is suspended at that hour resets the demo group in its first minute after waking.
+
+## Backups
+
+`npm run backup` writes a consistent copy of the database to `backups/` while the site runs. Copy each backup out of the pod. To restore one, stop the service, replace `saw.db` in `DATA_DIR` with the backup file, delete any `saw.db-wal` and `saw.db-shm` files beside it, and start the service again. Write down here where the copies go once that is set up.

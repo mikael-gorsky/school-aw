@@ -189,11 +189,9 @@ Example screens shown to visitors sit in a frame with a dashed yellow border and
 
 ## 9. Open questions
 
-The hosting platform behind territorial-mink-85a7.podway.site, and how the site is deployed to it.
+The region where the pod stores data.
 
-The technical stack, the database and the region where data is stored.
-
-The Google sign-in setup and the email service for sign-in links.
+The email service for sign-in links.
 
 The weights of the grade parts, the lesson dates, the exam date, length and conditions, and the period for which course data is kept.
 

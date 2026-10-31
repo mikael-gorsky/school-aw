@@ -37,3 +37,15 @@ The demo login is a login named "demo" with a password, which people request thr
 The site holds information only about programmes that have active students. Each student sees an overview of their own programme, as an institution's course page does. Information about another programme can be shown to clients only through a demo login for that programme.
 
 The repository is named school-aw, and the site will be hosted at territorial-mink-85a7.podway.site.
+
+The site is built as a Node.js application with no packages, on the database built into Node, and it renders its pages on the server with the markup of the mockup. This keeps the site easy to install and run in the pod and leaves no package to update or audit.
+
+Students and the teacher sign in with Google. Registration by a link sent by email waits for a decision about an email service. Until then, a student whose address is not a Google address writes to Contact SAW.
+
+A rating or survey answer is stored with a one-way key made from the student's id and a server secret, and never with the student's id. The key lets a student see and change their own rating and stops a second rating, while the teacher's pages show only totals from 5 or more students.
+
+A CSV file of addresses, such as a Moodle export, is read in the teacher's browser. Only the email and group of each row are sent to the server, so other columns, such as ID numbers, never leave the teacher's computer. The server reads only the same 2 columns from whatever it receives.
+
+The demo group is built again from a fixed seed every night at 03:00 Israel time, and on the first minute after that time if the pod was asleep. In the demo group @proctor opens a new exercise every 2 minutes, so that the demo shows a live lesson at any hour.
+
+A question that @tutor cannot answer from the rules is passed to the teacher without the asker. The teacher's answer is published on the Study alone page of every student of the programme, and the teacher can add it to the text from which @tutor answers.

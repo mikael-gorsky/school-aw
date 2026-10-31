@@ -8,7 +8,7 @@ Mikael Gorsky owns the project and makes every decision about it. You work for h
 
 ## Read these before any work
 
-Read `docs/specification.md` for what the site does and the rules it follows. Read `docs/decisions.md` for what has been decided and why. Open `mockup/index.html` for the agreed design. The mockup is the reference for layout, wording and behaviour. Where the specification and the mockup disagree, the specification wins, and you report the difference to the owner. Read `docs/deployment-podway.md` before you run, deploy or store anything: the site runs in the owner's Podway pod.
+Read `docs/specification.md` for what the site does and the rules it follows. Read `docs/decisions.md` for what has been decided and why. Open `mockup/index.html` for the agreed design. The mockup is the reference for layout, wording and behaviour. Where the specification and the mockup disagree, the specification wins, and you report the difference to the owner. Read `docs/deployment-podway.md` before you run, deploy or store anything: the site runs in the owner's Podway pod. Read `docs/status.md` for what is built, how the code is organised and where the build differs from the specification.
 
 ## Rules of the product
 
@@ -43,3 +43,11 @@ Write tests for every rule that protects access or privacy: the list of permitte
 Where code follows from a decision, write in a comment why it does what it does, and give the date of the decision in `docs/decisions.md`.
 
 At the end of each working session, add the decisions taken in it to `docs/decisions.md`, with their date and reason.
+
+## How the code works
+
+The site runs on Node.js 22.13 or later with no packages: it uses `node:sqlite` for the database, `node:http` for the server and `node:test` for the tests. Keep it free of packages unless the owner agrees to one.
+
+Every route is in `server/app.js`, with the roles allowed on it. Every route under `/teacher` allows only the teacher. The pages are rendered on the server in `server/pages/`, with the markup and class names of the mockup. Every figure that comes from ratings or surveys passes through `server/model.js`, which hides any figure that rests on fewer than 5 answers. Ratings and survey answers carry a one-way voter key instead of a user id.
+
+Run `npm test` before each commit. Never set `DEV_LOGIN` in the pod, and never commit a database file, a backup or a `.env` file.
