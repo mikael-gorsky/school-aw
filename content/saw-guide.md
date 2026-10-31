@@ -16,6 +16,10 @@ A student registers once with Google, using the email address they gave their co
 - **My account** opens from the student's last name at the top right. It shows the photo and name from Google, which the student can correct, the email, institution, group and program, a comment that only the student and the teacher see, and Sign out.
 - **Contact SAW** sends a message to the teacher, who answers by email.
 
+## The Teaching Assistant
+
+On every page a student sees a round button in the lower right corner, labeled "Teaching Assistant". It opens a chat that answers questions about the site, the course and the textbook, in the language the student writes in. A student may ask 20 questions a day. It does not know who the student is.
+
 ## The agents
 
 - @proctor runs the live lessons: it opens the warm-up quiz and the exercises after each block.

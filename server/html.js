@@ -145,12 +145,13 @@ function tabbar(ctx) {
   return `<nav class="tabbar" aria-label="Main"><div class="in">${MAIN.map(m => `<a href="${href(m.k)}"${isCur(m.k) ? ' aria-current="page"' : ''}>${I[m.ic].replace('width="18" height="18"', 'width="22" height="22"')}${m.s}</a>`).join('')}</div></nav>`;
 }
 
-// The helper button and its chat panel, for students and the demo login
-// (decision of 31 October 2026). public/app.js runs the conversation.
+// The Teaching Assistant button and its chat panel, for students and the demo
+// login (decisions of 31 October 2026). public/app.js runs the conversation.
+// The button sits above the "Made with Podway" badge in the corner.
 function helper(ctx) {
   if (ctx.role !== 'student' && ctx.role !== 'demo') return '';
-  return `<button type="button" class="helper-fab" data-helper-open aria-label="Ask the helper" aria-expanded="false" aria-controls="helper"><img src="/helper/avatar" alt=""></button>
-<section class="helper" id="helper" hidden aria-label="Helper"><header class="helper-h"><img src="/helper/avatar" alt=""><div><b>Helper</b><span>Answers about the site and your course</span></div><button type="button" class="helper-x" data-helper-close aria-label="Close">${I.x}</button></header>
+  return `<button type="button" class="helper-fab" data-helper-open aria-label="Ask the Teaching Assistant" aria-expanded="false" aria-controls="helper"><span class="helper-tag">Teaching Assistant</span><img src="/static/assistant.svg" alt=""></button>
+<section class="helper" id="helper" hidden aria-label="Teaching Assistant"><header class="helper-h"><img src="/static/assistant.svg" alt=""><div><b>Teaching Assistant</b><span>Answers about the site and your course</span></div><button type="button" class="helper-x" data-helper-close aria-label="Close">${I.x}</button></header>
 <div class="helper-log" data-helper-log aria-live="polite"><div class="hm a">How can I help? Ask me about the site, your course, the textbook or your projects, in any language.</div></div>
 <form class="helper-f" data-helper-form><textarea class="inp" name="q" rows="2" maxlength="3000" placeholder="Write your question" aria-label="Your question" required></textarea><button class="btn pri" type="submit">Send</button></form>
 <p class="helper-n" data-helper-note>Your name and address are not sent with your questions. 20 questions a day.</p></section>`;
@@ -166,6 +167,7 @@ export function layout(ctx, title, body, flash) {
 <title>${esc(title)} · School of Agentic Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="icon" href="/static/assistant.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/static/app.css">
 <script type="module" src="/static/app.js"></script>
 </head>

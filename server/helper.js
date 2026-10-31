@@ -1,4 +1,4 @@
-// The helper: the round button with the teacher's photo that answers a
+// The Teaching Assistant: the round button with its drawn icon that answers a
 // student's questions about the site and the course (decision of 31 October 2026).
 // It runs on Claude Sonnet with the site guide, the course and the whole
 // textbook in a cached system prompt. No name or email address is ever sent.
@@ -50,7 +50,7 @@ function bookText(id) {
   return cache.get(key);
 }
 
-const INSTRUCTIONS = `You are the helper of School of Agentic Work (SAW), shown as a round button with the teacher's photo. A student opens you to ask about the site, about their course, or about the ideas of the course and its textbook.
+const INSTRUCTIONS = `You are the Teaching Assistant of School of Agentic Work (SAW), shown as a round button with a drawn icon of a woman professor in glasses. A student opens you to ask about the site, about their course, or about the ideas of the course and its textbook.
 
 How you answer:
 - Answer in the language the student writes in. If they write in Hebrew, answer in Hebrew; in Russian, in Russian; and so on. Write English in American spelling.

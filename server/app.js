@@ -24,6 +24,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STATIC = {
   '/static/app.css': [path.join(ROOT, 'public/app.css'), 'text/css; charset=utf-8'],
   '/static/app.js': [path.join(ROOT, 'public/app.js'), 'text/javascript; charset=utf-8'],
+  // The Teaching Assistant icon, also the site's favicon (decision of 31 October 2026).
+  '/static/assistant.svg': [path.join(ROOT, 'public/assistant.svg'), 'image/svg+xml'],
+  '/favicon.ico': [path.join(ROOT, 'public/assistant.svg'), 'image/svg+xml'],
   // The CSV reader runs in the browser, so that a Moodle export never leaves the
   // teacher's computer with its other columns (decision of 27 October 2026).
   '/static/csv.js': [path.join(ROOT, 'server/csv.js'), 'text/javascript; charset=utf-8'],
@@ -258,8 +261,8 @@ on('POST', '/api/tutor', { roles: STU }, async ctx => {
 on('POST', '/api/helper', { roles: STU }, async ctx => {
   const turns = cleanTurns(ctx.form.turns);
   if (!turns.length) return { status: 400, json: { error: 'Write a question first.' } };
-  if (!aiAvailable()) return { status: 503, json: { error: 'The helper is not connected yet. Ask your teacher through Contact SAW.' } };
-  if (overBudget()) return { status: 503, json: { error: 'The helper is paused for now. Ask your teacher through Contact SAW.' } };
+  if (!aiAvailable()) return { status: 503, json: { error: 'The Teaching Assistant is not connected yet. Ask your teacher through Contact SAW.' } };
+  if (overBudget()) return { status: 503, json: { error: 'The Teaching Assistant is paused for now. Ask your teacher through Contact SAW.' } };
   const who = ctx.role === 'demo' ? `demo:${ctx.ip}` : `user:${ctx.user.id}`;
   const day = new Date().toISOString().slice(0, 10);
   const used = (get('SELECT count FROM helper_usage WHERE who = ? AND day = ?', who, day) || { count: 0 }).count;
@@ -271,14 +274,8 @@ on('POST', '/api/helper', { roles: STU }, async ctx => {
     return { json: { text: a.text, left: HELPER_DAILY - used - 1 } };
   } catch (e) {
     console.error(`Helper failed: ${e.message}`);
-    return { status: 502, json: { error: 'The helper could not answer just now. Try again in a minute.', left: HELPER_DAILY - used - 1 } };
+    return { status: 502, json: { error: 'The Teaching Assistant could not answer just now. Try again in a minute.', left: HELPER_DAILY - used - 1 } };
   }
-});
-// The round button shows the teacher's photo from his Google account.
-on('GET', '/helper/avatar', { roles: [...STU, 'teacher'] }, () => {
-  const ph = get("SELECT p.type, p.data FROM user_photos p JOIN users u ON u.id = p.user_id WHERE u.role = 'teacher' ORDER BY p.updated_at DESC LIMIT 1");
-  if (ph) return { text: Buffer.from(ph.data), type: ph.type, headers: { 'cache-control': 'private, max-age=3600' } };
-  return { text: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#1c2128"/><text x="32" y="40" font-family="monospace" font-size="22" fill="#3DDC97" text-anchor="middle">MG</text></svg>', type: 'image/svg+xml' };
 });
 
 on('POST', '/projects/submit', { roles: STU }, async ctx => {
@@ -477,11 +474,11 @@ on('POST', '/teacher/access/demo-reset', { roles: TEACHER }, () => {
 });
 // The teacher alone starts and stops the paid AI services (decision of 31 October 2026).
 on('POST', '/teacher/ai', { roles: TEACHER }, ctx => {
-  if (str(ctx.form.action) === 'stop') { stopAi(); return { redirect: '/teacher/agents', flash: 'The helper and @tutor are stopped.' }; }
+  if (str(ctx.form.action) === 'stop') { stopAi(); return { redirect: '/teacher/agents', flash: 'The Teaching Assistant and @tutor are stopped.' }; }
   const dollars = Math.round(Number(one(ctx.form.amount)));
   if (!(dollars >= 1 && dollars <= 500)) return { redirect: '/teacher/agents', flash: 'Give an amount from $1 to $500.' };
   allowMore(dollars);
-  return { redirect: '/teacher/agents', flash: `The helper and @tutor are running again, with another $${dollars} allowed.` };
+  return { redirect: '/teacher/agents', flash: `The Teaching Assistant and @tutor are running again, with another $${dollars} allowed.` };
 });
 on('POST', '/teacher/ai/seen', { roles: TEACHER }, () => { dismissAlerts(); return { redirect: '/teacher/agents' }; });
 on('POST', '/teacher/access/message', { roles: TEACHER }, ctx => {
@@ -529,7 +526,6 @@ export async function handle(req, res) {
     const [file, type] = STATIC[p];
     return fs.readFile(file, (err, data) => (err ? send(res, 404, 'Not found') : send(res, 200, data, { 'content-type': type, 'cache-control': 'no-cache' })));
   }
-  if (p === '/favicon.ico') return send(res, 204, '');
 
   const route = routes.find(r => r.method === req.method && r.re.test(p));
   const cookies = parseCookies(req.headers.cookie);

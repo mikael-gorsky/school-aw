@@ -118,9 +118,9 @@ The teacher sees readiness of the class, the draft of part A prepared by the exa
 
 The student sees 6 figures: live exercises answered, live exercise score, practice accuracy, modules studied, projects passing and exam readiness. The page also shows the score in each lesson against the group average (with a table view), messages from the agents about what to do next, the state of each module, the answers in each lesson, and the student's own lesson ratings beside the group average. Only the student sees these figures.
 
-### 4.7b The helper
+### 4.7b The Teaching Assistant
 
-Every page shows students and the demo login a round button with the teacher's photo. It opens a chat that begins "How can I help?". The helper answers questions about the site, the course and the textbook in the language the student writes in, in detail and in simple words, and names the textbook chapter it draws on. When the material does not settle a question about the course, it says so and points to Contact SAW. It never grades, never decides about a person, and does not write a student's project code. A student may ask 20 questions a day; the demo login's limit is counted per visitor. The conversation stays in the browser tab, and no name or email address is sent.
+Every page shows students and the demo login a round button with a drawn icon of an Ethiopian woman professor in glasses, labeled "Teaching Assistant", above the "Made with Podway" badge in the corner. The same icon is the site's favicon. It opens a chat that begins "How can I help?". The helper answers questions about the site, the course and the textbook in the language the student writes in, in detail and in simple words, and names the textbook chapter it draws on. When the material does not settle a question about the course, it says so and points to Contact SAW. It never grades, never decides about a person, and does not write a student's project code. A student may ask 20 questions a day; the demo login's limit is counted per visitor. The conversation stays in the browser tab, and no name or email address is sent.
 
 ### 4.7a My account
 

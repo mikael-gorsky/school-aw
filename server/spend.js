@@ -60,7 +60,7 @@ export function recordSpend(model, usage) {
   }
   if (total >= spendLimit() && setting('ai_stopped', '') !== '1') {
     setSetting('ai_stopped', '1');
-    alert(`The helper and @tutor have stopped at $${total.toFixed(2)}, the limit of $${spendLimit()}. They stay stopped until you allow more.`);
+    alert(`The Teaching Assistant and @tutor have stopped at $${total.toFixed(2)}, the limit of $${spendLimit()}. They stay stopped until you allow more.`);
   }
   return cost;
 }
@@ -69,9 +69,9 @@ export function recordSpend(model, usage) {
 export function allowMore(dollars) {
   setSetting('ai_limit', (totalSpend() + dollars).toFixed(2));
   setSetting('ai_stopped', '0');
-  log('steward', `the teacher allowed another $${dollars} for the helper and @tutor`);
+  log('steward', `the teacher allowed another $${dollars} for the Teaching Assistant and @tutor`);
 }
 export function stopAi() {
   setSetting('ai_stopped', '1');
-  log('steward', 'the teacher stopped the helper and @tutor');
+  log('steward', 'the teacher stopped the Teaching Assistant and @tutor');
 }

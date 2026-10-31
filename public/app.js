@@ -273,10 +273,10 @@ document.addEventListener('change', async e => {
       const data = await r.json().catch(() => ({}));
       wait.remove();
       if (r.ok && data.text) { add('a', data.text); turns.push({ role: 'assistant', text: data.text }); save(); }
-      else { add('e', data.error || 'The helper could not answer just now.'); turns.pop(); save(); }
+      else { add('e', data.error || 'The Teaching Assistant could not answer just now.'); turns.pop(); save(); }
       if (typeof data.left === 'number') note.textContent = `Your name and address are not sent with your questions. ${data.left} question${data.left === 1 ? '' : 's'} left today.`;
     } catch {
-      wait.remove(); add('e', 'The helper could not be reached. Check your connection.'); turns.pop(); save();
+      wait.remove(); add('e', 'The Teaching Assistant could not be reached. Check your connection.'); turns.pop(); save();
     }
     box.disabled = false; box.focus();
   });

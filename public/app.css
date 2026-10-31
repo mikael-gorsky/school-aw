@@ -326,9 +326,11 @@ input[type=file].inp{padding:10px 14px}
   .menu-btn{display:inline-flex}
   .drawer.open{display:block}
 }
-/* The helper: a round button with the teacher's photo, and its chat panel. */
-.helper-fab{position:fixed;right:20px;bottom:20px;z-index:60;width:60px;height:60px;padding:0;border-radius:50%;border:2px solid var(--accent);background:var(--surface);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45);overflow:hidden}
-.helper-fab img{width:100%;height:100%;object-fit:cover;display:block}
+/* The Teaching Assistant: a round button with its icon, and its chat panel. */
+.helper-fab{position:fixed;right:20px;bottom:84px;z-index:60;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;cursor:pointer}
+.helper-fab img{width:64px;height:64px;border-radius:50%;display:block;box-shadow:0 6px 20px rgba(0,0,0,.45)}
+.helper-tag{font-family:var(--mono);font-size:12px;color:var(--fg);background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:3px 9px;white-space:nowrap}
+.helper-fab:hover img{transform:scale(1.05)}
 .helper-fab[aria-expanded="true"]{display:none}
 .helper{position:fixed;right:20px;bottom:20px;z-index:61;width:min(420px,calc(100vw - 32px));height:min(620px,calc(100vh - 40px));display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
 .helper[hidden]{display:none}
@@ -347,7 +349,8 @@ input[type=file].inp{padding:10px 14px}
 .helper-n{margin:0;padding:0 14px 10px;font-size:12px;color:var(--muted)}
 /* The helper sits outside .app, so it uses a media query, not the container. */
 @media (max-width:640px){
-  .helper-fab{bottom:84px;right:14px;width:54px;height:54px}
+  .helper-fab{bottom:140px;right:12px}
+  .helper-fab img{width:54px;height:54px}
   .helper{right:8px;left:8px;bottom:8px;width:auto;height:calc(100vh - 16px)}
 }
 .hm .hh{display:block;font-size:15.5px;margin-top:4px}

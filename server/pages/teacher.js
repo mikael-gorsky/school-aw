@@ -413,7 +413,7 @@ const PERMS = {
 // The paid AI services: their spending, and the teacher's stop and allow controls.
 function aiCard() {
   const stopped = aiStopped();
-  return `<div class="card section${stopped ? ' warnb' : ''}"><p class="ch"${stopped ? ' style="color:var(--warn)"' : ''}>helper and @tutor <span class="r">${stopped ? 'stopped' : 'running'}</span></p>
+  return `<div class="card section${stopped ? ' warnb' : ''}"><p class="ch"${stopped ? ' style="color:var(--warn)"' : ''}>Teaching Assistant and @tutor <span class="r">${stopped ? 'stopped' : 'running'}</span></p>
    <p class="fg2" style="margin:0 0 14px">Spent on the Claude API so far: <b>$${totalSpend().toFixed(2)}</b> in total, $${monthSpend().toFixed(2)} this month. ${stopped ? 'They stay stopped until you allow more.' : `They stop by themselves at $${spendLimit().toFixed(2)}.`} You are told each time another $10 is spent.</p>
    <div class="row"><form method="post" action="/teacher/ai" class="row"><input type="hidden" name="action" value="allow"><label class="f" for="aa" style="margin:0">allow another $</label><input class="inp" id="aa" name="amount" type="number" min="1" max="500" value="20" style="width:90px;min-height:40px"><button class="btn ${stopped ? 'pri' : 'sec'}" style="min-height:40px">${stopped ? 'Start again' : 'Raise the limit'}</button></form>
    ${stopped ? '' : '<form method="post" action="/teacher/ai" class="inline"><input type="hidden" name="action" value="stop"><button class="btn out" style="min-height:40px">Stop now</button></form>'}</div></div>`;
