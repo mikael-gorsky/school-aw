@@ -16,7 +16,7 @@ const hidden = ctx => `<input type="hidden" name="group" value="${ctx.group.id}"
 // student's details and comment (decision of 31 October 2026).
 function who(u, id = u.id) {
   const name = [u.first_name, u.last_name].filter(Boolean).join(' ');
-  if (!id) return `<span class="m">${esc(u.email)}</span>`;
+  if (!id) return name ? `<span style="font-weight:600">${esc(name)}</span><span class="mono small" style="display:block">${esc(u.email)}</span>` : `<span class="m">${esc(u.email)}</span>`;
   return name
     ? `<a href="/teacher/student/${id}" style="color:var(--fg);font-weight:600">${esc(name)}</a><span class="mono small" style="display:block">${esc(u.email)}</span>`
     : `<a class="mono" href="/teacher/student/${id}" style="color:var(--fg)">${esc(u.email)}</a>`;
@@ -253,7 +253,7 @@ export function tProgress(ctx) {
   const onlyFlagged = ctx.query.flagged === '1';
   const list = onlyFlagged ? flagged : rows;
   const tr = list.map(r => `<tr><td>${who(r.user)}${r.flag ? ' <span class="chip warn" style="margin-left:6px">flag</span>' : ''}</td><td>${r.live.eng == null ? '–' : `<span class="mini"><i><b style="width:${r.live.eng}%"></b></i><span class="mono" style="font-size:13px">${r.live.eng}%</span></span>`}</td><td class="m">${r.live.score == null ? '–' : r.live.score + '%'}</td><td class="m">${r.practice == null ? '–' : Math.round(r.practice) + '%'}</td><td class="m">${r.studied} / ${prog.modules.length}</td><td>${projStat(r.own, r.projs.own)}</td><td>${projStat(r.trib, r.projs.tribunal)}</td><td class="m">${r.ready.met} / ${r.ready.conds.length}</td><td>${trendIc(r.trend)}</td></tr>`).join('')
-    + (onlyFlagged ? '' : cr.notRegistered.map(p => `<tr><td class="m">${esc(p.email)}</td><td colspan="8" class="muted" style="font-size:14px">Not registered on the site yet</td></tr>`).join(''));
+    + (onlyFlagged ? '' : cr.notRegistered.map(p => `<tr><td>${who(p, null)}</td><td colspan="8" class="muted" style="font-size:14px">Not registered on the site yet</td></tr>`).join(''));
   const pctFmt = { type: 'line', labels, tips, min: 0, max: 100, ticks: [0, 25, 50, 75, 100], fmt: 'pct' };
   return `<div class="wrap page">${head('analyst --class', 'Class progress', `${scope(ctx)} · ${n} students · ${cr.held} lesson${cr.held === 1 ? '' : 's'} held`, groupSwitch(ctx) + ag('analyst'))}
    ${tiles([['live exercises answered', engs.length ? Math.round(M.avg(engs)) + '%' : '–', 'average of registered students'], ['live exercise score', score == null ? '–' : Math.round(score) + '%', labels.length ? `lessons ${cr.matrix.lessons[0].number} to ${cr.matrix.lessons[cr.matrix.lessons.length - 1].number}` : 'no lessons yet'], ['modules studied', `${med}<small> of ${prog.modules.length}</small>`, 'median student'], ['own projects passing', `${ownPass}<small> of ${n}</small>`], ['exam ready', `${ready}<small> of ${n}</small>`, '5 or 6 conditions met'], ['flagged by @analyst', String(flagged.length), 'need your attention', flagged.length ? 'down' : '']])}

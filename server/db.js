@@ -201,6 +201,12 @@ function migrate() {
   for (const col of ['first_name', 'last_name', 'comment']) {
     if (!have.has(col)) db.exec(`ALTER TABLE users ADD COLUMN ${col} TEXT`);
   }
+  // The teacher may give the English names of students on the list, which the
+  // student then sees at registration (decision of 31 October 2026).
+  const havePermit = new Set(db.prepare('PRAGMA table_info(permitted)').all().map(c => c.name));
+  for (const col of ['first_name', 'last_name']) {
+    if (!havePermit.has(col)) db.exec(`ALTER TABLE permitted ADD COLUMN ${col} TEXT`);
+  }
   db.exec(`CREATE TABLE IF NOT EXISTS user_photos(
     user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     type TEXT NOT NULL,

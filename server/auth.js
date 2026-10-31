@@ -66,9 +66,11 @@ export function admit(rawEmail) {
   const group = get('SELECT * FROM groups WHERE id = ?', perm.group_id);
   if (existing) {
     if (existing.group_id !== perm.group_id) run('UPDATE users SET group_id = ? WHERE id = ?', perm.group_id, existing.id);
+    run('UPDATE users SET first_name = COALESCE(first_name, ?), last_name = COALESCE(last_name, ?) WHERE id = ?', perm.first_name, perm.last_name, existing.id);
     return { user: get('SELECT * FROM users WHERE id = ?', existing.id), isNew: false, group };
   }
-  run("INSERT INTO users(email, role, group_id, registered_at) VALUES(?, 'student', ?, ?)", email, perm.group_id, now());
+  // Names from the teacher's list come first; Google fills only what is missing.
+  run("INSERT INTO users(email, role, group_id, registered_at, first_name, last_name) VALUES(?, 'student', ?, ?, ?, ?)", email, perm.group_id, now(), perm.first_name, perm.last_name);
   log('registrar', `registered a student of ${groupLabel(group)}`);
   return { user: get('SELECT * FROM users WHERE email = ?', email), isNew: true, group };
 }

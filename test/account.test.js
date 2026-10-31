@@ -96,3 +96,15 @@ test('a photo is copied only from Google’s photo servers', async () => {
     globalThis.fetch = original;
   }
 });
+
+test('names on the teacher’s list are used at registration, and Google does not replace them', async () => {
+  const g = db.get("SELECT id FROM groups WHERE code = 'acct'");
+  db.run('INSERT INTO permitted(email, group_id, added_at, first_name, last_name) VALUES(?, ?, ?, ?, ?)', 'dor@gmail.com', g.id, new Date().toISOString(), 'Dor', 'Avital');
+  const list = await req('GET', `/teacher/access?group=${g.id}`, { jar: teacher.jar });
+  assert.match(list.text, /Dor Avital/);
+  await signInDev('dor@gmail.com');
+  const u = db.get('SELECT * FROM users WHERE email = ?', 'dor@gmail.com');
+  await applyProfile(u.id, { first: 'דור', last: 'אביטל', picture: '' });
+  const after = db.get('SELECT first_name, last_name FROM users WHERE id = ?', u.id);
+  assert.deepEqual([after.first_name, after.last_name], ['Dor', 'Avital']);
+});

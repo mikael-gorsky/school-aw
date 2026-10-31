@@ -14,7 +14,7 @@ export function members(groupId) {
   return all("SELECT * FROM users WHERE group_id = ? AND role IN ('student','demo','sample') ORDER BY email", groupId);
 }
 export function permittedOf(groupId) {
-  return all(`SELECT p.email, p.added_at, u.id AS user_id, u.first_name, u.last_name, u.registered_at, u.last_seen
+  return all(`SELECT p.email, p.added_at, u.id AS user_id, COALESCE(u.first_name, p.first_name) AS first_name, COALESCE(u.last_name, p.last_name) AS last_name, u.registered_at, u.last_seen
               FROM permitted p LEFT JOIN users u ON u.email = p.email WHERE p.group_id = ? ORDER BY p.email`, groupId);
 }
 export function instShort(name) {
@@ -400,6 +400,6 @@ export function classRows(groupId) {
       flag: flagFor(p, live, prac, projs, m.lessons),
     };
   });
-  const notRegistered = all(`SELECT p.email FROM permitted p LEFT JOIN users u ON u.email = p.email WHERE p.group_id = ? AND u.id IS NULL ORDER BY p.email`, groupId);
+  const notRegistered = all(`SELECT p.email, p.first_name, p.last_name FROM permitted p LEFT JOIN users u ON u.email = p.email WHERE p.group_id = ? AND u.id IS NULL ORDER BY p.email`, groupId);
   return { group: g, matrix: m, rows, notRegistered, held };
 }
