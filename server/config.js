@@ -28,8 +28,9 @@ export const config = {
   tutorModel: env.TUTOR_MODEL || 'claude-sonnet-5-5',
   // The helper runs on Claude Sonnet (decision of 31 October 2026).
   helperModel: env.HELPER_MODEL || 'claude-sonnet-5-5',
-  // The most the site may spend on the Claude API in a calendar month, in dollars.
-  aiMonthlyCap: Number(env.AI_MONTHLY_CAP_USD || 20),
+  // The first spending limit on the Claude API, in dollars. Once reached, the
+  // helper and @tutor stop until the teacher allows more.
+  aiSpendLimit: Number(env.AI_SPEND_LIMIT_USD || 20),
   githubToken: env.GITHUB_TOKEN || '',
   devLogin: env.DEV_LOGIN === '1',
 };

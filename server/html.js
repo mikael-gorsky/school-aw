@@ -2,6 +2,7 @@
 // Markup and class names follow mockup/index.html, the agreed design.
 import { displayName } from './auth.js';
 import { hasExam } from './content.js';
+import { spendAlerts } from './spend.js';
 
 export const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const pad = n => String(n).padStart(2, '0');
@@ -123,7 +124,12 @@ function header(ctx) {
   const demo = r === 'demo'
     ? `<div class="demo-bar"><div class="wrap in"><span class="tag">demo</span><span>You are signed in as <b style="color:var(--fg)">demo</b>, a sample student of the SAW demo group. Everything you enter here is deleted every night.</span><form method="post" action="/auth/signout" class="inline"><button class="linkbtn warnlink">Sign out</button></form></div></div>`
     : '';
-  return `<header class="hdr"><div class="wrap bar"><a class="brand" href="${HOME[r]}"><span class="p">~/</span><span class="long">school-of-agentic-work</span><span class="short">saw</span></a><nav class="nav" aria-label="Main">${nav}</nav><div class="acct">${acct}</div><button type="button" class="menu-btn" data-menu aria-expanded="false" aria-label="Open menu">${I.menu}</button></div>${sub}<div class="drawer" id="drawer"><div class="wrap">${drawer}</div></div></header>${demo}`;
+  // Spending alerts stay on every teacher page until the teacher marks them seen.
+  const alerts = r === 'teacher' ? spendAlerts() : [];
+  const spend = alerts.length
+    ? `<div class="demo-bar"><div class="wrap in"><span class="tag">AI</span><span>${alerts.map(x => esc(x.text)).join(' ')}</span><a href="/teacher/agents">Open Agents</a><form method="post" action="/teacher/ai/seen" class="inline"><button class="linkbtn warnlink">Mark as seen</button></form></div></div>`
+    : '';
+  return `<header class="hdr"><div class="wrap bar"><a class="brand" href="${HOME[r]}"><span class="p">~/</span><span class="long">school-of-agentic-work</span><span class="short">saw</span></a><nav class="nav" aria-label="Main">${nav}</nav><div class="acct">${acct}</div><button type="button" class="menu-btn" data-menu aria-expanded="false" aria-label="Open menu">${I.menu}</button></div>${sub}<div class="drawer" id="drawer"><div class="wrap">${drawer}</div></div></header>${demo}${spend}`;
 }
 
 function footer(ctx) {

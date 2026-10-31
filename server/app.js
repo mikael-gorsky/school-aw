@@ -18,7 +18,7 @@ import { readPermitCsv, readPermitList, isEmail } from './csv.js';
 import { parseRepo, checkRepository } from './reviewer.js';
 import { aiAvailable, askTutor, groupThemes } from './ai.js';
 import { askHelper, cleanTurns, HELPER_DAILY } from './helper.js';
-import { overBudget } from './spend.js';
+import { overBudget, allowMore, stopAi, dismissAlerts } from './spend.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STATIC = {
@@ -232,7 +232,7 @@ on('POST', '/api/tutor', { roles: STU }, async ctx => {
   const q = str(ctx.form.question, 1500);
   if (!q) return { status: 400, json: { error: 'Write a question first.' } };
   if (!aiAvailable()) return { status: 503, json: { error: 'The tutor is not connected yet. Ask your teacher through Contact SAW.' } };
-  if (overBudget()) return { status: 503, json: { error: 'The tutor has used this month’s budget and opens again on the 1st of next month. Ask your teacher through Contact SAW.' } };
+  if (overBudget()) return { status: 503, json: { error: 'The tutor is paused for now. Ask your teacher through Contact SAW.' } };
   const day = new Date().toISOString().slice(0, 10);
   const used = (get('SELECT count FROM tutor_usage WHERE user_id = ? AND day = ?', ctx.user.id, day) || { count: 0 }).count;
   if (used >= 20) return { status: 429, json: { error: 'You have asked 20 questions today. You can ask again tomorrow.', left: 0 } };
@@ -259,7 +259,7 @@ on('POST', '/api/helper', { roles: STU }, async ctx => {
   const turns = cleanTurns(ctx.form.turns);
   if (!turns.length) return { status: 400, json: { error: 'Write a question first.' } };
   if (!aiAvailable()) return { status: 503, json: { error: 'The helper is not connected yet. Ask your teacher through Contact SAW.' } };
-  if (overBudget()) return { status: 503, json: { error: 'The helper has used this month’s budget and opens again on the 1st of next month. Ask your teacher through Contact SAW.' } };
+  if (overBudget()) return { status: 503, json: { error: 'The helper is paused for now. Ask your teacher through Contact SAW.' } };
   const who = ctx.role === 'demo' ? `demo:${ctx.ip}` : `user:${ctx.user.id}`;
   const day = new Date().toISOString().slice(0, 10);
   const used = (get('SELECT count FROM helper_usage WHERE who = ? AND day = ?', who, day) || { count: 0 }).count;
@@ -406,7 +406,7 @@ on('POST', '/teacher/satisfaction/themes', { roles: TEACHER }, async ctx => {
   const g = ctx.group;
   const s = M.satisfaction(g.id);
   if (s.comments.length < M.MIN_GROUP || !aiAvailable()) return back(ctx, '/teacher/satisfaction');
-  if (overBudget()) return back(ctx, '/teacher/satisfaction', 'This month’s AI budget is used up, so the comments cannot be grouped until next month.');
+  if (overBudget()) return back(ctx, '/teacher/satisfaction', 'The AI services are stopped, so the comments cannot be grouped. You can allow more on the Agents page.');
   try {
     // The comments carry no names, and the AI service receives only their text.
     const themes = await groupThemes(s.comments.map(c => c.text));
@@ -475,6 +475,15 @@ on('POST', '/teacher/access/demo-reset', { roles: TEACHER }, () => {
   log('steward', 'reset the demo group on the teacher’s request');
   return { redirect: '/teacher/access', flash: 'The demo group is reset.' };
 });
+// The teacher alone starts and stops the paid AI services (decision of 31 October 2026).
+on('POST', '/teacher/ai', { roles: TEACHER }, ctx => {
+  if (str(ctx.form.action) === 'stop') { stopAi(); return { redirect: '/teacher/agents', flash: 'The helper and @tutor are stopped.' }; }
+  const dollars = Math.round(Number(one(ctx.form.amount)));
+  if (!(dollars >= 1 && dollars <= 500)) return { redirect: '/teacher/agents', flash: 'Give an amount from $1 to $500.' };
+  allowMore(dollars);
+  return { redirect: '/teacher/agents', flash: `The helper and @tutor are running again, with another $${dollars} allowed.` };
+});
+on('POST', '/teacher/ai/seen', { roles: TEACHER }, () => { dismissAlerts(); return { redirect: '/teacher/agents' }; });
 on('POST', '/teacher/access/message', { roles: TEACHER }, ctx => {
   run('UPDATE messages SET handled = 1 WHERE id = ?', Number(one(ctx.form.id)));
   return back(ctx, '/teacher/access', 'The message is marked as handled.');

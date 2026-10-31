@@ -219,17 +219,28 @@ test('a question to the helper reaches the AI service without the name or addres
   }
 });
 
-test('the helper stops when the monthly AI budget is used up', async () => {
-  const { costOf, recordSpend, monthSpend } = await import('../server/spend.js');
+test('the helper and tutor stop at the limit, stay stopped, and the teacher is told each $10', async () => {
+  const { costOf, recordSpend, totalSpend, spendAlerts } = await import('../server/spend.js');
   // 200,000 cached tokens read and 1,000 written by Sonnet: 0.04 + 0.01 dollars.
   assert.equal(Math.round(costOf('claude-sonnet-5-5', { cache_read_input_tokens: 200000, output_tokens: 1000 }) * 100), 5);
-  const before = monthSpend();
-  recordSpend('claude-sonnet-5-5', { input_tokens: 10e6 });
-  assert.ok(monthSpend() >= before + 20);
   const email = 'budget.user@gmail.com';
   await req('POST', '/teacher/access/permit', { jar: teacher.jar, form: { emails: email, institution: 'Test', code: 'budget', programme: 'ase' } });
   const { jar } = await signInDev(email);
-  const r = await req('POST', '/api/helper', { jar, json: { turns: [{ role: 'user', text: 'Hello?' }] } });
-  assert.equal(r.status, 503);
-  assert.match(r.json().error, /budget/);
+  // $12 spent: 1 alert, still running.
+  recordSpend('claude-sonnet-5-5', { input_tokens: 6e6 - totalSpend() * 5e5 });
+  assert.equal(spendAlerts().length, 1);
+  assert.match(spendAlerts()[0].text, /\$10/);
+  assert.match((await req('GET', '/teacher/agents', { jar: teacher.jar })).text, /\$10 on the Claude API/);
+  // Past $20: stopped, and a second alert.
+  recordSpend('claude-sonnet-5-5', { input_tokens: 5e6 });
+  assert.equal((await req('POST', '/api/helper', { jar, json: { turns: [{ role: 'user', text: 'Hello?' }] } })).status, 503);
+  assert.equal((await req('POST', '/api/tutor', { jar, json: { question: 'Hello?' } })).status, 503);
+  assert.ok(spendAlerts().some(a => /stopped/.test(a.text)));
+  // A student cannot start them again; the teacher can.
+  assert.equal((await req('POST', '/teacher/ai', { jar, form: { action: 'allow', amount: '100' } })).status, 403);
+  await req('POST', '/teacher/ai', { jar: teacher.jar, form: { action: 'allow', amount: '20' } });
+  const { aiStopped } = await import('../server/spend.js');
+  assert.equal(aiStopped(), false);
+  await req('POST', '/teacher/ai', { jar: teacher.jar, form: { action: 'stop' } });
+  assert.equal(aiStopped(), true);
 });
