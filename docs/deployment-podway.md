@@ -47,3 +47,7 @@ The helper reads the course textbook from `textbook-ase.txt` in `DATA_DIR` (in t
 ## The service in this pod
 
 The site runs as the Podway startup service `preview-3000`, which runs `~/saw-start.sh`. That script loads the secrets, unsets `DEV_LOGIN`, sets `PORT=3000`, `DATA_DIR=~/saw-data` and `BASE_URL=https://school.mgorsky.net`, and starts `node server/main.js`. Podway's own dev server is disabled. Restart the site with `podway startup restart preview-3000`.
+
+## Spending alerts in the owner's chat
+
+The Podway job `saw-ai-spend-alert` runs `~/ops/ai-spend-alert.mjs` every 15 minutes. It reads the spending totals from the database and, when a new $10 step has been crossed or the helper and @tutor have stopped, it exits with an error that carries the alert, because Podway reports a scheduled job to the owner's chat only when it fails. It remembers what it has reported in `~/ops/ai-spend-alert.state.json`. The script lives outside the repository; list the job with `podway schedule list`.
