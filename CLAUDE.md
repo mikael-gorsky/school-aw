@@ -20,7 +20,7 @@ A student can register only with an address on the teacher's list of permitted a
 
 The demo login is a sample student. It sees only the student side, it can never open a teacher page, and everything entered under it is deleted every night.
 
-The site never asks for, imports or stores an ID number. When it reads a Moodle export, it reads only the email and group columns.
+The site never asks for, imports or stores an ID number. When it reads a CSV file of students, such as a Moodle export, it reads only 5 columns: first name, last name, email, group and institution. Names may be left out, and then they come from the student's Google account. Every user can change their own name freely on My account.
 
 Lesson ratings and survey answers are anonymous to the teacher. The teacher sees them only as totals from 5 or more students. Ratings never affect any grade.
 
