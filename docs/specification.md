@@ -21,7 +21,7 @@ The site therefore follows one rule of communication. Every page addresses the s
 
 ### 2.1 Registration and the list of permitted addresses
 
-The teacher keeps a list of permitted addresses. Each address on the list carries an institution name, a group number and a programme. The teacher adds addresses by pasting them, one per line, with the institution, group and programme for the whole batch, or by uploading a CSV file. When the site reads a CSV file, such as a Moodle export, it reads only the email and group columns. It never imports ID numbers.
+The teacher keeps a list of permitted addresses. Each address on the list carries an institution name, a group number and a programme. The teacher adds addresses by pasting them, one per line, with the institution, group and programme for the whole batch, or by uploading a CSV file. When the site reads a CSV file, such as a Moodle export, it reads only the email and group columns. It never imports ID numbers. An address may also carry the student's first and last name in English, which the teacher gives. The site uses them when the student registers, in place of the names from Google.
 
 The page "Register to use the service" tells the student to register with the email address given to the course organiser, preferably a Gmail address. A Gmail address registers with Google. Any other address registers through a link sent to it by email. The site accepts only an address on the list. When it accepts one, it tells the student the institution, group and programme in which it has placed them. The student never enters these values.
 

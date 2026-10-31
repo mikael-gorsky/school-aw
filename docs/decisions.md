@@ -61,3 +61,7 @@ Every signed-in user sees their last name and status beside the main menu, and i
 My account shows the photo and the first and last name from the user's Google account, and a comment of up to 2,000 characters. The user can correct the names, and Google's names fill only empty fields, so a correction stays. Only the user and the teacher see the name, photo and comment, so that a student can tell the teacher something without other students seeing it. Sign-in therefore asks Google for the profile as well as the email address. The photo is copied at sign-in and served by the site, because Google's photo addresses can change.
 
 The teacher's lists show each student by name with the email address under it, and the name opens the student's details and comment.
+
+The list of permitted addresses may carry each student's first and last name in English. The teacher asked for it so that his lists show the names students are known by in the course. A student who registers takes the names from the list, and the names from Google fill only what is missing. The upload form still reads only the email and group columns of a CSV file.
+
+The 44 students of the HIT fall 2026 ASE course were added from the Moodle participants export, with their English names, email addresses and groups 62121-1 and 62121-2, under the institution HIT. The export gives each student a second group, 662121-1 or 662121-2, which was left out because it repeats the first. The Hebrew names were not imported. The export was read once in the pod and is not kept in the repository.
