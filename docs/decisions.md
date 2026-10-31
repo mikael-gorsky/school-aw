@@ -49,3 +49,15 @@ A CSV file of addresses, such as a Moodle export, is read in the teacher's brows
 The demo group is built again from a fixed seed every night at 03:00 Israel time, and on the first minute after that time if the pod was asleep. In the demo group @proctor opens a new exercise every 2 minutes, so that the demo shows a live lesson at any hour.
 
 A question that @tutor cannot answer from the rules is passed to the teacher without the asker. The teacher's answer is published on the Study alone page of every student of the programme, and the teacher can add it to the text from which @tutor answers.
+
+The site is served at school.mgorsky.net, and the Google sign-in return address uses that name. A custom domain the owner controls reads better for students and clients than the pod's own address.
+
+The site keeps SQLite, built into Node, and does not move to the Postgres server that the pod also runs. One server and a few classes of students do not need a separate database server, and moving would add a package and rewrite the data layer.
+
+Nightly backups outside the pod are postponed. Until they are set up, the only copy of the database is the file in the pod.
+
+Every signed-in user sees their last name and status beside the main menu, and it opens My account, which holds Sign out. Sign out was only a small link in the footer, and users did not find it.
+
+My account shows the photo and the first and last name from the user's Google account, and a comment of up to 2,000 characters. The user can correct the names, and Google's names fill only empty fields, so a correction stays. Only the user and the teacher see the name, photo and comment, so that a student can tell the teacher something without other students seeing it. Sign-in therefore asks Google for the profile as well as the email address. The photo is copied at sign-in and served by the site, because Google's photo addresses can change.
+
+The teacher's lists show each student by name with the email address under it, and the name opens the student's details and comment.

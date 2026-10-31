@@ -47,6 +47,8 @@ The main menu has 4 sections: Learn in class, Study alone, Submit projects and E
 
 A signed-in student also has 2 personal pages, My programme and My progress, which appear beside the main menu. My programme is the page a student sees after signing in.
 
+Every signed-in user, the teacher included, sees their last name and status beside the main menu, for example "Gold · student". It opens My account, which also holds Sign out.
+
 The school pages are Home, The agents, Contact SAW, Privacy notice, Sign in and Register to use the service.
 
 The teacher sees the 4 sections from the teacher's side, and 4 further pages: Class progress, Satisfaction, Groups and access, and Agents.
@@ -62,6 +64,7 @@ On a phone, the 4 sections sit in a tab bar at the bottom of the screen, and all
 | Submit projects | How checks work, an example check and the list of checks. | Repository links, check results, feedback and project rules. | Checks of all students and the most common failed checks. |
 | Exam finale | How the exam works, an example readiness card and the exam format. | The student's readiness, practice exams and the rules for the exam day. | Readiness of the class, the exam draft and the exam settings. |
 | My progress | What the page shows, with an example. | The student's figures against the average of the group. | Class progress. |
+| My account | What the page shows, with an example. | The student's photo and name, email, institution, group, programme and comment, and Sign out. | The teacher's own name, photo, comment and Sign out. |
 
 ## 4. Pages
 
@@ -112,6 +115,12 @@ The teacher sees readiness of the class, the draft of part A prepared by the exa
 ### 4.7 My progress
 
 The student sees 6 figures: live exercises answered, live exercise score, practice accuracy, modules studied, projects passing and exam readiness. The page also shows the score in each lesson against the group average (with a table view), messages from the agents about what to do next, the state of each module, the answers in each lesson, and the student's own lesson ratings beside the group average. Only the student sees these figures.
+
+### 4.7a My account
+
+The page shows the user's photo, first name and last name, which come from the Google account at sign-in. Google's names fill only empty fields, so a name the user corrects here stays. The site copies the photo at each sign-in and serves it itself. The page also shows the email address and, for a student, the institution, group and programme from the teacher's list, which the student cannot change. A comment field of up to 2,000 characters holds anything the student wants the teacher to know. Only the user and the teacher see the name, photo and comment; other students never see them. The page holds Sign out.
+
+The teacher's lists show each student by name, with the email address under it, and the name opens the student's details and comment, read-only.
 
 ### 4.8 Class progress (teacher)
 
@@ -167,7 +176,7 @@ Each week, the analyst writes a short list of findings at the top of the report.
 
 Mikael Gorsky runs the site and is responsible for the data it keeps. The privacy notice on the site states the following.
 
-The site keeps the email address a student registers with, and the institution, group and programme written beside it on the teacher's list. It keeps the student's answers to exercises, project links and their checks, and messages sent through Contact SAW. It does not keep the name or photo from Google, and it never asks for an ID number.
+The site keeps the email address a student registers with, and the institution, group and programme written beside it on the teacher's list. It keeps the student's answers to exercises, project links and their checks, and messages sent through Contact SAW. When a user signs in with Google, the site also keeps the first and last name and the profile photo from the Google account, and the comment the user writes on My account. Only the user and the teacher see them. The site never asks for an ID number.
 
 Ratings and survey answers are anonymous to the teacher, as described in section 6.2.
 
