@@ -3,6 +3,7 @@
 import { config } from './config.js';
 import { programme, rulesText } from './content.js';
 import { setting } from './db.js';
+import { recordSpend } from './spend.js';
 
 async function claude(system, user, maxTokens = 700) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -16,6 +17,7 @@ async function claude(system, user, maxTokens = 700) {
   });
   if (!res.ok) throw new Error(`Claude API answered ${res.status}`);
   const data = await res.json();
+  recordSpend(data.model || config.tutorModel, data.usage);
   return (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
 }
 

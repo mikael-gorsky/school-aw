@@ -7,6 +7,7 @@ import { programme, moduleContent, moduleTitle, hasExam, lessonTitle, lessonModu
 import { all, get, setting } from '../db.js';
 import { aiAvailable } from '../ai.js';
 import { activeAgents } from './public.js';
+import { monthSpend, monthCap } from '../spend.js';
 import * as M from '../model.js';
 
 const r1 = v => (v == null ? '–' : (Math.round(v * 10) / 10).toFixed(1));
@@ -425,7 +426,7 @@ export function tAgents(ctx) {
     if (flagged) wait.push(['analyst', `${flagged} student${flagged > 1 ? 's' : ''} of ${M.groupLabel(g)} ${flagged > 1 ? 'are' : 'is'} flagged`, `/teacher/progress?group=${g.id}`]);
   }
   const log = all('SELECT * FROM agent_log ORDER BY id DESC LIMIT 30');
-  return `<div class="wrap page">${head('ps agents', 'Agents', 'What each agent did today and what waits for your decision.', `<span class="chip">${activeAgents().length} running</span>`)}
+  return `<div class="wrap page">${head('ps agents', 'Agents', 'What each agent did today and what waits for your decision.', `<span class="chip">${activeAgents().length} running</span><span class="chip${monthSpend() >= monthCap() ? ' warn' : ''}">AI this month: $${monthSpend().toFixed(2)} of $${monthCap()}</span>`)}
    <div class="card hl"><p class="ch">waiting for you <span class="r">daily brief by @steward</span></p>${wait.map(w => `<div class="li"><span class="agent" style="flex:0 0 110px">@${w[0]}</span><span class="t" style="flex:999 1 240px">${esc(w[1])}</span><a class="btn out" href="${w[2]}">open</a></div>`).join('') || '<p class="fg2" style="margin:0">Nothing waits for your decision.</p>'}</div>
    <div class="cols section" style="--b:300px">${activeAgents().map(a => { const p = PERMS[a.id]; return `<article class="card" style="display:flex;flex-direction:column;gap:10px"><div class="row" style="justify-content:space-between"><span class="agent" style="font-size:15px">@${a.id}</span><span class="chip ok"><span class="dot"></span>running</span></div><p class="mono small" style="margin:0">${esc(a.role.toLowerCase())} · ${today[a.id] || 0} action${today[a.id] === 1 ? "" : "s"} today</p><dl class="kv" style="margin:0;font-size:14px"><dt>does alone</dt><dd>${p[0]}</dd><dt>asks you first</dt><dd>${p[1]}</dd></dl></article>`; }).join('')}</div>
    <div class="section card"><p class="ch">activity <span class="r">latest 30 actions</span></p><div class="log">${log.length ? logLines(log.map(l => [l.agent, `${fmtDate(l.at)} · ${l.text}`])) : '<p class="fg2" style="margin:0">No activity yet.</p>'}</div></div></div>`;

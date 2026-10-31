@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { config } from './config.js';
 import { programme, rulesText, moduleContent } from './content.js';
+import { recordSpend } from './spend.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'content');
 export const HELPER_DAILY = 20;
@@ -112,6 +113,7 @@ export async function askHelper(id, turns) {
   });
   if (!res.ok) throw new Error(`Claude API answered ${res.status}`);
   const data = await res.json();
+  recordSpend(data.model || config.helperModel, data.usage);
   if (data.stop_reason === 'refusal') return { text: 'I cannot help with that question. Please ask your teacher through Contact SAW.' };
   const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
   return { text: text || 'I could not answer just now. Please try again.', usage: data.usage };

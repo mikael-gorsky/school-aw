@@ -218,3 +218,18 @@ test('a question to the helper reaches the AI service without the name or addres
     globalThis.fetch = original;
   }
 });
+
+test('the helper stops when the monthly AI budget is used up', async () => {
+  const { costOf, recordSpend, monthSpend } = await import('../server/spend.js');
+  // 200,000 cached tokens read and 1,000 written by Sonnet: 0.04 + 0.01 dollars.
+  assert.equal(Math.round(costOf('claude-sonnet-5-5', { cache_read_input_tokens: 200000, output_tokens: 1000 }) * 100), 5);
+  const before = monthSpend();
+  recordSpend('claude-sonnet-5-5', { input_tokens: 10e6 });
+  assert.ok(monthSpend() >= before + 20);
+  const email = 'budget.user@gmail.com';
+  await req('POST', '/teacher/access/permit', { jar: teacher.jar, form: { emails: email, institution: 'Test', code: 'budget', programme: 'ase' } });
+  const { jar } = await signInDev(email);
+  const r = await req('POST', '/api/helper', { jar, json: { turns: [{ role: 'user', text: 'Hello?' }] } });
+  assert.equal(r.status, 503);
+  assert.match(r.json().error, /budget/);
+});
