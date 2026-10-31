@@ -1,0 +1,88 @@
+{
+  "n": 16,
+  "reading": "Chapter 12, Review and quality: all sections, 12.1 to 12.11",
+  "intro": "In agentic work you write almost none of the significant code yourself, so reading and judging code that someone else wrote becomes your main task. This module shows you how to review an agent's change against the 5 criteria of the Merge-Readiness Pack, how agent-written code decays across many changes that each passed review, and how to read and refactor legacy code, including your own earlier work on the Tribunal.",
+  "ideas": [
+    { "title": "Review is the central skill", "text": "Almost all the significant code in your project is code you did not write, so review is the one task you perform on nearly everything the project contains. Before review, an agent's output is a plausible hypothesis; after it passes review, it becomes an artifact the project can rely on." },
+    { "title": "Reading and judging are 2 acts", "text": "A reviewing agent can carry most of the reading and report what it found, but the judgment of whether a change serves the project's intent stays with you. No agent may be the sole judge of its own output, because it shares the blind spots of the agent that wrote the code." },
+    { "title": "The Merge-Readiness Pack in full", "text": "A change is merge-ready only when it shows, each with explicit evidence, functional completeness, sound verification, engineering hygiene, rationale and communication, and full auditability. A change that meets 4 of the 5 is not four-fifths ready: it is held, because the missing criterion is where the unreviewed fault hides." },
+    { "title": "Ask where the tests came from", "text": "A green suite can still fail sound verification if its tests were drawn from the code rather than from the specification, because such tests confirm what the code does and would pass even if the code were wrong. You check the design of the tests against the specification, not only whether they pass." },
+    { "title": "Decay over the long horizon", "text": "Changes that each pass review can together cause drift of style, the growth of needless abstraction and the loss of design intent. These are properties of the whole, so only a review that looks past the single change to the shape of the codebase catches them." },
+    { "title": "Legacy code is foreign code", "text": "Inherited code brings assumptions that may no longer hold, documentation that no longer matches, tests that confirm what the code does rather than what it should do, and dependencies that have changed. Read the code as what the system does now, and treat a passing legacy suite only as a record of present behavior." },
+    { "title": "Refactor by the dependency graph", "text": "Draw the graph of what depends on what across the whole system, change the leaves first and verify each part before moving up toward the root. Guard each step with tests written from intent, not translated from the old code, and prefer a refactor to a rewrite, which throws away the corrections the old code already knew." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "An agent adds a feature. The code compiles, passes the tests the agent wrote, and works on the case you tried. What is it, in the book's terms, until it has been reviewed?",
+      "options": [
+        ["a", "A merge-ready change, because it runs and its tests pass."],
+        ["b", "Legacy code, because nobody on the team wrote it."],
+        ["c", "A plausible hypothesis that has not yet been verified."],
+        ["d", "Four-fifths ready, because only the review is missing."]
+      ],
+      "correct": "c",
+      "right": "Correct. Only a review it has passed turns an agent's output into an artifact the project can rely on, and faults like the edited-post case are found by reading, not by running.",
+      "wrong": "Not quite. Read idea 1 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "A change does what the specification asks, has tests written from the specification, passes the linters and links its specification and checks. It gives no reason for one of its design decisions. What should you do?",
+      "options": [
+        ["a", "Hold it until the reason is written, because a change that meets 4 of the 5 criteria is not merge-ready."],
+        ["b", "Merge it, because the missing reason is a matter of style."],
+        ["c", "Merge it with a note that the reason can be added later."],
+        ["d", "Ask a reviewing agent to decide whether the reason matters."]
+      ],
+      "correct": "a",
+      "right": "Correct. Rationale and communication is 1 of the 5 criteria, and a change without its reason becomes, in 6 months, a part of the system that nobody can explain.",
+      "wrong": "Not quite. Read idea 3 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "Over a month, agents in 3 separate sessions each wrote their own helper to format a date. Each helper passed its review. Why did no review stop this?",
+      "options": [
+        ["a", "The reviewers read too quickly on those days."],
+        ["b", "The helpers had no tests, so the gate let them through."],
+        ["c", "The linter was not set up to find duplicate code."],
+        ["d", "The fault lies in the accumulation, which is a property of the whole and not of any one change."]
+      ],
+      "correct": "d",
+      "right": "Correct. Each helper was sound on its own; only a review that looks past the change to the shape of the whole asks whether the thing being built already exists.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "You migrate the payroll module from the book: a money-rounding routine and a pay-period routine that depend on nothing, gross pay and deductions that depend on them, and the monthly run that calls everything. Which part do you take first, and why?",
+      "options": [
+        ["a", "The monthly run, because it shows at once whether the whole still works."],
+        ["b", "The money-rounding routine, because it is a leaf, so a new fault stays close to the part you just changed."],
+        ["c", "Deductions, because the new statutory deduction is the reason for the work."],
+        ["d", "All 5 parts at once, because a clean rewrite avoids carrying old faults across."]
+      ],
+      "correct": "b",
+      "right": "Correct. Working from the leaves keeps every new fault close to the last change, because everything beneath it has already been rewritten and checked.",
+      "wrong": "Not quite. Read idea 7 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Take 1 part of your Tribunal or your own project that you built early, before you had context files or a verification gate. Why is reviewing your own earlier code harder than reviewing a stranger's, and what procedure keeps the review honest?",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "It is harder because you grant your own work the trust you give your memory, and because you already decided, when you wrote it, that it was right. The defense is procedural: treat the code as foreign and test each part against evidence rather than memory, for example by reviewing it against the 5 criteria of the Merge-Readiness Pack. For a design you wrote, ask of each rule what in the build would look different had the rule been absent, and cut the rules that changed nothing. Record what the review could not establish rather than fixing it quietly."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "A change arrives for review with passing tests, a clear description and no stated reason for 1 of its 3 design decisions. Using the Merge-Readiness Pack, write down what the change establishes and what it leaves unestablished.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "The passing tests support sound verification only if you can show they were written from the specification, so you check where they came from. The description supports rationale and communication for 2 decisions, but the missing reason for the third is a defect in the pack, not a matter of style, because a later engineer will either keep that choice out of fear or undo it out of ignorance. Functional completeness, hygiene and auditability each need their own evidence: the specification beside the change, the linter output, and the linked specification, context and checks. Until every criterion is shown with evidence, the change is held."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "n": 14,
+  "reading": "Chapter 10, Multi-agent decomposition and orchestration: sections 10.1 to 10.9",
+  "intro": "In this module you learn how one task is divided among several agents and how those agents are arranged into a single flow of work. You will see when to take the arrangement over from the tool, what a clean decomposition looks like, the 5 workflow patterns, and when to set several agents on the same problem. Every arrangement multiplies token use, so you also learn to weigh what it costs against what it buys.",
+  "ideas": [
+    { "title": "Implicit and explicit orchestration", "text": "Your tool may already run several agents unseen on a substantial task: that is implicit orchestration. You design the arrangement yourself only when the default is not enough: the task is too large to stay coherent, resources need control, you need precise control over what each agent sees, or the work needs a role the tool would never create, such as a security-only reviewer." },
+    { "title": "A clean split", "text": "Decomposition is the foundation of orchestration. Each sub-task must name the input it receives, the output it must return and the test that shows the output is correct. Overlapping or vague scopes make agents duplicate work, contradict one another or collide on the same code." },
+    { "title": "Right sequencing", "text": "Sub-tasks that do not depend on one another can run at the same time, and a sub-task waits only when its input is another's output. A dependency imagined where none exists wastes time, and a dependency missed is worse, because an agent works from an input that is not ready." },
+    { "title": "Sealed context", "text": "Give each agent what it needs to see and no more. If one agent's conclusion leaks into another's context, the second tends to agree with it, so you no longer have 2 independent views." },
+    { "title": "The 5 workflow patterns", "text": "Prompt chaining, routing, parallelization, orchestrator-workers and evaluator-optimizer recur in almost every arrangement. They are a vocabulary, not finished designs, and most real arrangements combine several of them." },
+    { "title": "N-version programming", "text": "Several agents solve the same problem separately, without seeing one another's work. Unlike asking one agent to try again, their differences show you the real decision a single answer hides. It costs close to N times the tokens, so it is worth it only while the design is still unsettled, and you must plan in advance how one result will be drawn from the versions." },
+    { "title": "Token use is the constraint", "text": "Every agent adds its own tokens, and every handoff adds the context passed along; parallel agents save time but not tokens. Match the size of the arrangement to the task, and estimate the cost from the design before you build it." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "You need an ordinary form validation added to your app. Your tool already divides such tasks among helper agents on its own. What should you do?",
+      "options": [
+        ["a", "Design an explicit arrangement so you control every agent."],
+        ["b", "Leave the tool's implicit orchestration alone, since it handles this kind of work well."],
+        ["c", "Use N-version programming to compare 3 validations."],
+        ["d", "Add an evaluator-optimizer loop to be safe."]
+      ],
+      "correct": "b",
+      "right": "Correct. Restraint is part of the discipline: design an arrangement only when the default is not enough.",
+      "wrong": "Not quite. Read idea 1 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "2 agents run at once, one changing how data is stored and one changing how it is displayed. Both edit the code between storage and display. Where was the fault?",
+      "options": [
+        ["a", "In the storage agent, which should have waited."],
+        ["b", "In the tool, which ran the agents in parallel."],
+        ["c", "In the display agent, which ignored its prompt."],
+        ["d", "In the split, which gave the 2 agents overlapping scopes."]
+      ],
+      "correct": "d",
+      "right": "Correct. A split that leaves doubt about who owns which piece guarantees the collision.",
+      "wrong": "Not quite. Read idea 2 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "A large refactoring must change files, but nobody knows in advance which ones. Which pattern fits best?",
+      "options": [
+        ["a", "Orchestrator-workers"],
+        ["b", "Routing"],
+        ["c", "Prompt chaining"],
+        ["d", "Parallelization"]
+      ],
+      "correct": "a",
+      "right": "Correct. Orchestrator-workers suits work whose division is not known in advance and must itself be worked out.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "You are unhappy with a data schema an agent designed. Why might 3 separate agents give you more than asking the same agent to try again?",
+      "options": [
+        ["a", "3 agents always cost fewer tokens than 2 revisions."],
+        ["b", "A revision is anchored to the first attempt, while independent versions show the range of the choice."],
+        ["c", "The third agent will always find the correct schema."],
+        ["d", "Separate agents can see one another's work and agree faster."]
+      ],
+      "correct": "b",
+      "right": "Correct. Independent answers put on view the choices that a single answer made without showing them.",
+      "wrong": "Not quite. Read idea 6 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "A team runs 5 agents in parallel on 5 parts of a feature. The work takes longer than one agent would have taken and costs 11 times as much. Give the 3 most likely causes, and say which you could have seen before the run and which only after.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "First, a dependency between the parts was missed, so some agents worked from inputs that were not ready and their work had to be redone. Second, each agent had to carry a large context before doing any work, and that context was paid for 5 times. Third, the task was too small for the arrangement, so the machinery cost more than it bought. The dependency and the size of the task can be seen on paper before the run, and the context cost can be estimated from the design, but the redone work and the real token figures show only after the run."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "The Tribunal's analytics screen has 3 displays over one shared aggregation layer. Explain why the build is decomposed as one hard part followed by 3 easy ones, and where N-version programming and parallelization each belong in it.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "All 3 displays read the same figures computed from the call log, so the aggregation layer is the whole design risk; treating the task as 3 parallel parts would have produced 3 incompatible readings of the log. N-version programming belongs on that layer: 3 agents design it independently, because the choice is unsettled and hard to reverse once things are built on it. One agent then builds the chosen layer and fixes its interface. Only after that are the 3 displays truly independent, so 3 agents build them in parallel against the fixed interface."
+    }
+  ]
+}

@@ -1,57 +1,336 @@
 {
   "id": "ase",
   "title": "Agentic software engineering",
+  "exam": false,
+  "course": {
+    "name": "LLM-Augmented Software Practice (vibe coding), taught as Agentic Software Engineering (ASE)",
+    "number": "62121",
+    "meetings": "4 academic hours, once a week",
+    "format": "Live, in person, on campus; on Zoom only in special situations",
+    "language": "English",
+    "lecturer": "Mikael Gorsky, School of Computer Science"
+  },
   "description": [
-    "Agentic software engineering taught as a discipline, not a tool. The course teaches how to build good software by directing AI agents, and it measures good against industry standards: software that is functionally suitable, reliable, secure, maintainable, and fit for the person who uses it.",
-    "From module 6 to the end, you build one running project and carry it from a rough intent to a finished system."
+    "The course teaches you to build software by directing AI agents and checking what they produce, instead of typing most of the code yourself.",
+    "In this way of working you frame the problem, write the specification and judge the result, and the agent writes the code. The course calls your side of this work equipping and verifying. Equipping means giving the agent the right problem, specification, project context, tools, permissions and limits. Verifying means checking the agent's output against a defined standard before you accept it. Every module covers one part of equipping, one part of verifying, or the cycle that connects them.",
+    "The course teaches a discipline and not a single tool. Agents now produce code faster than people can review it, and much of that code is not ready to merge. What separates professional from casual use of the same agent is the structure around its work: specification, context, version control, verification gates, review and an audit trail. These methods rest on long-standing ideas from software engineering and design, so they stay useful when the tools change.",
+    "You run your projects as a spiral of improvement and not as a single delivery. You revise the specification each time the agent's output shows something new about what is needed. You practise this on 2 projects that run through the semester: the Tribunal, which the whole class builds, and an individual project of your own design."
+  ],
+  "prerequisites": "You need programming and software engineering knowledge at the level of a third-year computer science student. The course does not teach programming or software engineering basics. Set up accounts for the course tools before the first lesson.",
+  "outcomes": [
+    "Frame a software problem with a problem statement, a testable definition of done and an out-of-scope list.",
+    "Write a specification that an agent can act on without constant intervention.",
+    "Set up an agent's context files, tools and permissions for a given task.",
+    "Use version control as a safety layer, with commits before agent runs and clear atomic messages.",
+    "Design verification gates that catch real failures, and review agent-written code against a merge-readiness standard.",
+    "Break a task into parts for several agents and judge whether the extra cost is justified.",
+    "Identify security risks specific to agentic systems, such as prompt injection, and limit them through least privilege and an audit trail.",
+    "Run a project through several turns of the specification spiral and leave a trail that another engineer can inspect.",
+    "Evaluate new agentic development tools by how they handle transparency, control and permissions."
   ],
   "parts": [
-    { "n": 1, "title": "Building the ontology", "from": 1, "to": 5, "text": "The models the rest of the course depends on, built before there is anything to construct." },
-    { "n": 2, "title": "Setting up the environment", "from": 6, "to": 9, "text": "The setup for building, together with the first conception of the running project." },
-    { "n": 3, "title": "The craft of the build", "from": 10, "to": 17, "text": "The heart of the discipline, each module adding one dimension to a turn of the running project." },
-    { "n": 4, "title": "The changed market", "from": 18, "to": 19, "text": "The economic and career ground the discipline lands on." }
+    {
+      "n": 1,
+      "title": "The discipline",
+      "from": 1,
+      "to": 5,
+      "text": "What agentic software engineering is, what stays with you, how agents work, and the frame and tools for every task."
+    },
+    {
+      "n": 2,
+      "title": "The environment",
+      "from": 6,
+      "to": 9,
+      "text": "From intent to a conceived project: architecture, interface, documentation and the economics of a model call."
+    },
+    {
+      "n": 3,
+      "title": "The engineering",
+      "from": 10,
+      "to": 17,
+      "text": "The heart of the discipline: specification, context, control, verification, several agents, review and security."
+    },
+    {
+      "n": 4,
+      "title": "The market",
+      "from": 18,
+      "to": 19,
+      "text": "Building a business and finding work when agents write the code."
+    }
   ],
   "modules": [
-    { "n": 1, "title": "What is agentic software engineering?", "summary": "Sets the subject as a discipline, with durable principles, a method that can be learned, and characteristic faults." },
-    { "n": 2, "title": "The human role: what erodes and what compounds", "summary": "What the human still owns once the agent writes most of the code." },
-    { "n": 3, "title": "Mental models of the agent", "summary": "A working picture of how the agent operates, so that it can be directed well." },
-    { "n": 4, "title": "The anatomy of an agentic workflow", "summary": "Any agentic task broken into the same 7 parts, one turn of the work." },
-    { "n": 5, "title": "The typology of agentic development environments", "summary": "A frame for judging any tool, built from 6 pillars." },
-    { "n": 6, "title": "Intent and the discipline of project conception", "summary": "Deciding what to build, and the start of the running project." },
-    { "n": 7, "title": "The architecture of a web application", "summary": "As much web architecture as directing an agent well requires." },
-    { "n": 8, "title": "Interface design and documentation", "summary": "Clarity as a control mechanism, and design that the engineer specifies rather than draws." },
-    { "n": 9, "title": "Cognified software and the economics of a model call", "summary": "Software with a model reasoning inside it, and the price and time of every call." },
-    { "n": 10, "title": "Specification and the co-evolution spiral", "summary": "The quality of the work placed in the specification, and the spiral in which problem and solution evolve together." },
-    { "n": 11, "title": "Context engineering: the agent's briefing", "summary": "Context as a budgeted resource, and the context file as a designed artefact." },
-    { "n": 12, "title": "Version control, and keeping a session on course", "summary": "Version control as the way back, and reading the drift in a session before it compounds." },
-    { "n": 13, "title": "Verification before trust", "summary": "Verification as a whole category, and the rule of no gate, no merge." },
-    { "n": 14, "title": "Multi-agent decomposition and orchestration", "summary": "Decomposition as an engineering activity, and 5 workflow patterns." },
-    { "n": 15, "title": "Designing multi-agent workflows", "summary": "Coordination between agents as a designed artefact." },
-    { "n": 16, "title": "Review and quality, and the onboarding of legacy code", "summary": "Review at the centre of the discipline, the Merge-Readiness Pack in full, and legacy code." },
-    { "n": 17, "title": "Building secure software", "summary": "Security as a built-in quality, including the prompt injection peculiar to a cognified product." },
-    { "n": 18, "title": "Entrepreneurship in the age of AI coding", "summary": "How cheap building moved the bottleneck, and the unit economics of a cognified product." },
-    { "n": 19, "title": "Where software work is going", "summary": "A world model for the cognified economy, and the skills that compound." }
+    {
+      "n": 1,
+      "title": "What is agentic software engineering",
+      "summary": "Sets the subject as a discipline, with durable principles, a method that can be learned, and characteristic faults."
+    },
+    {
+      "n": 2,
+      "title": "The human role: what erodes and what compounds",
+      "summary": "What the human still owns once the agent writes most of the code."
+    },
+    {
+      "n": 3,
+      "title": "Mental models of agents",
+      "summary": "A working picture of how the agent operates, so that it can be directed well."
+    },
+    {
+      "n": 4,
+      "title": "The anatomy of an agentic workflow",
+      "summary": "Any agentic task broken into the same 7 parts, one turn of the work."
+    },
+    {
+      "n": 5,
+      "title": "The ADE typology, tooling and permissions",
+      "summary": "A frame for judging any agentic development environment, built from 6 pillars, and the tools and permissions you give an agent."
+    },
+    {
+      "n": 6,
+      "title": "Intent and project conception",
+      "summary": "Deciding what to build, and the start of the running project."
+    },
+    {
+      "n": 7,
+      "title": "Modern web application architecture",
+      "summary": "As much web architecture as directing an agent well requires."
+    },
+    {
+      "n": 8,
+      "title": "Interface design and app documentation",
+      "summary": "Clarity as a control mechanism, and design that the engineer specifies rather than draws."
+    },
+    {
+      "n": 9,
+      "title": "Cognified products and agent economics",
+      "summary": "Software with a model reasoning inside it, and the price and time of every call."
+    },
+    {
+      "n": 10,
+      "title": "Specifications and the co-evolution spiral",
+      "summary": "The quality of the work placed in the specification, and the spiral in which problem and solution evolve together."
+    },
+    {
+      "n": 11,
+      "title": "Context engineering",
+      "summary": "Context as a budgeted resource, and the context file as a designed artefact."
+    },
+    {
+      "n": 12,
+      "title": "Safety, control and recovery",
+      "summary": "Version control as the way back, permissions and limits as control, and reading the drift in a session before it compounds."
+    },
+    {
+      "n": 13,
+      "title": "Verification before trust",
+      "summary": "Verification as a whole category, and the rule of no gate, no merge."
+    },
+    {
+      "n": 14,
+      "title": "Multi-agent decomposition and orchestration",
+      "summary": "Decomposition as an engineering activity, and 5 workflow patterns."
+    },
+    {
+      "n": 15,
+      "title": "Designing multi-agent workflows",
+      "summary": "Coordination between agents as a designed artefact."
+    },
+    {
+      "n": 16,
+      "title": "Review and quality, legacy onboarding",
+      "summary": "Review at the centre of the discipline, the Merge-Readiness Pack in full, and legacy code."
+    },
+    {
+      "n": 17,
+      "title": "Security, risk and governance",
+      "summary": "Security as a built-in quality, the risks peculiar to agentic systems such as prompt injection, least privilege and an audit trail."
+    },
+    {
+      "n": 18,
+      "title": "Entrepreneurship in the age of AI coding",
+      "summary": "How cheap building moved the bottleneck, and the unit economics of a cognified product."
+    },
+    {
+      "n": 19,
+      "title": "Job search in the age of AI coding",
+      "summary": "What employers look for when agents write the code, and how to show the skills that compound."
+    }
   ],
+  "lessons": [
+    {
+      "n": 1,
+      "modules": [
+        1
+      ]
+    },
+    {
+      "n": 2,
+      "modules": [
+        2,
+        3
+      ]
+    },
+    {
+      "n": 3,
+      "modules": [
+        4,
+        6
+      ]
+    },
+    {
+      "n": 4,
+      "modules": [
+        5,
+        7
+      ]
+    },
+    {
+      "n": 5,
+      "modules": [
+        8,
+        9
+      ]
+    },
+    {
+      "n": 6,
+      "modules": [
+        10
+      ]
+    },
+    {
+      "n": 7,
+      "modules": [
+        11
+      ],
+      "note": "Tribunal introduction"
+    },
+    {
+      "n": 8,
+      "modules": [
+        12,
+        13
+      ]
+    },
+    {
+      "n": 9,
+      "modules": [
+        14,
+        15
+      ]
+    },
+    {
+      "n": 10,
+      "modules": [
+        16,
+        17
+      ]
+    },
+    {
+      "n": 11,
+      "modules": [
+        18,
+        19
+      ]
+    }
+  ],
+  "lessonsNote": "The remaining meetings of the semester are used for project work and project presentations.",
   "grade": [
-    { "key": "live", "title": "live engagement", "text": "Answers to the warm-up quizzes and the exercises after each block.", "weight": "[%]" },
-    { "key": "own", "title": "own project", "text": "Your running project, in a public repository.", "weight": "[%]" },
-    { "key": "tribunal", "title": "tribunal", "text": "The second project, in a public repository.", "weight": "[%]" },
-    { "key": "exam", "title": "final exam", "text": "2 parts, at the end of the course.", "weight": "[%]" }
+    {
+      "key": "live",
+      "title": "class engagement",
+      "weight": "33%",
+      "text": "Reading the textbook, doing the exercises, substantial questions and answers in class, live demonstrations of your own workflow, and material you send the lecturer from following the field."
+    },
+    {
+      "key": "tribunal",
+      "title": "the Tribunal",
+      "weight": "33%",
+      "text": "The charge sheet written as a specification, the 7 versioned agent prompts, a protocol that reports the 3 verdicts side by side, and the progression from 1 model toward several."
+    },
+    {
+      "key": "own",
+      "title": "individual project",
+      "weight": "33%",
+      "text": "The framing document and at least 3 turns of the specification spiral."
+    }
+  ],
+  "gradeNotes": [
+    "The grade measures the discipline you show in directing agents, not the app you produce.",
+    "Both projects are graded on the same trail: keeping to the module schedule and its checkpoints, documenting the work as it happens, maintained context files, a commit history with commits before agent runs and honest atomic messages, verification gates that catch real failures, and a final state that is ready to merge. A build that arrives late, or whose trail was written afterwards, loses marks even when the final product is sound.",
+    "Only what is in the repository at the deadline is graded. Videos of a running app, verbal accounts, files kept outside the repository and repositories re-created after the fact are not graded.",
+    "Up to 90 is defendable: based on the specifications and the evidence in the repository. Complete and competent work lands here. 91 to 97 is obtainable: work of clear quality beyond the minimum, based on the lecturer's judgement. 98 to 100 is exceptional extra effort, judged against the strongest work in the class and not guaranteed.",
+    "Grades are published no later than 10 days after the final class. You may ask once, in writing and within 7 days, for a regrade, pointing to the evidence you believe was misjudged. Regrades apply to the range up to 90, and the second grade is final."
   ],
   "projects": [
-    { "kind": "own", "title": "Own project" },
-    { "kind": "tribunal", "title": "Tribunal" }
+    {
+      "kind": "tribunal",
+      "title": "Tribunal",
+      "text": "The Tribunal takes a real historical decision, puts it before a panel of 7 agents and returns a protocol of separate, reasoned verdicts. The case is the penalty vote of the Athenian jury that convicted Socrates in 399 BC. 4 agents act as advocates, 2 for the vote and 2 against it, and 3 agents act as judges who reason from different principles. The system never combines the 3 verdicts into one answer. Each run starts from a charge sheet and produces 2 files, the protocol and a budget of the tokens and cost of the run. You move from 1 model for all roles toward several distinct models, reached through OpenRouter. The panel, the protocol, the charge sheet and the case are fixed; everything else about the application is your design."
+    },
+    {
+      "kind": "own",
+      "title": "Individual project",
+      "text": "You frame and build an independent application on a subject of your own choice. It follows the same steps as the Tribunal in the same weeks: when the class frames, specifies, verifies, reviews or audits the Tribunal, you do the same for this project. It needs a framing document, with a problem statement, a testable definition of done and an out-of-scope list, and a commit history covering at least 3 full turns of the specification spiral."
+    }
   ],
   "projectRules": [
+    "You build 2 projects in parallel, on the same module schedule, each in its own repository.",
     "Only code in a public GitHub repository is graded. You may open a separate GitHub account for the course.",
-    "Keep a context file from the first day of the project.",
-    "Build along the course schedule and commit as you work, with messages that say what changed.",
-    "Write tests and keep them passing."
+    "Keep to the module schedule and its checkpoints, and document the work as it happens.",
+    "Keep context files from the first day of the project, and maintain them.",
+    "Commit before every agent run, with honest atomic messages that say what changed.",
+    "Build verification gates that catch real failures, and leave the final state ready to merge.",
+    "Only what is in the repository at the deadline is graded."
   ],
+  "policies": [
+    {
+      "title": "Attendance",
+      "text": "Attendance is recorded on a sheet at every lesson. Class begins 5 minutes after the scheduled time, and the sheet closes 35 minutes after it. If you must miss a class, tell the lecturer in advance. When a session moves to Zoom, keep your camera on for the whole session and show your name in English."
+    },
+    {
+      "title": "Use of AI",
+      "text": "Agents write the code in this course by design. You may also use AI to help draft your emails to the lecturer, but you remain responsible for what you send."
+    },
+    {
+      "title": "Communication",
+      "text": "Course announcements, deadlines and grades are sent by email from the lecturer's address and posted on Moodle. Add the lecturer's address to your safe senders in the first week. The lecturer answers email within 3 to 4 days."
+    },
+    {
+      "title": "Tools",
+      "text": "The reference environment is Claude Code, preferably in the terminal. The recommended stack is GitHub for code and version history, Netlify for deployment and Supabase for the database, authentication and storage. You may use equivalent tools if you can keep pace with the course; nothing in the course depends on this exact set."
+    }
+  ],
+  "reading": {
+    "textbook": "The main text is the course textbook on agentic software engineering by Mikael Gorsky (2026), which you receive through the course site. Its 14 chapters and Appendix A, which sets out the Tribunal in detail, cover the course modules, and each chapter ends with exercises.",
+    "list": [
+      "Brooks, F. P. (2010). The Design of Design: Essays from a Computer Scientist. Addison-Wesley.",
+      "Brooks, F. P. (1995). The Mythical Man-Month, anniversary edition. Addison-Wesley.",
+      "Polya, G. (1945). How to Solve It. Princeton University Press.",
+      "Schön, D. A. (1983). The Reflective Practitioner. Basic Books.",
+      "Boehm, B. W. (1988). A spiral model of software development and enhancement. IEEE Computer, 21(5), 61–72.",
+      "Cross, N. and Dorst, K. (1999). Co-evolution of problem and solution spaces in creative design. In Computational Models of Creative Design IV, University of Sydney.",
+      "Hassan, A. E. et al. (2025). Agentic software engineering: foundational pillars and a research roadmap. arXiv:2509.06216.",
+      "Meske, C. et al. (2025). Vibe coding as a reconfiguration of intent mediation in software development. IEEE Access, 13, 213242–213259.",
+      "Otoum, N. and Elkhalili, N. (2026). Methods and techniques of agentic software engineering: a systematic literature review. IEEE Access, 14.",
+      "OWASP (2025). Top 10 for Agentic Applications."
+    ],
+    "note": "The full reference list is posted in the Course overview section on Moodle."
+  },
   "documents": [
-    { "title": "Programme 2-pager", "url": "" },
-    { "title": "Full curriculum", "url": "" },
-    { "title": "Project rules", "url": "" },
-    { "title": "Grading rules", "url": "" }
+    {
+      "title": "Programme 2-pager",
+      "url": ""
+    },
+    {
+      "title": "Full curriculum",
+      "url": ""
+    },
+    {
+      "title": "Project rules",
+      "url": ""
+    },
+    {
+      "title": "Grading rules",
+      "url": ""
+    }
   ]
 }

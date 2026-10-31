@@ -1,0 +1,88 @@
+{
+  "n": 12,
+  "reading": "Chapter 8, Version control, and keeping a session on course",
+  "intro": "An agent changes more code in an hour than you can read in a day, so you cannot make its work safe by reading alone. This module gives you 2 safeguards: a way back, which is version control used with discipline, and a way of seeing, which is noticing while a session runs that it has begun to drift. Together they let you work at the agent's speed, in turns of the spiral and with agents running in parallel, without losing control.",
+  "ideas": [
+    { "title": "3 demands, 1 tool", "text": "Agentic work demands speed, the spiral and concurrency at once. Version control meets all 3: it records every committed state, lets any of them be recovered, and keeps separate lines of work apart until they are merged with care." },
+    { "title": "A way back and a way of seeing", "text": "Safety has 2 parts. Version control makes mistakes recoverable by structure, and trajectory management, a human judgment no tool supplies, makes them fewer. Safety is what makes fast, iterative, parallel work possible, not a brake on it." },
+    { "title": "What a commit protects", "text": "A commit is a full snapshot of the tracked files that can always be restored. It does not protect untracked or ignored files, or anything a command did outside the repository, such as a message sent or a database altered. A harness checkpoint is a convenience within one session and no substitute for version control." },
+    { "title": "The 4 practices", "text": "Commit before any non-trivial task, meaning one that touches more than one file, alters working behavior or adds a dependency. Make each commit atomic, with a message that says why. Let a pre-commit hook refuse bad changes mechanically, and never commit a secret: one that was committed is exposed for good and must be replaced." },
+    { "title": "Branch, and merge on purpose", "text": "Each turn and each agent works on its own branch, and a worktree lets several branches be checked out at once. A branch is thrown away, tidied, or merged only after its result is verified against the specification and reviewed. A merge conflict is the normal meeting of 2 lines of work, and you resolve it by knowing what both changes were for." },
+    { "title": "5 signs of drift, and stop first", "text": "A session drifts when it rewrites its own work, grows its scope, swells its justifications, passes tests that confirm the code rather than the intent, or plans without reaching a milestone. Each sign has its matching intervention, and every one begins with stopping. A written session plan that you check during the work makes drift visible as a divergence from it." },
+    { "title": "Leave the fix-this-bug loop", "text": "When each fix brings a new fault, stop rather than try another correction. Return to the last good commit and restate the original fault more precisely. Judge by how far the work still is from the result you want, not by how much effort it has already used." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "During a bad run, the agent edited 6 tracked files, wrote rows into the database and sent a test email. You return to the last commit. What is restored?",
+      "options": [
+        ["a", "Everything, because the commit holds the whole state of the project"],
+        ["b", "The files and the database, but not the email"],
+        ["c", "Nothing, because the agent's changes were never committed"],
+        ["d", "Only the 6 tracked files"]
+      ],
+      "correct": "d",
+      "right": "Correct. A commit protects the tracked files; actions outside the repository are beyond its reach.",
+      "wrong": "Not quite. Think about where the database and the email live. Read idea 3 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "You find that the OpenRouter key was committed last week. You delete it in a new commit today. What else must you do?",
+      "options": [
+        ["a", "Treat the key as exposed and replace it, and keep the new one out of tracked files."],
+        ["b", "Nothing, because the key is no longer in the current files."],
+        ["c", "Rename the file that held the key."],
+        ["d", "Add a comment asking others not to use the old key."]
+      ],
+      "correct": "a",
+      "right": "Correct. The history keeps every state it has held, so the old key stays recoverable and must be replaced.",
+      "wrong": "Not quite. Deleting a secret in a later commit does not remove it from the history. Read idea 4 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "You asked the agent only to make the panel's calls faster. It has added a caching library that stores past verdicts. What do you do first?",
+      "options": [
+        ["a", "Let it finish, then review the result at the end."],
+        ["b", "Stop, and ask it to list every file it has touched and why each touch was needed."],
+        ["c", "Merge the branch, then remove the library in a later commit."],
+        ["d", "Add a rule against caching to the context file and let it continue."]
+      ],
+      "correct": "b",
+      "right": "Correct. The scope has grown, and the matching intervention begins with stopping and asking for an account of every change.",
+      "wrong": "Not quite. Drift is answered by intervention, not patience. Read idea 6 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "The agent's fix for a bug caused a second fault, and its fix for that caused a third. You have spent an hour. What is the best next step?",
+      "options": [
+        ["a", "Ask for one more fix, since you are close after so much work."],
+        ["b", "Write a test that passes with the current code, then move on."],
+        ["c", "Return to the last good commit and restate the original fault more precisely."],
+        ["d", "Ask the agent to explain each step in more detail."]
+      ],
+      "correct": "c",
+      "right": "Correct. The quickest way out of the loop is a clean start and a sharper statement of the first fault.",
+      "wrong": "Not quite. Effort already spent is not a reason to spend more. Read idea 7 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Choose one contained change for your individual project or the Tribunal. Write the session plan you would set down before the agent starts, and say how you would use it during the session.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "First I commit the current state and make a branch for the change. For the Tribunal, adding the 4 advocates, the plan reads: add the 4 advocates as profiles in the advocates directory; build each from the same shape as a judge; teach the dispatch layer to run advocates before judges; change nothing else. The last line is the standard the session is judged against. During the session I return to the plan at intervals, and as soon as the work touches something the plan does not name, I stop and ask the agent which line of the plan each change serves."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Someone argues that you need version control less when an agent writes the code, because you review its work before you keep it. Do you agree? Answer in 3 to 5 sentences.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "No. The agent makes version control more necessary, because it changes many files quickly and confidently, so far more can change between 2 moments of review than when you write by hand. The window in which a mistake stays small is shorter. Review cannot keep up with the agent's speed, so you need a known good state to return to, and a branch on which the work waits until you have verified and reviewed it."
+    }
+  ]
+}

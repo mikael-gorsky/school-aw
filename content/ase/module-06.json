@@ -1,0 +1,88 @@
+{
+  "n": 6,
+  "reading": "Chapter 6, Framing, specification, and the co-evolution spiral: sections 6.1 to 6.3 (framing), and steps 1 to 4 of section 6.6. Sections 6.4 and 6.5, on specification and the spiral, belong to module 10.",
+  "intro": "This module is about the work that comes before anything is built: turning an idea into a clear intent and framing the project. You learn to find the real problem, state what the project is for and who it is for, read its constraints, and write the 4 deliverables of a first-draft framing. It matters because a project can be built with great skill and still be useless if its framing was wrong.",
+  "ideas": [
+    { "title": "The framing decides the outcome", "text": "A project can be built well and still be useless, because skill is applied to whatever was decided beforehand. An error in the framing stays hidden until the finished thing meets reality, while the same error found while the idea is a paragraph is fixed by rewriting the paragraph." },
+    { "title": "The problem is found, not given", "text": "Requirements emerge from attempts, as in Brooks's house, where the family rejected a proposed pavilion and only then saw what they wanted. When the problem is unclear, make a deliberately rough attempt, a sketch or a mock-up, and treat it as a question rather than an answer." },
+    { "title": "One primary usefulness", "text": "Every project has one primary usefulness, the single purpose that justifies it, and you must ask early whether the project should exist at all. A stated purpose gives many later decisions their criterion: the Tribunal never combines the verdicts, because a combined verdict would hand the user an answer to accept." },
+    { "title": "Better wrong than vague", "text": "Every design carries a user model, and the only choice is whether it is stated or hidden. A stated model can be examined and corrected, while a hidden one is filled by each person's own guess, so 2 engineers build 2 different products." },
+    { "title": "Constraints shape the design", "text": "A constraint shrinks the space of designs and so makes it easier to search, and it should say what must be true of the result, not how to reach it. Read each constraint as real, obsolete, misperceived or intentional before you obey it." },
+    { "title": "The 4 deliverables of a first-draft framing", "text": "A first-draft framing produces a problem statement that describes the situation and not the solution, a stakeholder list that includes people the project depends on without employing them, a definition of done specific enough to test, and an out-of-scope list. An entry belongs on the out-of-scope list only if a reasonable person might have expected it to be in scope." },
+    { "title": "The framing is a first draft", "text": "Each framing artifact is provisional and is revised against what the build shows. In the Tribunal, the first build moved the problem from hidden reasoning to hearing only one side, added the party who is written about, widened the definition of done to the panel, and excluded recommendations." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "Which of these is a problem statement rather than a solution?",
+      "options": [
+        ["a", "Build a system that shows 3 judge verdicts side by side."],
+        ["b", "A person facing a hard judgment wants to see it weighed from several sides, and to see where careful judges disagree."],
+        ["c", "Build a system where 7 AI agents debate a historical case and produce a report."],
+        ["d", "Add a page that lists each judge's reasons."]
+      ],
+      "correct": "b",
+      "right": "Correct. Someone could meet it with a panel, a written brief of opposing arguments, or a way not yet imagined.",
+      "wrong": "Not quite. Read idea 6 again: a good problem statement allows several different solutions."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "A student planner failed because shifts arrived 2 days ahead and deadlines clustered in one week. Which framing deliverable, done well, would most likely have caught this?",
+      "options": [
+        ["a", "The out-of-scope list."],
+        ["b", "The definition of done."],
+        ["c", "The problem statement."],
+        ["d", "The stakeholder list, by asking who has to act for each assumed step to happen."]
+      ],
+      "correct": "d",
+      "right": "Correct. The employer and the teachers belonged on the list as people the planner depended on without employing them.",
+      "wrong": "Not quite. Read idea 6 again, on the stakeholder list."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "The belief that a Tribunal panel needs an odd number of judges so it can reach a majority is which kind of constraint?",
+      "options": [
+        ["a", "Obsolete, because it is carried over from courts that vote, and the Tribunal never votes."],
+        ["b", "Real, because a panel without a majority cannot decide."],
+        ["c", "Intentional, because it was chosen to shape the work."],
+        ["d", "Misperceived, because it was never true of any court."]
+      ],
+      "correct": "a",
+      "right": "Correct. It was once true elsewhere and is repeated out of habit, so it can be discarded here.",
+      "wrong": "Not quite. Read idea 5 again, on the 4 kinds of constraint."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "Which entry belongs on the Tribunal's out-of-scope list?",
+      "options": [
+        ["a", "The system will not compose music."],
+        ["b", "The system will not crash."],
+        ["c", "The system will not combine the judges' verdicts into one."],
+        ["d", "The system will not use the internet for anything."]
+      ],
+      "correct": "c",
+      "right": "Correct. A reasonable person would expect a judging system to combine verdicts, and leaving it out is the project's central choice.",
+      "wrong": "Not quite. Read idea 6 again: an entry belongs only if a reasonable person might have expected it in scope."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Frame your own project, or the Tribunal, in the 4 deliverables of a first-draft framing. Keep each to 1 or 2 sentences, and say how someone who did not write it could check your definition of done.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "For the Tribunal: the problem statement says that a person facing a hard judgment, on which reasonable people disagree, cannot see the strongest arguments on each side or where the disagreement lies. The stakeholders are the user who reads the protocol, the engineer who builds and maintains it, the model providers, and the historical figures who are written about. The definition of done is that, given a charge sheet, the system produces 4 advocate speeches and 3 judge verdicts, shows the verdicts separately with their reasons, combines nothing, and records the cost of the run. The out-of-scope list excludes combining or ranking verdicts, recommendations, real and living people, and cases whose facts are disputed. Each part of the definition of done can be checked by reading the output."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Take 4 constraints from your own project and place each one as real, obsolete, misperceived or intentional. Say which one you will stop obeying and why.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "A good answer gives 1 concrete constraint per kind where it can, and states each as what must be true of the result rather than how to build it. In the Tribunal, slow or unavailable network models are real, an odd number of judges is obsolete, high cost for 7 agents is misperceived because free models make it nearly free, and the ban on real and living people is intentional. The usual and useful outcome is that at least 1 constraint you had long obeyed turns out to be obsolete or misperceived, and you can drop it."
+    }
+  ]
+}

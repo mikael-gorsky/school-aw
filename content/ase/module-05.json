@@ -1,0 +1,157 @@
+{
+  "n": 5,
+  "reading": "Chapter 5, The typology of ADEs: sections 5.1 to 5.10",
+  "intro": "This module gives you a way to judge any agentic development environment (ADE), including one that does not exist yet. You learn what an ADE is built from, where it places itself, how tightly it is bound to its model, and how the tools and permissions you grant set the damage a mistake can do. The products change within months, but these frameworks do not.",
+  "ideas": [
+    {
+      "title": "You direct the whole ADE, not the model",
+      "text": "An ADE is a harness aimed at building software: the instructions, context, tools, limits and checks placed around a model. 2 engineers who use the same model through different ADEs are directing different agents, and you are accountable for the ADE you set up."
+    },
+    {
+      "title": "6 pillars",
+      "text": "Every ADE rests on some of 6 pillars: the bare model, tool augmentation, knowledge and memory, learning from experience, multi-agent coordination and computer use. Memory recalls stored facts, while learning changes how the agent behaves, and the 2 must be kept apart."
+    },
+    {
+      "title": "3 surfaces, and responsibility follows visibility",
+      "text": "An ADE places itself on an axis from the transparent command line, through the editor, to the opaque builder. The less it shows, the more is decided out of your sight, yet you stay accountable for all of it, so choose the surface to fit the task: serious or auditable work on a transparent surface, exploratory low-stakes work on a more opaque one."
+    },
+    {
+      "title": "Blast radius and minimal footprint",
+      "text": "The blast radius is set by the tools and permissions you grant, not by the tool's nature. Minimal footprint means only the permissions the task needs, reversible actions in preference to irreversible ones, less action rather than more under uncertainty, and a confirmation gate before any step that cannot be undone."
+    },
+    {
+      "title": "The sandbox is a boundary",
+      "text": "A sandbox is a line the agent's actions cannot cross without your deliberate consent, with everything that must not be harmed on the far side. Inside it the agent may act broadly and freely, and where actions reach real systems the footprint should be narrow and gated."
+    },
+    {
+      "title": "An open interface hides a coupling",
+      "text": "A shared wire format makes a model look swappable, but most models perform badly inside an ADE built around another, because the coupling lives in training rather than in code. Single-model ADEs gain fit and give up portability, and model-agnostic ones make the opposite trade."
+    },
+    {
+      "title": "7 questions for any ADE",
+      "text": "Judge an ADE by its pillars, its surface, its default blast radius, its sandboxing, its audit trail, how it carries context between sessions, and how tightly it is bound to its model. Check its answers about itself rather than trusting them, because a model describing its own harness reports what it was told."
+    }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "An ADE loads a rules file at the start of each session, and after many corrections it begins to follow a convention without being told again. Which 2 pillars does this description show?",
+      "options": [
+        [
+          "a",
+          "Tool augmentation and computer use."
+        ],
+        [
+          "b",
+          "Multi-agent coordination and the bare model."
+        ],
+        [
+          "c",
+          "Computer use and multi-agent coordination."
+        ],
+        [
+          "d",
+          "Knowledge and memory, and learning from experience."
+        ]
+      ],
+      "correct": "d",
+      "right": "Correct. Loading a file recalls stored facts, which is memory, and changing behavior without being told again is learning.",
+      "wrong": "Not quite. Read idea 2 again, on the difference between memory and learning."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "An agent with full permission over the file system, no sandbox and no confirmation step deletes a critical file while cleaning up temporary files. According to the book, whose fault is it?",
+      "options": [
+        [
+          "a",
+          "The model's, because it made an error in the file pattern."
+        ],
+        [
+          "b",
+          "The configuration's, and so the engineer's who set the tools, permissions, isolation and gates."
+        ],
+        [
+          "c",
+          "Nobody's, because mistakes in commands cannot be prevented."
+        ],
+        [
+          "d",
+          "The ADE maker's, because the default permissions were too wide."
+        ]
+      ],
+      "correct": "b",
+      "right": "Correct. Each link in the chain was a decision, and changing any one of them would have prevented the loss.",
+      "wrong": "Not quite. Read idea 4 again, on blast radius as an engineering decision."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "You switch the model behind an ADE that speaks an open interface. Every call still returns a valid response, but tool use degrades badly. What explains this?",
+      "options": [
+        [
+          "a",
+          "The ADE was tuned against another model, and the coupling lives in training, which no interface shows."
+        ],
+        [
+          "b",
+          "The new model is simply weaker than the old one."
+        ],
+        [
+          "c",
+          "The wire format was translated incorrectly."
+        ],
+        [
+          "d",
+          "The context window of the new model is too small."
+        ]
+      ],
+      "correct": "a",
+      "right": "Correct. The open interface promised a shared format, not shared behavior.",
+      "wrong": "Not quite. Read idea 6 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "Which statement matches the book's view of how narrow an agent's permissions should be?",
+      "options": [
+        [
+          "a",
+          "Always the narrowest possible, whatever the task."
+        ],
+        [
+          "b",
+          "As broad as possible, so the agent never has to ask."
+        ],
+        [
+          "c",
+          "Matched to the task and to how reversible its actions are: broad inside a sandbox, narrow and gated where actions reach real systems."
+        ],
+        [
+          "d",
+          "Whatever the ADE sets by default, since its maker knows best."
+        ]
+      ],
+      "correct": "c",
+      "right": "Correct. A footprint that is too narrow makes the agent useless, so you match permission to the task each time.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Answer the 7 questions for the ADE you use for your own project or the Tribunal. Mark each answer you took on trust, and say which 1 answer you would check rather than accept.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "A good answer names the pillars and the surface from knowledge, takes the default blast radius and the sandboxing from the documentation, and asks or tests the tool about its audit trail and its memory between sessions. For a command-line ADE it might find a wide default blast radius that must be narrowed by hand, sandboxing that is available but not imposed, and no memory beyond maintained files. It marks the coupling to the model as inferred from evidence, and it checks at least 1 answer, such as whether a session export really keeps every tool result."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Argue first that you should always work on the most transparent surface available, and then that the convenience of an opaque one is worth what it gives up. Settle it, and name the kind of task on which the verdict reverses.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "Transparency lets you direct and record each step, which matters for work whose detail matters, whose failure would do harm, or which must be audited. An opaque builder trades that sight for speed, and for exploratory, low-stakes work where a first result is what you want, the trade is worth it. The verdict reverses when the task is serious enough that you would have to answer for steps you could not see. A good answer treats transparency and convenience as a trade, not as a virtue and a vice."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "n": 4,
+  "reading": "Chapter 4, The anatomy of an agentic workflow: sections 4.1 to 4.7",
+  "intro": "This module turns from the agent and the human to the work itself. You learn the 7 parts that every agentic task has, from intent to the audit trail, and you see why a part you do not supply on purpose is supplied by the agent's assumption. You also learn why the audit trail is what turns coding into engineering.",
+  "ideas": [
+    { "title": "Coding and engineering", "text": "Coding is the production of code. Engineering is work that is framed, specified, checked and recorded, so that another person, or you at a later time, can reconstruct what was decided and why." },
+    { "title": "The 7 parts of a task", "text": "Every agentic task has the same 7 parts: intent, specification, context, plan, execution, verification and the audit trail. They are not 7 stages to march through once, but the parts of a single turn of work, and a project is many such turns." },
+    { "title": "A missing part is supplied by assumption", "text": "A part that you do not supply deliberately is supplied by the agent's assumption instead. Without intent the agent answers a question nobody asked, and without context it produces work that is correct in isolation and wrong in place." },
+    { "title": "Read the plan before the code", "text": "The plan is where the agent's understanding becomes visible before any code is written. A misunderstanding found in the plan can be fixed in 1 sentence, while the same misunderstanding found after execution may lie across many changed files." },
+    { "title": "Verify against the specification", "text": "Verification checks the output against the specification, not against the impression that the code runs. The temptation to skip it is strongest when the result looks best, because a clean and confident result is the most persuasive." },
+    { "title": "The audit trail makes it engineering", "text": "A workflow that cannot be inspected or reconstructed afterward is craft, not engineering. In agentic work most of the trail is produced for free, in the conversation, the plan, version control and the checks, but it is lost just as easily unless you keep it on purpose." },
+    { "title": "The endpoint is correct and the system is wrong", "text": "In the pagination example the agent did its work well, and the fault came from the engineer's hurried answer to a good question the agent had asked. The tests passed, and only the check that the specification named, running every caller against the largest account, caught the fault." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "You ask an agent to \"add validation to this function\". It returns a version that returns a null value on bad input, while the rest of the project raises a standard error. Which part was most clearly missing?",
+      "options": [
+        ["a", "Execution, because the agent wrote the code badly."],
+        ["b", "The audit trail, because nothing was recorded."],
+        ["c", "Context, because the agent could not see how errors are reported elsewhere in the project."],
+        ["d", "Verification, because no test was run."]
+      ],
+      "correct": "c",
+      "right": "Correct. The agent produced work that is correct in isolation and wrong in place, because it could not see the pattern it had to match.",
+      "wrong": "Not quite. Read idea 3 again, on what happens when context is missing."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "Why does the book call the 7 parts the parts of one turn rather than the phases of a project?",
+      "options": [
+        ["a", "Because all 7 are present in every turn, and a project is many turns, each revising what the last one settled."],
+        ["b", "Because small tasks need only some of the 7 parts."],
+        ["c", "Because the parts must be done in strict order, once."],
+        ["d", "Because the agent performs all 7 parts on its own."]
+      ],
+      "correct": "a",
+      "right": "Correct. The parts are always present, and later turns reveal errors in what earlier turns settled.",
+      "wrong": "Not quite. Read idea 2 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "Two engineers made the same design choice 6 months ago. Both wrote working code. What makes only one of them an engineer in the book's sense?",
+      "options": [
+        ["a", "Only one of them wrote tests."],
+        ["b", "Only one of them used the most capable model."],
+        ["c", "Only one of them finished on time."],
+        ["d", "Only one of them kept a record from which the reason for the choice can be recovered."]
+      ],
+      "correct": "d",
+      "right": "Correct. Engineering leaves work that can be understood after the fact, and that requires a kept audit trail.",
+      "wrong": "Not quite. Read idea 6 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "In the pagination task, all tests passed but the nightly job produced a rollup from only the first 100 records. What does this case show?",
+      "options": [
+        ["a", "The agent's execution was the weak part of the task."],
+        ["b", "Passing tests can still leave the system wrong, and a check named in the specification caught what the tests missed."],
+        ["c", "Pagination should never be done with a cursor."],
+        ["d", "The plan should have been skipped to save time."]
+      ],
+      "correct": "b",
+      "right": "Correct. The endpoint was correct and the system was wrong, and the check against the largest account exposed it.",
+      "wrong": "Not quite. Read idea 7 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Take 1 task you recently did with an agent, or a small task you plan to give the agent in your own project. For each of the 7 parts, say in a few words what it was, and mark which part was weakest or was supplied by the agent's assumption.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "A good answer names all 7 parts for one concrete task: the intent behind the request, the decisions in the specification, the context shown to the agent, the plan it returned, the execution, the checks run against the specification, and what was kept as a record. It ties each rating to something that actually happened, and it traces any trouble to a weak or missing part without inventing a weakness that was not there. For example, if the reasons for a design stayed only in a conversation that was later closed, the audit trail was the weak part."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Argue in a few sentences whether the specification or the plan is the part most worth your time, and say on which kind of task the other one wins.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "The specification is worth the most time when the decisions are yours to make, because every decision fixed there is one the agent would otherwise make unseen. The plan wins when the task touches parts of the project you cannot fully hold in your head, because reading it shows what the agent has taken the task to be, and a misunderstanding there costs 1 sentence to fix. A sound answer separates the 2 kinds of task rather than naming one winner for all."
+    }
+  ]
+}

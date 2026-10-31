@@ -1,67 +1,1789 @@
 {
-  "_note": "Exercises for the live lessons, keyed by module number. When the teacher adds a lesson for a module, the site copies these items into it. A null 'correct' marks a question with no right answer. The teacher can add more items during a lesson.",
   "1": [
     {
       "label": "Warm-up quiz",
-      "question": "Which way of producing code have you used most so far?",
-      "options": [["a", "Writing it all by hand."], ["b", "Copying from examples and forums."], ["c", "Asking a chat assistant for snippets."], ["d", "Directing an agent that edits the project."]],
+      "question": "How do you mostly use AI coding tools today?",
+      "options": [
+        [
+          "a",
+          "I do not use them yet."
+        ],
+        [
+          "b",
+          "For completing lines as I type."
+        ],
+        [
+          "c",
+          "For writing whole functions I describe."
+        ],
+        [
+          "d",
+          "I give an agent goals across many files."
+        ]
+      ],
       "correct": null
     },
     {
       "label": "After block 1",
-      "question": "How does this course treat agentic software engineering?",
-      "options": [["a", "As a discipline with durable principles, a method that can be learned, and characteristic faults."], ["b", "As a set of tools that write code faster than a person can."], ["c", "As a way to replace programmers with agents."], ["d", "As a style of writing prompts."]],
-      "correct": "a"
+      "question": "What does the book say decides good software?",
+      "options": [
+        [
+          "a",
+          "The taste of the senior engineer."
+        ],
+        [
+          "b",
+          "How fast the code was written."
+        ],
+        [
+          "c",
+          "An industry standard with 9 qualities."
+        ],
+        [
+          "d",
+          "The number of tests that pass."
+        ]
+      ],
+      "correct": "c"
     },
     {
       "label": "After block 2",
-      "question": "What does the long line of handovers describe?",
-      "options": [["a", "How programming moved from hand-written code to directing an agent."], ["b", "How code passes from developers to testers."], ["c", "How projects move between companies."], ["d", "How a team divides a project into tasks."]],
+      "question": "What did each handover in programming history do to the engineer's skill?",
+      "options": [
+        [
+          "a",
+          "It moved the skill to directing the machine well."
+        ],
+        [
+          "b",
+          "It removed the need for skill."
+        ],
+        [
+          "c",
+          "It left the skill unchanged."
+        ],
+        [
+          "d",
+          "It moved the skill to typing faster."
+        ]
+      ],
       "correct": "a"
     },
     {
       "label": "After block 3",
-      "question": "What rhythm does the course set for every piece of work?",
-      "options": [["a", "Equip the agent, then verify its work."], ["b", "Write the code, then ask the agent to explain it."], ["c", "Plan for a week, then build for a week."], ["d", "Let the agent work, and review only if the tests fail."]],
+      "question": "What is the harness?",
+      "options": [
+        [
+          "a",
+          "The model the vendor trains."
+        ],
+        [
+          "b",
+          "A test framework for agents."
+        ],
+        [
+          "c",
+          "The editor the agent runs in."
+        ],
+        [
+          "d",
+          "The instructions, context, tools, limits and checks around the model."
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "2": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Which of your skills do you expect to matter most in 5 years?",
+      "options": [
+        [
+          "a",
+          "Writing code quickly."
+        ],
+        [
+          "b",
+          "Knowing many frameworks."
+        ],
+        [
+          "c",
+          "Judging whether a result is good."
+        ],
+        [
+          "d",
+          "Writing clever prompts."
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Agents take part in most tasks. How many tasks can be fully delegated and left alone?",
+      "options": [
+        [
+          "a",
+          "About 60%."
+        ],
+        [
+          "b",
+          "A small share."
+        ],
+        [
+          "c",
+          "Almost all of them."
+        ],
+        [
+          "d",
+          "None at all."
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 2",
+      "question": "Which skill does the book place in the compounding group?",
+      "options": [
+        [
+          "a",
+          "Searching a large codebase for a pattern."
+        ],
+        [
+          "b",
+          "Writing boilerplate configuration."
+        ],
+        [
+          "c",
+          "Documenting what existing code does."
+        ],
+        [
+          "d",
+          "Deciding what is worth building."
+        ]
+      ],
+      "correct": "d"
+    },
+    {
+      "label": "After block 3",
+      "question": "Which 3 practices close the responsibility gap?",
+      "options": [
+        [
+          "a",
+          "A record of decisions, a clear specification and a gate."
+        ],
+        [
+          "b",
+          "Better models, more tests and longer prompts."
+        ],
+        [
+          "c",
+          "Legal contracts with the model vendor."
+        ],
+        [
+          "d",
+          "Letting the agent sign off its own work."
+        ]
+      ],
+      "correct": "a"
+    }
+  ],
+  "3": [
+    {
+      "label": "Warm-up quiz",
+      "question": "When an agent answers you confidently, how often do you check the answer?",
+      "options": [
+        [
+          "a",
+          "Almost never."
+        ],
+        [
+          "b",
+          "Only when something looks odd."
+        ],
+        [
+          "c",
+          "Usually."
+        ],
+        [
+          "d",
+          "Always, against a source."
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "What does the agent know about yesterday's session, by default?",
+      "options": [
+        [
+          "a",
+          "Everything, in a summary."
+        ],
+        [
+          "b",
+          "Only the decisions it made."
+        ],
+        [
+          "c",
+          "Nothing, unless it is placed in today's context."
+        ],
+        [
+          "d",
+          "The last 100 messages."
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "Why is reading the plan before the agent acts so valuable?",
+      "options": [
+        [
+          "a",
+          "A wrong plan is corrected in a sentence before any file changes."
+        ],
+        [
+          "b",
+          "Plans always sound less confident when wrong."
+        ],
+        [
+          "c",
+          "The agent cannot act without a plan."
+        ],
+        [
+          "d",
+          "It replaces the need for tests."
+        ]
+      ],
       "correct": "a"
     },
     {
-      "label": "After block 4",
-      "question": "Which tension does this course set out to answer?",
-      "options": [["a", "The speed of production has outrun our ability to trust the result."], ["b", "Models are still too expensive for everyday coding."], ["c", "Most developers refuse to hand work to an agent."], ["d", "Agents cannot yet write code that compiles."]],
+      "label": "After block 3",
+      "question": "An agent praises your flawed design and builds it. What is the remedy?",
+      "options": [
+        [
+          "a",
+          "Give it more context."
+        ],
+        [
+          "b",
+          "Switch to a larger model."
+        ],
+        [
+          "c",
+          "Check its facts against the documentation."
+        ],
+        [
+          "d",
+          "Ask it to act as a critic and say what is wrong."
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "4": [
+    {
+      "label": "Warm-up quiz",
+      "question": "When you last worked with an agent, what did you keep once the task was done?",
+      "options": [
+        [
+          "a",
+          "Only the code"
+        ],
+        [
+          "b",
+          "The code and the commits"
+        ],
+        [
+          "c",
+          "The code, commits and the conversation"
+        ],
+        [
+          "d",
+          "Also the specification and the checks I ran"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "The request is \"add pagination\". What is its intent?",
+      "options": [
+        [
+          "a",
+          "Adding a page_size parameter"
+        ],
+        [
+          "b",
+          "Returning a slice of all rows"
+        ],
+        [
+          "c",
+          "Letting a client fetch a large report without timing out"
+        ],
+        [
+          "d",
+          "Using a cursor instead of an offset"
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "Which of these is not part of the audit trail in agentic work?",
+      "options": [
+        [
+          "a",
+          "The conversation with the agent"
+        ],
+        [
+          "b",
+          "A long report written by hand after the work"
+        ],
+        [
+          "c",
+          "The changes kept in version control"
+        ],
+        [
+          "d",
+          "The results of the checks that were run"
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 3",
+      "question": "In the pagination task, which part was performed badly?",
+      "options": [
+        [
+          "a",
+          "The engineer's answer to the agent's question"
+        ],
+        [
+          "b",
+          "The agent's execution"
+        ],
+        [
+          "c",
+          "The tests of the endpoint"
+        ],
+        [
+          "d",
+          "The context given to the agent"
+        ]
+      ],
       "correct": "a"
+    }
+  ],
+  "5": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Where do you mostly work with an agent today?",
+      "options": [
+        [
+          "a",
+          "In a terminal, on the command line"
+        ],
+        [
+          "b",
+          "Inside my code editor"
+        ],
+        [
+          "c",
+          "In a builder that gives me a working app"
+        ],
+        [
+          "d",
+          "I have not worked with one yet"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Which pillar turns a bare model into an agent?",
+      "options": [
+        [
+          "a",
+          "Knowledge and memory"
+        ],
+        [
+          "b",
+          "Learning from experience"
+        ],
+        [
+          "c",
+          "Multi-agent coordination"
+        ],
+        [
+          "d",
+          "Tool augmentation"
+        ]
+      ],
+      "correct": "d"
+    },
+    {
+      "label": "After block 2",
+      "question": "What sets an agent's blast radius?",
+      "options": [
+        [
+          "a",
+          "The size of the model"
+        ],
+        [
+          "b",
+          "The tools and permissions the engineer grants"
+        ],
+        [
+          "c",
+          "The length of the prompt"
+        ],
+        [
+          "d",
+          "The surface the ADE runs on"
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 3",
+      "question": "A tool tells you how it exports sessions. What should you do?",
+      "options": [
+        [
+          "a",
+          "Check the answer by testing it"
+        ],
+        [
+          "b",
+          "Trust it, since it describes itself"
+        ],
+        [
+          "c",
+          "Ignore it and read reviews"
+        ],
+        [
+          "d",
+          "Ask it the same question again"
+        ]
+      ],
+      "correct": "a"
+    }
+  ],
+  "6": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Have you ever built something well that nobody then used?",
+      "options": [
+        [
+          "a",
+          "Yes, more than once"
+        ],
+        [
+          "b",
+          "Yes, once"
+        ],
+        [
+          "c",
+          "Not that I know of"
+        ],
+        [
+          "d",
+          "I have not built anything for users yet"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "What is the quickest way to find an unclear problem?",
+      "options": [
+        [
+          "a",
+          "Write a complete specification first"
+        ],
+        [
+          "b",
+          "Ask the agent to build the final version"
+        ],
+        [
+          "c",
+          "Make a rough attempt and see what is wrong with it"
+        ],
+        [
+          "d",
+          "Wait until the users explain it"
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "Why write the user model down even if it may be wrong?",
+      "options": [
+        [
+          "a",
+          "A stated model can be corrected"
+        ],
+        [
+          "b",
+          "The agent cannot work without one"
+        ],
+        [
+          "c",
+          "It replaces talking to users"
+        ],
+        [
+          "d",
+          "It makes the design final"
+        ]
+      ],
+      "correct": "a"
+    },
+    {
+      "label": "After block 3",
+      "question": "Which is a definition of done, not a hope?",
+      "options": [
+        [
+          "a",
+          "The system judges the case well"
+        ],
+        [
+          "b",
+          "Users find the protocol useful"
+        ],
+        [
+          "c",
+          "The judges reason carefully"
+        ],
+        [
+          "d",
+          "One opinion with a verdict and at least 2 reasons from the facts"
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "7": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Who chose the framework and structure of your last project?",
+      "options": [
+        [
+          "a",
+          "I chose them on purpose."
+        ],
+        [
+          "b",
+          "A tutorial or template chose them."
+        ],
+        [
+          "c",
+          "An agent chose them, and I kept them."
+        ],
+        [
+          "d",
+          "I am not sure who chose them."
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Which architectural work grows more valuable as agents grow stronger?",
+      "options": [
+        [
+          "a",
+          "Writing the code that stores a record."
+        ],
+        [
+          "b",
+          "Writing configuration files."
+        ],
+        [
+          "c",
+          "Deciding how the parts fit and where the boundaries lie."
+        ],
+        [
+          "d",
+          "Knowing the commands of a framework."
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "What should architectural guidance in a specification do?",
+      "options": [
+        [
+          "a",
+          "Name the boundaries and fixed points, and leave the interior open."
+        ],
+        [
+          "b",
+          "List every file the agent must create, in order."
+        ],
+        [
+          "c",
+          "Leave every decision to the agent."
+        ],
+        [
+          "d",
+          "Name the most popular framework."
+        ]
+      ],
+      "correct": "a"
+    },
+    {
+      "label": "After block 3",
+      "question": "Where should the Tribunal's OpenRouter key live?",
+      "options": [
+        [
+          "a",
+          "In the source, next to the call."
+        ],
+        [
+          "b",
+          "In a comment in the context file."
+        ],
+        [
+          "c",
+          "In the first commit, then deleted."
+        ],
+        [
+          "d",
+          "In an environment variable, outside the tracked files."
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "8": [
+    {
+      "label": "Warm-up quiz",
+      "question": "When you build a screen, what do you usually decide first?",
+      "options": [
+        [
+          "a",
+          "How it looks."
+        ],
+        [
+          "b",
+          "Who will use it."
+        ],
+        [
+          "c",
+          "Which framework to use."
+        ],
+        [
+          "d",
+          "I let the agent decide."
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Which interface work does the book call eroding?",
+      "options": [
+        [
+          "a",
+          "Judging which interface will be clear to a user."
+        ],
+        [
+          "b",
+          "Deciding who the user is."
+        ],
+        [
+          "c",
+          "Adding a standard screen that lists records with a filter."
+        ],
+        [
+          "d",
+          "Deciding what the app is for."
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "What does the Tribunal protocol never contain?",
+      "options": [
+        [
+          "a",
+          "The name of each judge."
+        ],
+        [
+          "b",
+          "A summary, a majority or a count of verdicts."
+        ],
+        [
+          "c",
+          "The reasons for each verdict."
+        ],
+        [
+          "d",
+          "The verdict of each judge."
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 3",
+      "question": "A README is written for the engineer. Who are context files written for?",
+      "options": [
+        [
+          "a",
+          "The user of the app."
+        ],
+        [
+          "b",
+          "The teacher."
+        ],
+        [
+          "c",
+          "The hosting platform."
+        ],
+        [
+          "d",
+          "The agent."
+        ]
+      ],
+      "correct": "d"
     }
   ],
   "9": [
     {
       "label": "Warm-up quiz",
-      "question": "In module 8, who supplies the why of an interface specification?",
-      "options": [["a", "The engineer."], ["b", "The agent."], ["c", "The end user."], ["d", "The framework."]],
-      "correct": "a"
+      "question": "Do you know what your agent work cost last week?",
+      "options": [
+        [
+          "a",
+          "Yes, to the token."
+        ],
+        [
+          "b",
+          "Roughly, from my plan or bill."
+        ],
+        [
+          "c",
+          "No, I never checked."
+        ],
+        [
+          "d",
+          "I only use free tools."
+        ]
+      ],
+      "correct": null
     },
     {
       "label": "After block 1",
-      "question": "What does the course call cognified software?",
-      "options": [["a", "Software with a model reasoning inside it."], ["b", "Software written by an agent."], ["c", "Software that learns from its users' clicks."], ["d", "Software with a chat window."]],
-      "correct": "a"
+      "question": "What does the Tribunal's budget file record?",
+      "options": [
+        [
+          "a",
+          "The verdict of each judge."
+        ],
+        [
+          "b",
+          "The tokens each of the 7 agents used and the total cost."
+        ],
+        [
+          "c",
+          "The time each speech took to read."
+        ],
+        [
+          "d",
+          "The price of each model per month."
+        ]
+      ],
+      "correct": "b"
     },
     {
       "label": "After block 2",
-      "question": "What does module 9 ask you to make visible for every model call?",
-      "options": [["a", "Its price and its time."], ["b", "The source code of the model."], ["c", "The name of the person who wrote the prompt."], ["d", "The number of agents in the session."]],
+      "question": "Why does a large standing context cost money?",
+      "options": [
+        [
+          "a",
+          "Its tokens are paid for again on every call."
+        ],
+        [
+          "b",
+          "It is paid for once, when it is written."
+        ],
+        [
+          "c",
+          "It is stored on a paid server."
+        ],
+        [
+          "d",
+          "It costs money only when the window is full."
+        ]
+      ],
       "correct": "a"
     },
     {
       "label": "After block 3",
-      "question": "Why does a product that calls a model need a ceiling?",
-      "options": [["a", "To stop a runaway process before it spends too much money and time."], ["b", "To keep the model's answers short."], ["c", "To meet a legal limit on model use."], ["d", "To make the agent work faster."]],
+      "question": "Running agents in parallel saves what?",
+      "options": [
+        [
+          "a",
+          "Tokens."
+        ],
+        [
+          "b",
+          "Money."
+        ],
+        [
+          "c",
+          "Context."
+        ],
+        [
+          "d",
+          "Time, but not tokens."
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "10": [
+    {
+      "label": "Warm-up quiz",
+      "question": "When you start a task with an agent, what do you usually write first?",
+      "options": [
+        [
+          "a",
+          "Just the prompt, and I fix things as they come"
+        ],
+        [
+          "b",
+          "A short sketch of what I want"
+        ],
+        [
+          "c",
+          "A full specification"
+        ],
+        [
+          "d",
+          "Some code myself, then I hand it over"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "An agent stops when the function returns, though the verdict is empty. Which part was missing?",
+      "options": [
+        [
+          "a",
+          "The known pitfalls"
+        ],
+        [
+          "b",
+          "Architectural guidance"
+        ],
+        [
+          "c",
+          "Testable success criteria"
+        ],
+        [
+          "d",
+          "The reason behind the goal"
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "Which of these should a brief leave open on purpose?",
+      "options": [
+        [
+          "a",
+          "The order in which the parts are built"
+        ],
+        [
+          "b",
+          "Who will use the result"
+        ],
+        [
+          "c",
+          "Who decides open questions"
+        ],
+        [
+          "d",
+          "A deadline that cannot move"
+        ]
+      ],
       "correct": "a"
     },
     {
-      "label": "After block 4",
-      "question": "What groundwork does module 9 lay for the rest of the course?",
-      "options": [["a", "The economic groundwork for building anything that calls a model."], ["b", "The security model of the running project."], ["c", "The rules for grading projects."], ["d", "The design of the user interface."]],
+      "label": "After block 3",
+      "question": "Which is a sign that a spiral is drifting?",
+      "options": [
+        [
+          "a",
+          "The specification changed after a build"
+        ],
+        [
+          "b",
+          "A decision was locked at the commit point"
+        ],
+        [
+          "c",
+          "Each turn starts on a new branch"
+        ],
+        [
+          "d",
+          "Scope keeps growing but no milestone is reached"
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "11": [
+    {
+      "label": "Warm-up quiz",
+      "question": "When an agent gets something wrong, what do you usually do first?",
+      "options": [
+        [
+          "a",
+          "Add another rule or warning"
+        ],
+        [
+          "b",
+          "Remove something from what it was given"
+        ],
+        [
+          "c",
+          "Reword the prompt"
+        ],
+        [
+          "d",
+          "Try a different model"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Where in a long context does a model attend least?",
+      "options": [
+        [
+          "a",
+          "At the very start"
+        ],
+        [
+          "b",
+          "In the middle"
+        ],
+        [
+          "c",
+          "At the very end"
+        ],
+        [
+          "d",
+          "Attention is spread evenly"
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 2",
+      "question": "Which fact belongs in the context file rather than a specification?",
+      "options": [
+        [
+          "a",
+          "The success criteria of one feature"
+        ],
+        [
+          "b",
+          "The pitfalls of one task"
+        ],
+        [
+          "c",
+          "A rule every specification would otherwise repeat"
+        ],
+        [
+          "d",
+          "The reason for one feature"
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 3",
+      "question": "When should you review the context files?",
+      "options": [
+        [
+          "a",
+          "Only when the agent fails visibly"
+        ],
+        [
+          "b",
+          "Once, when the project starts"
+        ],
+        [
+          "c",
+          "When the window is full"
+        ],
+        [
+          "d",
+          "At the commit point of every turn"
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "12": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Have you ever lost work after an agent changed your code?",
+      "options": [
+        [
+          "a",
+          "Yes, and I got it back from Git"
+        ],
+        [
+          "b",
+          "Yes, and it was gone for good"
+        ],
+        [
+          "c",
+          "No, never"
+        ],
+        [
+          "d",
+          "I do not use version control yet"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Which of these can a Git commit not undo?",
+      "options": [
+        [
+          "a",
+          "A file the agent overwrote"
+        ],
+        [
+          "b",
+          "An email the agent sent"
+        ],
+        [
+          "c",
+          "A function the agent deleted"
+        ],
+        [
+          "d",
+          "A test the agent rewrote"
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 2",
+      "question": "When should an agent's branch be merged into the main line?",
+      "options": [
+        [
+          "a",
+          "After the result is verified and the changes reviewed"
+        ],
+        [
+          "b",
+          "As soon as the tests pass"
+        ],
+        [
+          "c",
+          "At the end of every session"
+        ],
+        [
+          "d",
+          "When the agent says it is done"
+        ]
+      ],
+      "correct": "a"
+    },
+    {
+      "label": "After block 3",
+      "question": "What is the first move at any sign of drift?",
+      "options": [
+        [
+          "a",
+          "Add a rule to the context file"
+        ],
+        [
+          "b",
+          "Ask for one more fix"
+        ],
+        [
+          "c",
+          "Let the session finish"
+        ],
+        [
+          "d",
+          "Stop the session"
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "13": [
+    {
+      "label": "Warm-up quiz",
+      "question": "When an agent says your task is done, what do you usually do?",
+      "options": [
+        [
+          "a",
+          "Accept it and move on"
+        ],
+        [
+          "b",
+          "Run the tests and accept if green"
+        ],
+        [
+          "c",
+          "Read the diff before I accept it"
+        ],
+        [
+          "d",
+          "Check it against what I asked for"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Which check is best placed to catch a design that is sound in its parts but wrong as a whole?",
+      "options": [
+        [
+          "a",
+          "A type check"
+        ],
+        [
+          "b",
+          "A linter"
+        ],
+        [
+          "c",
+          "A unit test"
+        ],
+        [
+          "d",
+          "Manual review"
+        ]
+      ],
+      "correct": "d"
+    },
+    {
+      "label": "After block 2",
+      "question": "What is verification theatre?",
+      "options": [
+        [
+          "a",
+          "Gates that exist and pass, but catch no real fault"
+        ],
+        [
+          "b",
+          "Showing test results to the teacher in class"
+        ],
+        [
+          "c",
+          "A gate that is skipped near a deadline"
+        ],
+        [
+          "d",
+          "Tests written before the code exists"
+        ]
+      ],
+      "correct": "a"
+    },
+    {
+      "label": "After block 3",
+      "question": "In a system with a model inside it, what does build verification check?",
+      "options": [
+        [
+          "a",
+          "Whether the model's answers reason well"
+        ],
+        [
+          "b",
+          "Whether the code around the model handles what the model returns"
+        ],
+        [
+          "c",
+          "How far the model's answers vary between runs"
+        ],
+        [
+          "d",
+          "Which model gives the best verdicts"
+        ]
+      ],
+      "correct": "b"
+    }
+  ],
+  "14": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Have you ever run more than one agent at once on the same project?",
+      "options": [
+        [
+          "a",
+          "No, always one agent at a time"
+        ],
+        [
+          "b",
+          "Yes, and it went well"
+        ],
+        [
+          "c",
+          "Yes, and they got in each other's way"
+        ],
+        [
+          "d",
+          "I am not sure what my tool does inside"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "What must each sub-task name to have a clean boundary?",
+      "options": [
+        [
+          "a",
+          "Its model, its cost and its deadline"
+        ],
+        [
+          "b",
+          "Its input, its output and the test for its output"
+        ],
+        [
+          "c",
+          "Its agent, its prompt and its branch"
+        ],
+        [
+          "d",
+          "Its files, its owner and its reviewer"
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 2",
+      "question": "You translate one document into 5 languages, one agent per language. Which pattern is this?",
+      "options": [
+        [
+          "a",
+          "Prompt chaining"
+        ],
+        [
+          "b",
+          "Routing"
+        ],
+        [
+          "c",
+          "Evaluator-optimizer"
+        ],
+        [
+          "d",
+          "Parallelization"
+        ]
+      ],
+      "correct": "d"
+    },
+    {
+      "label": "After block 3",
+      "question": "Running agents in parallel instead of one after another saves what?",
+      "options": [
+        [
+          "a",
+          "Time, but not tokens"
+        ],
+        [
+          "b",
+          "Tokens, but not time"
+        ],
+        [
+          "c",
+          "Both time and tokens"
+        ],
+        [
+          "d",
+          "Neither time nor tokens"
+        ]
+      ],
       "correct": "a"
     }
-  ]
+  ],
+  "15": [
+    {
+      "label": "Warm-up quiz",
+      "question": "When you set up several agents, where does the plan for how they work together usually live?",
+      "options": [
+        [
+          "a",
+          "Only in my head"
+        ],
+        [
+          "b",
+          "In the prompts I give them"
+        ],
+        [
+          "c",
+          "In a written note or document"
+        ],
+        [
+          "d",
+          "In code that dispatches them"
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Which rules of an arrangement belong in code rather than in an agent's instructions?",
+      "options": [
+        [
+          "a",
+          "The wording of each agent's role"
+        ],
+        [
+          "b",
+          "The standard a reviewer applies"
+        ],
+        [
+          "c",
+          "The rules that must run the same way every time"
+        ],
+        [
+          "d",
+          "Whatever was easiest to write"
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "What should cross a handoff between 2 agents?",
+      "options": [
+        [
+          "a",
+          "Structured data that keeps its fields"
+        ],
+        [
+          "b",
+          "A clear prose summary of the result"
+        ],
+        [
+          "c",
+          "The first agent's whole context"
+        ],
+        [
+          "d",
+          "Only the first agent's final verdict"
+        ]
+      ],
+      "correct": "a"
+    },
+    {
+      "label": "After block 3",
+      "question": "What makes a dedicated evaluator different from a reviewing agent?",
+      "options": [
+        [
+          "a",
+          "It rewrites the work it checks"
+        ],
+        [
+          "b",
+          "It reviews its own output"
+        ],
+        [
+          "c",
+          "It runs only when the engineer asks"
+        ],
+        [
+          "d",
+          "It checks every output at a boundary against one fixed standard"
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "16": [
+    {
+      "label": "Warm-up quiz",
+      "question": "When you accept an agent's change today, what do you mostly rely on?",
+      "options": [
+        [
+          "a",
+          "The tests pass."
+        ],
+        [
+          "b",
+          "I read the code."
+        ],
+        [
+          "c",
+          "I read the agent's description."
+        ],
+        [
+          "d",
+          "I run it and try it."
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Who may be the sole judge of an agent's output?",
+      "options": [
+        [
+          "a",
+          "A second, independent reviewing agent."
+        ],
+        [
+          "b",
+          "The agent that wrote it, if it checks its work."
+        ],
+        [
+          "c",
+          "No agent: you judge, the agent may only read and report."
+        ],
+        [
+          "d",
+          "The linter and the test suite together."
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "Tests drawn from the code, not the specification, fail which criterion?",
+      "options": [
+        [
+          "a",
+          "Engineering hygiene."
+        ],
+        [
+          "b",
+          "Sound verification."
+        ],
+        [
+          "c",
+          "Full auditability."
+        ],
+        [
+          "d",
+          "Rationale and communication."
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 3",
+      "question": "Payroll rounds a half unit down. The comment says per finance dept, 1998. Your refactor should:",
+      "options": [
+        [
+          "a",
+          "Keep the behavior: it is a decision, not a fault."
+        ],
+        [
+          "b",
+          "Correct it to the ordinary rounding rule."
+        ],
+        [
+          "c",
+          "Rewrite the routine from a clean idea."
+        ],
+        [
+          "d",
+          "Delete the comment as out of date."
+        ]
+      ],
+      "correct": "a"
+    }
+  ],
+  "17": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Where does your own project keep its API keys today?",
+      "options": [
+        [
+          "a",
+          "In an environment variable or secret store."
+        ],
+        [
+          "b",
+          "In a config file inside the repository."
+        ],
+        [
+          "c",
+          "Written straight into the code."
+        ],
+        [
+          "d",
+          "I am not sure."
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Why does agent-written code often lack input checks and narrow permissions?",
+      "options": [
+        [
+          "a",
+          "Models are trained on insecure code only."
+        ],
+        [
+          "b",
+          "The checks slow the program down."
+        ],
+        [
+          "c",
+          "It writes toward code that works, not code that resists an attacker."
+        ],
+        [
+          "d",
+          "Agents cannot read the security catalogs."
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "An agent proposes a package you have never heard of. What do you do first?",
+      "options": [
+        [
+          "a",
+          "Install it, since the agent named it."
+        ],
+        [
+          "b",
+          "Install it and pin its version."
+        ],
+        [
+          "c",
+          "Ask the agent whether it is safe."
+        ],
+        [
+          "d",
+          "Check it exists and is the one intended."
+        ]
+      ],
+      "correct": "d"
+    },
+    {
+      "label": "After block 3",
+      "question": "An attack makes a Tribunal judge return justified. What bounds the harm most?",
+      "options": [
+        [
+          "a",
+          "The judge's instructions tell it to ignore commands."
+        ],
+        [
+          "b",
+          "The judge can only write a verdict into the protocol."
+        ],
+        [
+          "c",
+          "The model is the newest one available."
+        ],
+        [
+          "d",
+          "The charge sheet is limited in length."
+        ]
+      ],
+      "correct": "b"
+    }
+  ],
+  "18": [
+    {
+      "label": "Warm-up quiz",
+      "question": "Would you like a project of yours to become a product that others use?",
+      "options": [
+        [
+          "a",
+          "Yes, I already have an idea."
+        ],
+        [
+          "b",
+          "Maybe, if the right idea comes."
+        ],
+        [
+          "c",
+          "No, I prefer to work for others."
+        ],
+        [
+          "d",
+          "I have not thought about it."
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "Now that building is cheap, what stands between an idea and its construction?",
+      "options": [
+        [
+          "a",
+          "The price of the AI tools."
+        ],
+        [
+          "b",
+          "The time it takes to write the code."
+        ],
+        [
+          "c",
+          "Your judgment about whether it is worth building."
+        ],
+        [
+          "d",
+          "The agent's refusal to build bad ideas."
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 2",
+      "question": "Why write down a user model you may get wrong?",
+      "options": [
+        [
+          "a",
+          "A stated model can be corrected by evidence."
+        ],
+        [
+          "b",
+          "Investors ask for one."
+        ],
+        [
+          "c",
+          "The agent refuses to build without one."
+        ],
+        [
+          "d",
+          "A wrong model is never harmful."
+        ]
+      ],
+      "correct": "a"
+    },
+    {
+      "label": "After block 3",
+      "question": "Once a product has real users, what shows what it must become?",
+      "options": [
+        [
+          "a",
+          "The original specification."
+        ],
+        [
+          "b",
+          "The newest model's suggestions."
+        ],
+        [
+          "c",
+          "What competitors have built."
+        ],
+        [
+          "d",
+          "Their use: failed assumptions and unmet needs."
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "19": [
+    {
+      "label": "Warm-up quiz",
+      "question": "What worries you most about finding your first job in software?",
+      "options": [
+        [
+          "a",
+          "Agents doing the work I was trained for."
+        ],
+        [
+          "b",
+          "Fewer openings for beginners."
+        ],
+        [
+          "c",
+          "Not knowing which skills employers want."
+        ],
+        [
+          "d",
+          "Nothing worries me yet."
+        ]
+      ],
+      "correct": null
+    },
+    {
+      "label": "After block 1",
+      "question": "According to the Preface, what do organizations no longer need?",
+      "options": [
+        [
+          "a",
+          "Engineers who review code."
+        ],
+        [
+          "b",
+          "Junior developers who write code by hand."
+        ],
+        [
+          "c",
+          "People who build with agents."
+        ],
+        [
+          "d",
+          "Specifications."
+        ]
+      ],
+      "correct": "b"
+    },
+    {
+      "label": "After block 2",
+      "question": "What did the 2026 review name as the leading obstacle to adopting agentic tools?",
+      "options": [
+        [
+          "a",
+          "The cost of the tools."
+        ],
+        [
+          "b",
+          "The raw capability of the tools."
+        ],
+        [
+          "c",
+          "Trust and reliability."
+        ],
+        [
+          "d",
+          "The speed of the tools."
+        ]
+      ],
+      "correct": "c"
+    },
+    {
+      "label": "After block 3",
+      "question": "Which kind of knowledge does the book expect to stay valuable longest?",
+      "options": [
+        [
+          "a",
+          "Knowledge written down in full in books."
+        ],
+        [
+          "b",
+          "The commands of today's tools."
+        ],
+        [
+          "c",
+          "The syntax of popular frameworks."
+        ],
+        [
+          "d",
+          "Tacit knowledge learned by doing the work."
+        ]
+      ],
+      "correct": "d"
+    }
+  ],
+  "_note": "Exercises for the live lessons, keyed by module number, written from the course textbook. When the teacher adds a lesson, the site copies the items of each of its modules into it. A null 'correct' marks a question with no right answer. The teacher can add more items during a lesson."
 }

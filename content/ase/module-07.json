@@ -1,0 +1,88 @@
+{
+  "n": 7,
+  "reading": "No chapter of the textbook covers this module: the book says in About the book that it has no chapter on web application architecture. Passages that touch it: Chapter 2, sections 2.3 and 2.5 (designing the shape of a system, the model's defaults); Chapter 6, sections 6.3.4, 6.4.3, 6.4.5 and 6.4.7 (constraints, architectural guidance, leaving the means open); Chapter 7, section 7.4 (an existing home for data); Chapter 8, section 8.3 (secrets); Chapter 9, section 9.5 (the code around the model); Chapter 10, sections 10.5 and 10.7 (the aggregation layer); Chapter 13, sections 13.3, 13.4 and 13.6 (injection, secrets, least privilege); The running project: the Tribunal (what the book leaves for you to design).",
+  "intro": "This module is about the shape of a web application: its parts, where its data lives, how the parts depend on one another and what each part is allowed to do. The lesson covers this topic, and the textbook touches it in chapters 2, 6, 7, 9, 10 and 13. It matters because an agent will build each part for you, but the decision about how the parts fit together stays yours, and every later change pays for that decision.",
+  "ideas": [
+    { "title": "The shape of the system compounds", "text": "An agent can build each part of a system, but the decision about how the parts fit together, what depends on what and where the boundaries lie governs everything that follows. Designing the overall shape of a system is one of the skills that grow more valuable as agents grow stronger." },
+    { "title": "Choose the defaults on purpose", "text": "A model reproduces the assumptions of what it was trained on, so it will often reach for the most common framework or structure. That choice is not always right for your work, and unless you choose your stack and structure on purpose, the model's defaults quietly become yours." },
+    { "title": "Architectural guidance names the fixed points", "text": "Good architectural guidance in a specification names the boundaries and the fixed points and leaves the interior to the agent, as in \"reach the models through the existing model client\". Without it, the agent picks an approach that is sound in itself and wrong in its context, and a duplicated structure is the usual sign." },
+    { "title": "One home for each fact", "text": "Before an agent creates a new store, it should look for an existing home for the data, so that it does not build a second database beside the one already there. When the same fact or calculation lives in 2 places, the 2 copies drift apart the first time either is changed." },
+    { "title": "Most of the system is ordinary software", "text": "In a system with a model inside it, the web pages, the routes, the database and the code that dispatches the calls all have fixed correct behavior and are checked in the ordinary way. The models are reached over a network, so they may be slow or briefly unavailable, and that real constraint is something the design must work around." },
+    { "title": "Fix first what everything rests on", "text": "Some choices are hard to reverse once other parts are built on them, such as the layer that computes the figures every display of the Tribunal's analytics screen reads. Spend your care on that part first and fix its interface exactly, and the parts above it become ordinary work that can be built in parallel." },
+    { "title": "Give each part the fewest powers", "text": "Each part of the application should hold only the powers its work needs: a backend that stores a result writes to one table, and a component that serves pages reads data but cannot delete it. Secrets such as an API key live outside the source, in an environment variable or an ignored configuration file, so that a fault or a leak reaches as little as possible." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "A brief for your project says: \"Reach the models through a queue.\" Nobody has built anything yet. What is the main problem with this line?",
+      "options": [
+        ["a", "A queue is always slower than a direct call."],
+        ["b", "It fixes how the thing is built before anyone knows what the building will reveal."],
+        ["c", "It does not say which queue product to use."],
+        ["d", "Architecture should never appear in a specification."]
+      ],
+      "correct": "b",
+      "right": "Correct. The means should be left open, because the engineer will know more about them within a day than the writer of the brief knew.",
+      "wrong": "Not quite. Read idea 3 again: guidance names the fixed points and leaves the means to whoever builds."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "You asked an agent to start your app, and it chose a popular framework that you never asked for. The framework is reasonable. What should you do?",
+      "options": [
+        ["a", "Keep it, because the most common choice is the safest one."],
+        ["b", "Replace it, because the agent should never choose a framework."],
+        ["c", "Decide on purpose whether it fits your work, and write down the reason either way."],
+        ["d", "Ask the agent to choose again and take its second answer."]
+      ],
+      "correct": "c",
+      "right": "Correct. The fault is not the framework but the unexamined default; a choice you make and record can be defended and revisited.",
+      "wrong": "Not quite. Read idea 2 again: a default can be kept, but only after you choose it."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "The Tribunal already records every model call in its call log. An agent asked to show costs proposes a new database file that will store a copy of each call's cost. What is the best response?",
+      "options": [
+        ["a", "Accept it, because a separate store keeps the cost data tidy."],
+        ["b", "Accept it, but tell the agent to keep both stores in step."],
+        ["c", "Ask the agent to store the costs in the protocol file instead."],
+        ["d", "Refuse it and have the costs read from the call log, which is already the home of that data."]
+      ],
+      "correct": "d",
+      "right": "Correct. A second store beside the one already there creates 2 copies of the same fact, and they will disagree.",
+      "wrong": "Not quite. Read idea 4 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "Your app has a page that shows a user the protocols of their past runs. Which powers should the part that serves this page hold?",
+      "options": [
+        ["a", "Read access to the data the page shows, and nothing more."],
+        ["b", "Full access to the database, so that the page never fails on a permission."],
+        ["c", "Read and delete access, so that users can tidy their history later."],
+        ["d", "The same powers as the backend that calls the models."]
+      ],
+      "correct": "a",
+      "right": "Correct. If this part is ever subverted, it can then only read what it already shows, and the damage stays small.",
+      "wrong": "Not quite. Read idea 7 again: each part holds the fewest powers its work needs."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "For your own project, or the Tribunal, write the architectural guidance you would give an agent in 3 to 5 lines. Name the boundaries and fixed points the agent must honor, and say which decisions you leave open to it on purpose.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "For the Tribunal: every model call goes through the existing model client, so that the call log stays the only record of what a run cost. The charge sheet and the profiles already exist as documents, and the code reads them and never writes its own copy of the case. The API key lives in an environment variable, and the part that serves pages may read data but never delete it. How the backend is divided into files, and how it passes a run from the advocates to the judges, is left to the agent, because those are means and not fixed points."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Argue first that a brief which fixes the architecture saves you time, and then that it destroys the value of engaging an engineer at all. Settle the argument, and name a circumstance in which a brief is right to fix an architectural decision.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "A fixed architecture saves time because the engineer, or the agent, does not have to make or argue the decision. But it is made from less information than the builder will have within a day, so it may bind the work to a way that does not fit the problem, which is the very work an engineer is engaged to do. The settlement is that a brief should fix a decision only when it is a real fixed point, a fact the builder cannot change. An example is the system that must be integrated with, such as the existing model client through which every call must pass, because a call outside it is invisible to the budget."
+    }
+  ]
+}

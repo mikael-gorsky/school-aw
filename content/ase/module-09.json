@@ -1,0 +1,88 @@
+{
+  "n": 9,
+  "reading": "No chapter of the textbook covers this module, and the book does not use the term cognified products. Passages that touch it: The running project: the Tribunal (the budget file, and the progression from one model to 7) and Appendix A, Asset 03; Chapter 6, section 6.3.4 (a misperceived constraint about cost); Chapter 7, sections 7.2 and 7.8 (context as a budget of money, the cost of tools, the call log); Chapter 10, sections 10.6 and 10.7 (token use as the constraint, and an accounting of one build); Chapter 11, section 11.4 (matching the effort to the task).",
+  "intro": "This module is about products that have a model inside them and about what the agents in them cost. The lesson covers this topic, and the textbook touches it in the Tribunal chapter and in chapters 6, 7, 10 and 11. It matters because every call to a model is paid for in tokens, and you can only judge whether an arrangement of agents is worth its price if you record what it costs and weigh that against what it buys.",
+  "ideas": [
+    { "title": "The price sits beside the judgment", "text": "Every run of the Tribunal produces 2 files: the protocol and the budget. The budget records the tokens each of the 7 agents used and what the run cost in total, because it answers a question the protocol cannot: what this judgment cost in money." },
+    { "title": "From one model to 7", "text": "The Tribunal starts with all 7 roles on one model, the least expensive arrangement that works, then moves to one model for the advocates and another for the judges, and ends with up to 7 distinct models reached through one routing service. At each step you measure what changes in quality and what changes in cost; the lasting lesson is the trade-off between the number of distinct models and the cost of a run, within a set budget." },
+    { "title": "Check what you believe about cost", "text": "The belief that running 7 agents must be expensive is a misperceived constraint, because free and very low-cost models reached through OpenRouter make it nearly free. Which models are free will change, so you test such a belief rather than obey it." },
+    { "title": "Context is a budget of money", "text": "Every token in the context window is paid for on every call. A standing context of 10,000 tokens carried into every call of a session is not a single cost but a tax on all the work that follows, so context is 2 budgets at once: one of attention and one of money." },
+    { "title": "Every tool costs twice", "text": "A tool given to an agent costs tokens, because its full description sits in the context window on every call whether or not it is used, and it costs decisions, because the agent must weigh it each time it chooses what to do. Give the agent the few tools the task needs, and load others only on demand." },
+    { "title": "Count every call in one place", "text": "In the Tribunal, every model call goes through one client, because the call log is the only record of what a run cost and a call made outside it is invisible to the budget. The log records for each call the model, the agent role, the prompt and completion tokens, the cost, the latency and the outcome." },
+    { "title": "Orchestration multiplies tokens", "text": "Each added agent adds its tokens and the context passed to it; running agents in parallel saves time but not tokens, and N independent versions cost close to N times one. Make the arrangement only as large as the task repays, estimate the multiple before you build, and measure it after: on the Tribunal's analytics screen, building 3 displays in parallel cost 3.1 times one display and bought time, but cost more than the time was worth on a task that size." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "Your app loads a context of 10,000 tokens at the start of each session and carries it into every model call. The app makes many calls a day. What does this context cost?",
+      "options": [
+        ["a", "Nothing extra, because the context is loaded only once."],
+        ["b", "Its tokens once a day, when the first session starts."],
+        ["c", "Its tokens again on every call, in money as well as in the model's attention."],
+        ["d", "Nothing, as long as the context window is not full."]
+      ],
+      "correct": "c",
+      "right": "Correct. A standing context is billed again with every call, so it is a tax on all the work that follows.",
+      "wrong": "Not quite. Read idea 4 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "You have moved the Tribunal's 3 judges onto 3 different models. How do you find out whether the move was worth it?",
+      "options": [
+        ["a", "Compare the protocols and the budget files of runs before and after the move."],
+        ["b", "Check that the new models are newer than the old one."],
+        ["c", "Count how often the 3 judges now agree."],
+        ["d", "Ask one of the judges whether its verdict improved."]
+      ],
+      "correct": "a",
+      "right": "Correct. Each step of the progression is judged by what changed in quality and what changed in cost, and the 2 files of a run show both.",
+      "wrong": "Not quite. Read idea 1 and idea 2 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "For a quick test, a teammate calls a model directly from a script instead of through the project's model client. The test works. What is the problem?",
+      "options": [
+        ["a", "Direct calls are always slower."],
+        ["b", "The call does not appear in the call log, so its cost is invisible to the budget."],
+        ["c", "Direct calls cannot use free models."],
+        ["d", "There is no problem, because it was only a test."]
+      ],
+      "correct": "b",
+      "right": "Correct. The call log is the only record of what a run cost, and a call made outside the client escapes it.",
+      "wrong": "Not quite. Read idea 6 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "Your agent has 12 tool servers loaded, and today's task needs 2 of them. Why does this matter?",
+      "options": [
+        ["a", "It does not matter, because unused tools are never sent to the model."],
+        ["b", "It matters only if the agent calls one of the unused tools."],
+        ["c", "It matters only for security, not for cost."],
+        ["d", "Each loaded tool takes tokens on every call and is one more choice the agent must weigh."]
+      ],
+      "correct": "d",
+      "right": "Correct. Every tool costs twice, in tokens and in decisions, so you give the agent the few the task needs.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Take one arrangement of agents in your own project, or in the Tribunal, as a design on paper. Count the agents, the context each one is handed and any independent versions, and estimate how many times the token use of a single agent it will consume. Then say what it buys that one agent could not.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "The Tribunal's panel sets 7 agents to work: 4 advocates, each handed the charge sheet and its own profile, and 3 judges, each handed the charge sheet, all 4 speeches and its own profile. So the judges carry more context than the advocates, and the run uses several times the tokens of one agent writing one answer. What it buys is independence: 3 judges who measure different quantities, and who may disagree, show the user what a single answer would hide. The estimate is checked afterwards against the budget file, which records the tokens of each agent."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Your own project calls a model. Describe what its record of each call should hold, and explain why that record is kept apart from the result the user reads.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "Each call is recorded with its time, the model, the agent role, the prompt tokens, the completion tokens, the cost, the latency and the outcome, and every call passes through one client so that none is missed. From that record you can see what a run cost, where the tokens went and why one run cost more than another. It is kept apart from the result, as the Tribunal keeps its budget apart from its protocol, because it answers a different question: not what was concluded, but what the conclusion cost in money."
+    }
+  ]
+}

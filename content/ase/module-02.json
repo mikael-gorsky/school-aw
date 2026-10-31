@@ -1,0 +1,88 @@
+{
+  "n": 2,
+  "reading": "Chapter 2, The human role: what erodes and what compounds: all sections, 2.1 to 2.10",
+  "intro": "If the agent now writes most of the code, what is left for you to do? This module shows that your value moves to a different set of skills: some erode, some hold and some compound as the agent improves. You will learn why the boundary falls where it does, which 4 hazards come with the new way of working, and why you stay accountable for the software you deliver.",
+  "ideas": [
+    { "title": "Used for everything, delegated for almost nothing", "text": "Agents take part in most of the work, but very few tasks can be handed over completely and then left alone. The gap follows from a fixed fact: the agent can produce work, but it cannot be the one who decides whether the work is correct and wanted." },
+    { "title": "Erodes, holds, compounds", "text": "A skill erodes when the agent performs it well enough that your own ability matters less each year. A skill holds when the agent cannot perform it reliably. A skill compounds when the agent's growing power makes it more valuable, because it decides how well all the agent's work is used." },
+    { "title": "What compounds", "text": "Framing the problem, designing the overall shape of the system, judging the quality of the agent's output and deciding what is worth building all compound. When building is fast and cheap, only judgment stands between an idea and its construction, so judgment must do the work that cost once did." },
+    { "title": "Judgment is learned through the work that erodes", "text": "You learn to tell good code from bad by writing a lot of code yourself. If the agent writes all the code, a new engineer never builds that judgment, so you must keep practicing some of the work the agent could do, because the practice keeps judgment alive." },
+    { "title": "We know more than we can tell", "text": "Polanyi showed that much expert skill is tacit: it lives in practice and cannot be written down in full. A model learns from written text, so it takes in the explicit skills that erode and misses the tacit ones that compound. A useful test for any skill is whether it could be taught completely from a book." },
+    { "title": "4 hazards", "text": "The 4 hazards are the erosion of your own skill, the black-box codebase that nobody understands, the responsibility gap when an outcome has many authors, and the bias the model carries from its training. Each has its own remedy: deliberate practice, review, the audit trail, and clear framing and context." },
+    { "title": "The engineer remains accountable", "text": "You are accountable for the software you deliver, whatever produced it. Deciding what done means, setting the standard and approving the result cannot be given to the agent, and a record of decisions, a clear specification and a gate close the responsibility gap in practice." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "You place reviewing a colleague's pull request in the holding group, because an agent cannot review reliably. The book argues it belongs in the compounding group. Why?",
+      "options": [
+        ["a", "Reviewing is now done well by agents, so it erodes."],
+        ["b", "Reviewing is the most important task of the week."],
+        ["c", "Reviewing produces no code, and anything without code compounds."],
+        ["d", "The value of review rises with the volume of code agents produce, which is a different question from whether an agent can do it."]
+      ],
+      "correct": "d",
+      "right": "Correct. Holding asks whether the agent can perform the skill; compounding asks whether the skill is worth more as the agent improves.",
+      "wrong": "Not quite. Read idea 2 again, and note that holding and compounding are 2 different tests."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "Which of these tasks belongs most clearly in the eroding group?",
+      "options": [
+        ["a", "Writing a single function to a precise description of its inputs, output and behavior."],
+        ["b", "Finding the cause of a failure never seen before in this particular system."],
+        ["c", "Deciding that a feature 3 teams asked for is the wrong answer to their real need."],
+        ["d", "Choosing between 2 correct designs that carry different costs."]
+      ],
+      "correct": "a",
+      "right": "Correct. A task that can be stated precisely in advance is exactly what the agent needs in order to succeed, so your own ability to do it by hand matters less.",
+      "wrong": "Not quite. Read idea 2 and idea 3 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "According to the book, why can a model take the routine skills so well and miss the judgment that compounds?",
+      "options": [
+        ["a", "Routine skills need less computing power."],
+        ["b", "A model learns from written text, so it takes in what has been made explicit and misses tacit knowledge that was never written down."],
+        ["c", "The companies that build models choose not to train them on judgment."],
+        ["d", "Judgment is forbidden to agents by their permissions."]
+      ],
+      "correct": "b",
+      "right": "Correct. In Polanyi's terms, the skills that erode are largely explicit and the skills that compound are largely tacit.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "A program built in one afternoon passes every test. 6 months later its own engineer cannot say how it works. Which hazard is this, and what answers it?",
+      "options": [
+        ["a", "The responsibility gap, answered by the audit trail."],
+        ["b", "The model's bias, answered by framing and context."],
+        ["c", "The black-box codebase, answered by review."],
+        ["d", "The erosion of skill, answered by buying a better tool."]
+      ],
+      "correct": "c",
+      "right": "Correct. The understanding that slow construction would have produced was never produced, and review is the discipline that protects against it.",
+      "wrong": "Not quite. Read idea 6 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "List 3 tasks from your own work on your project or the Tribunal this week. Place each as eroding, holding or compounding, and give one sentence of reasoning for each. Then name one eroding skill you will still practice by hand, and why.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "Each placement should rest on what the agent can do with the task and how that changes the value of the skill, not on how important or enjoyable the task is. For example, writing a standard screen to a clear description erodes, tracing a failure tied to this system's own history holds, and deciding which feature is worth building compounds. A skill you keep practicing by hand needs its own reason, such as keeping the judgment you need to review the agent's version of that work."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "An agent proposed the project structure, the framework and the test layout, and you accepted all 3 without asking why. 6 weeks later nobody can explain why they were chosen. What was lost, and what could you have done at the time in less than 10 minutes?",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "The defaults may not have been wrong, but they were unexamined, so the model's defaults quietly became yours and the reasons were never recorded. This is the hazard of the model's bias, and it also weakens the record that lets you answer for your decisions. In a few minutes you could have asked the agent why it chose each one and what the alternatives were, decided to keep or replace each, and written down the reason."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "n": 10,
+  "reading": "Chapter 6, Framing, specification, and the co-evolution spiral: sections 6.4 to 6.6 (section 6.3 on framing belongs to module 6)",
+  "intro": "In module 6 you framed a project: its problem, its people, its definition of done and what it will not do. This module carries that framing into a specification, the document the agent builds from. You learn what a complete specification contains, how to let the agent find its gaps, and why you revise it after every build in the turns of the co-evolution spiral. In agentic work the specification, not the code, is your deliverable, so this is where the quality of your work is decided.",
+  "ideas": [
+    { "title": "The specification is the deliverable", "text": "The agent writes the code, and your craft moves to the specification, which decides what the agent builds. Effort spent on the specification improves everything built from it, while polishing code built from a vague specification improves only one instance of the wrong thing." },
+    { "title": "Knuth's 5 criteria as the aim", "text": "Knuth's 5 criteria for an algorithm are finiteness, definiteness, input, output and effectiveness. A specification in natural language cannot meet them exactly, but it aims at them by naming its inputs and outputs, defining its terms and saying when the task is done." },
+    { "title": "The 5 parts of a complete specification", "text": "A complete specification has a goal with its reason, testable success criteria, architectural guidance, a validation approach and the known pitfalls. Each part answers a question that the agent would otherwise settle for itself, silently and perhaps wrongly." },
+    { "title": "Every gap is a shape of agent failure", "text": "Each missing part produces a failure you can recognize: a malformed result points to missing success criteria, a literal but wrong result to a missing reason, a duplicated structure to missing guidance, an unchecked result to a missing validation approach, and a familiar problem returning to missing pitfalls. When the agent's work is confident and wrong, examine the specification before you argue with the agent." },
+    { "title": "A brief must contain 5 things and leave 4 open", "text": "Before anyone can build from a brief, it must state the situation, the user, some statement of success, the fixed constraints and who decides. It should leave open the means, the shape of the solution, the order of building and anything nobody cares about. When a brief is silent, ask whether the silence is open on purpose and who decides, or ask whether filling the gap would change what the result is for." },
+    { "title": "The reverse interview", "text": "You write a short sketch and direct the agent to ask you questions, one at a time, until it can draft the specification. Its questions fall on exactly what your sketch left unsaid. The answers, and the reading and approval of the whole draft, stay with you." },
+    { "title": "A hypothesis revised in a spiral", "text": "A specification is a hypothesis about what is wanted and what will work, and only a build can test it, as the crash of Lufthansa Flight 2904 shows. Each turn of the co-evolution spiral revises intent, updates context, makes the ground safe, builds, verifies and reviews. At the commit point you lock what use has confirmed and leave open what is still contested, and you watch for the 4 signs of drift: turns that repeat, scope that grows without a milestone, intent that wanders and a purpose nobody can state." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "You tell an agent to make the Tribunal's judges agree more often. It makes the 3 judges identical, and agreement rises to 100%. Which part of the specification was missing?",
+      "options": [
+        ["a", "Testable success criteria"],
+        ["b", "The reason behind the goal"],
+        ["c", "Architectural guidance"],
+        ["d", "The known pitfalls"]
+      ],
+      "correct": "b",
+      "right": "Correct. The agent met the letter of the goal and destroyed its point, because nobody told it the system exists to show disagreement.",
+      "wrong": "Not quite. A literal but wrong result points to one particular missing part. Read idea 4 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "A specification says: a judge receives the charge sheet and its profile, returns justified or not justified with at least 2 reasons from the charge sheet, and is complete when both are present. Which of Knuth's 5 criteria does it leave to the agent?",
+      "options": [
+        ["a", "Input"],
+        ["b", "Finiteness"],
+        ["c", "Definiteness"],
+        ["d", "Effectiveness"]
+      ],
+      "correct": "d",
+      "right": "Correct. Weighing reasons is not an operation someone could perform mechanically with pencil and paper, so effectiveness is left to the agent.",
+      "wrong": "Not quite. The specification names its input, its output, its terms and its point of completion. Read idea 2 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "You run a reverse interview on a 2-line sketch of a feature. The agent asks 7 questions. What is your part from here?",
+      "options": [
+        ["a", "Answer each question with care, then read and approve the whole draft the agent writes."],
+        ["b", "Let the agent answer its own questions, since it knows best what it needs."],
+        ["c", "Approve the draft once its summary looks right."],
+        ["d", "Skip the questions you find minor, since the agent will make sensible choices."]
+      ],
+      "correct": "a",
+      "right": "Correct. The agent finds the gaps, but the answers and the approval of the whole draft remain yours.",
+      "wrong": "Not quite. The specification is only as good as the answers you give. Read idea 6 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "A turn of the spiral has ended. Which decision should you lock at the commit point?",
+      "options": [
+        ["a", "A decision that won the argument in a team discussion but has not been tried yet"],
+        ["b", "Every open decision, so the next turn does not reopen anything"],
+        ["c", "A decision that use has confirmed and that has held steady across several turns"],
+        ["d", "The choice of which models back the judges, so the build stays stable"]
+      ],
+      "correct": "c",
+      "right": "Correct. You lock what is confirmed through use and steady across turns, and leave open what is still uncertain.",
+      "wrong": "Not quite. Locking too much too early freezes false certainty. Read idea 7 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Pick one feature of your individual project, or a single Tribunal judge. Write one line for each of the 5 parts of its specification.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "For a single Tribunal judge: the goal is a judge that reads the charge sheet and gives a ruling, because the system exists to show reasoned disagreement rather than hand the user one answer. The success criteria are a verdict of exactly justified or not justified and at least 2 reasons drawn from the agreed record. The architectural guidance is that the judge reads the existing charge sheet and its profile, alters neither, and combines no verdicts. Validation is your reading of each part of the ruling against what a judge is required to give. The known pitfalls are that a judge sometimes returns prose instead of a structured ruling, and may present an inference as part of the record."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "A brief for your project says nothing about who will use the result. Is this silence deliberate openness or vagueness? Explain how you would tell, and what you would do.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "The quickest test is to ask whoever wrote the brief whether this is open on purpose and who decides it. If no answer can be had, ask whether the missing decision would change what the result is for. Who the result serves changes its purpose, so this silence is vagueness, however confidently the brief was written. I would not fill it myself, because I would be guessing at what someone else already knows; I would ask, or return the brief as incomplete."
+    }
+  ]
+}

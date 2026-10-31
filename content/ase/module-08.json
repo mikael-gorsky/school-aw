@@ -1,0 +1,88 @@
+{
+  "n": 8,
+  "reading": "No chapter of the textbook covers this module: the book says in About the book that it has no chapter on interface design. Passages that touch it: Chapter 2, section 2.3 (taste, and screens as eroding work); Chapter 6, sections 6.3.2, 6.3.3 and 6.4.5 (the primary usefulness, the user model, leaving the shape of the solution open); The running project: the Tribunal, and Appendix A, Asset 03 (the verdict format); Chapter 7, section 7.3 (the README and the context files); Chapter 10, section 10.7, step 6 (a display that is correct and useless); Chapter 11, section 11.8 (the protocol view); Chapter 12, sections 12.3 and 12.5 (rationale, and documentation that stops being true).",
+  "intro": "This module is about what your user sees and how you describe your app to the people who read about it later. The lesson covers this topic, and the textbook touches it in chapters 2, 6, 7, 10, 11 and 12 and in the Tribunal's verdict format. It matters because an agent can produce a working screen in an hour, but only you can decide who the screen is for and what it must show, and only a true record of the app lets a later engineer change it safely.",
+  "ideas": [
+    { "title": "Screens erode, taste compounds", "text": "Adding a standard screen that lists records and lets the user filter them is eroding work, because an agent produces it in an hour. What grows in value is taste: the developed sense of which interface will be clear to a user and which will confuse, which you need when an agent can offer 10 designs in a minute." },
+    { "title": "State the user model", "text": "Every design has a picture of its user, and the only choice is whether it is stated or hidden. If nobody states it, one engineer builds a Tribunal screen with only the verdicts in large type and another builds one with every argument in full, and you have 2 different products." },
+    { "title": "The purpose decides the screen", "text": "A plain statement of what the project is for settles many interface questions. The Tribunal exists to let the user weigh a hard judgment, so its protocol shows each judge's verdict and reasons separately and carries no summary, no majority and no count of verdicts: the user has to read all 3 rulings." },
+    { "title": "Leave the shape of the solution open", "text": "If a weekly message would serve as well as a dashboard, a brief should say what is wanted and not which of the 2. A brief that also gives an opinion about the color of a button gives a minor matter the same standing as the decisions that matter." },
+    { "title": "A display can be correct and useless", "text": "The first latency chart of the Tribunal plotted the mean latency per hour, which is dominated by the slowest of the 7 calls in a run. Nobody had said which figure answers the question, the agent chose the obvious one, and the fix was to show the distribution instead." },
+    { "title": "The screen needs the right fields", "text": "In the protocol view, a speech panel had to show which advocate spoke for and which against, but the data gave a speech only as text. The worker reported the gap instead of guessing from the advocate's name, which would have been wrong for Hegel, so the interface was fixed to carry what the screen must show." },
+    { "title": "Documentation for 2 readers, and kept true", "text": "A mature project keeps a README written for the engineer beside context files written for the agent, because the 2 readers need different things. A change should carry an account of why it was made, and when a comment and the code disagree, the code is the record of what the system does now." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "A teammate wants to add one line at the top of the Tribunal protocol: \"Panel result: 2 of 3 judges say not justified.\" Why does the Tribunal leave this line out?",
+      "options": [
+        ["a", "The line would take too much space on a phone screen."],
+        ["b", "Counting the verdicts hands the user an answer and moves the judgment from the user to the machine."],
+        ["c", "The judges may change their verdicts after the protocol is written."],
+        ["d", "A count is only allowed when all 3 judges agree."]
+      ],
+      "correct": "b",
+      "right": "Correct. The protocol exists so that the user reads all 3 rulings and stays responsible for the decision.",
+      "wrong": "Not quite. Read idea 3 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "2 students build the screen for the same app. One shows only a short result in large type, the other shows every step of the reasoning. Both screens work. What went wrong first?",
+      "options": [
+        ["a", "Nobody wrote down who the user is, so each student designed for a different guess."],
+        ["b", "One of the students used a weaker agent."],
+        ["c", "The screens were not tested on enough devices."],
+        ["d", "The students should have used the same framework."]
+      ],
+      "correct": "a",
+      "right": "Correct. A stated user model can be argued over and corrected; a hidden one is filled by each person's own guess.",
+      "wrong": "Not quite. Read idea 2 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "An agent builds a chart of response times for your app. It shows the mean per hour, and the chart is accurate but tells you nothing useful. What should your request have said?",
+      "options": [
+        ["a", "Which charting library to use."],
+        ["b", "That the chart must update every second."],
+        ["c", "Which figure answers the question the chart is for."],
+        ["d", "That the agent should try again until the chart looks better."]
+      ],
+      "correct": "c",
+      "right": "Correct. The data offered many figures, and nothing said which of them answered the question, so the agent chose the obvious one.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "A comment in your code says that users are limited to 3 runs a day. The code itself sets no limit. What should you do first?",
+      "options": [
+        ["a", "Add the limit to the code, because the comment states the intended rule."],
+        ["b", "Delete the comment, because the code is always right."],
+        ["c", "Ask the agent which of the 2 is correct and follow its answer."],
+        ["d", "Treat the code as what the system does now, and find out why the 2 differ before you correct either."]
+      ],
+      "correct": "d",
+      "right": "Correct. The comment shows what someone may have meant; you need the reason for the difference before you change anything.",
+      "wrong": "Not quite. Read idea 7 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Write the user model of your own project, or of the Tribunal, in 2 or 3 sentences, even at the risk of being wrong. Then say how it changes what your main screen shows first.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "For the Tribunal: the user is a careful reader who wants to weigh a hard judgment, not someone who wants a quick opinion. The user has time to read and wants to see where thoughtful judges disagree and why. So the main screen shows the 3 rulings side by side, each with its verdict and its reasons, and offers the 4 speeches behind them; it shows no summary and no count, because those would hand the user an answer. If evidence from real users shows this model is wrong, the stated model can be corrected."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "List what the README of your project should tell a new engineer and what its context file should tell the agent. Name at least one thing that belongs in only one of the 2, and say why.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "The README tells a new engineer what the app is for, who uses it, how to run it and where its parts live. The context file tells the agent the facts it must hold on every task, such as that every model call goes through one client because the call log is the only record of what a run cost, and that a change to the shape of the charge sheet must be raised with the engineer first. How to run the app on your own machine belongs in the README, because the agent does not need it on every call. A collaboration rule, such as when to stop and ask, belongs in the context file, because it tells the agent how to work with you."
+    }
+  ]
+}

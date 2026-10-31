@@ -1,0 +1,88 @@
+{
+  "n": 3,
+  "reading": "Chapter 3, Mental models of the LLM: all sections, 3.1 to 3.11",
+  "intro": "To direct an agent well, you need an accurate picture of how it takes in the world and acts in it. This module builds 5 mental models: the context window, the tools, the plan, the 4 failure modes and the jagged frontier. Each one names a place where an intuition trained on human colleagues will mislead you, and each is met by a discipline you will learn later in the course.",
+  "ideas": [
+    { "title": "An LLM, with tools and a loop", "text": "A coding agent is a large language model plus a set of tools through which it acts and a loop that feeds it the results of its actions. The LLM decides what the agent perceives, how it plans and how it fails; the tools and the loop in the harness decide what it can do and how much harm a mistake can cause." },
+    { "title": "The context window is the agent's entire world", "text": "Everything the agent knows in a session lives in its context window, and there is nothing behind it. From this follow 3 consequences: it has no memory outside the window, it cannot tell what knowledge it lacks, and more context is not always better, because attention weakens as the window fills." },
+    { "title": "The agent acts only through its tools", "text": "The tools an agent holds define completely what it can do, and they fix its blast radius, the reach of the damage if it acts wrongly. You learn what an agent can do by examining its tools, not its confidence, and to be certain it cannot do something you withhold the tool rather than tell it to refrain." },
+    { "title": "The plan is only as good as the context behind it", "text": "A plan is the LLM's best guess at a good sequence of steps, delivered with the same confidence whether it is right or wrong. You judge it by its content, read against your own understanding of the task, and reading it before the agent acts is the cheapest verification step there is." },
+    { "title": "4 ways the agent fails", "text": "Hallucination produces something plausible and false; misalignment solves the wrong problem correctly; ambiguity collapse silently picks one meaning of an unclear instruction; sycophancy agrees when it should object. The remedies are checking against a source of truth, specification, making the agent raise the ambiguity, and asking it to act as a critic." },
+    { "title": "The jagged frontier and calibrated trust", "text": "The agent does some hard-looking tasks superbly and fails at some simple ones, because its competence follows its training data, not human difficulty, and each LLM has its own frontier. You learn where the frontier lies by watching it in your own work, and you extend calibrated trust: more where it is reliably strong, less where it is weak, and a gate for misjudgments." },
+    { "title": "The agent has no stake in the outcome", "text": "The agent never meets the consequences of its work, and its training rewarded answers judged acceptable at the moment they were read. Its work therefore arrives looking finished, and you must supply through framing and verification the care that a human colleague's stake used to provide." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "Yesterday an agent's work matched your project's naming and structure. Today, in a fresh session, similar work comes back in a different style. What is the most likely cause?",
+      "options": [
+        ["a", "The model was replaced overnight with a weaker one."],
+        ["b", "The conventions were in yesterday's conversation but not in any file that a new session loads."],
+        ["c", "The agent became careless because the task was repeated."],
+        ["d", "The context window was too small to hold the task."]
+      ],
+      "correct": "b",
+      "right": "Correct. The agent carries nothing between sessions, so whatever it must know has to be placed in its context window every time.",
+      "wrong": "Not quite. Read idea 2 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "You must be certain that an agent cannot delete files in production. Which control does the book say is most reliable?",
+      "options": [
+        ["a", "A clear instruction in the prompt never to delete anything in production."],
+        ["b", "Asking the agent to confirm that it understands the rule."],
+        ["c", "Not giving the agent any tool that can delete files in production."],
+        ["d", "Choosing a model with a higher benchmark score."]
+      ],
+      "correct": "c",
+      "right": "Correct. An instruction can be misread or circumvented, but the agent has no way to perform an action for which it holds no tool.",
+      "wrong": "Not quite. Read idea 3 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "Asked to make the search return better results, an agent sorts them by date and never asks whether better means newer or more relevant. Which failure mode is this?",
+      "options": [
+        ["a", "Ambiguity collapse."],
+        ["b", "Hallucination."],
+        ["c", "Sycophancy."],
+        ["d", "A jagged frontier."]
+      ],
+      "correct": "a",
+      "right": "Correct. The instruction had more than one reasonable meaning, and the agent silently chose one without telling you a choice was made.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "An agent applies the same tedious change to 40 files without a slip, then miscounts the letters in a long word. What does calibrated trust ask you to do?",
+      "options": [
+        ["a", "Stop trusting the agent at all, since it fails at simple tasks."],
+        ["b", "Trust it fully, since it handles hard tasks well."],
+        ["c", "Judge each task by how hard it would be for a person."],
+        ["d", "Learn from observation where it is reliably strong or weak in your work, and keep a gate for misjudgments."]
+      ],
+      "correct": "d",
+      "right": "Correct. The frontier does not follow human difficulty, so trust is drawn from your own observation and kept up to date.",
+      "wrong": "Not quite. Read idea 6 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "An agent plans to add a preferred language to the sign-up form, store it, and use it for the welcome email. You know 3 things it was not shown: accounts also come from a nightly partner import, the email service supports fewer languages than the form would offer, and the list of languages is kept by the translation team in a shared file. Which assumptions does the plan make, and what should you do next?",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "The plan assumes that every account is created through the form, that the email service can send in every language the form offers, and that the agent may define its own list of languages. Each assumption is refuted by one of the 3 facts, and each would change a step: the default for imported accounts, the choice of email language, and where the list comes from. Rather than patch the plan, you supply the missing facts and ask again for a plan that states its assumptions, because the fault lies in the context the agent was given."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Take one piece of work on your own project where you trust the agent without checking. Check it thoroughly once. What did you find, and what does it tell you about where the frontier lies?",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "Either outcome is a result. If the check finds a fault, you have found a place where your trust ran ahead of the agent's real ability, and that kind of work needs a check from now on. If it finds nothing, you have evidence that this agent is reliably strong on this kind of work, which is what calibrated trust is built from. In both cases you write down what was checked, because the map has to be updated as you go and whenever the model changes."
+    }
+  ]
+}

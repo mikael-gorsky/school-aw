@@ -1,0 +1,88 @@
+{
+  "n": 11,
+  "reading": "Chapter 7, Context engineering: the agent's briefing",
+  "intro": "The agent knows only what its context window holds, so the context you give it decides most of how well it works. This module treats context in 3 ways: as a budget you spend with care, as context files you design like code, and as a system you keep current. You also learn to keep a lessons-learned file and to recognize the 5 ways context fails.",
+  "ideas": [
+    { "title": "Context outweighs the model", "text": "A model is the same for everyone who calls it, and what differs is the context each engineer gives it. Over the range that matters in daily work, better context yields more than a better model, which is why the field moved from prompt engineering to context engineering." },
+    { "title": "Context is a budget, not a container", "text": "The window is finite, and a model attends most to the start and the end and least to the middle. Every token is also paid for on every call, and a fresh session has already spent part of the window on instructions, tool descriptions and loaded files. Every tool you add costs tokens and costs the agent decisions." },
+    { "title": "Curate, place, and subtract before you add", "text": "Deciding what goes into the context matters more than how it is worded. Put the most important material early, plainly and under a clear heading. When the agent errs, try removing what hides the instruction before you add a new one." },
+    { "title": "Context files are designed artifacts", "text": "The context files are the agent's only memory between sessions, so you write them with the care you give code: readable to the agent, readable to you, and focused. Static context loads on every call and must stay lean, while dynamic context is fetched for a task, and progressive disclosure loads more only when a step needs it. A rule that is present is not thereby obeyed; its prominence and position decide whether it is heeded." },
+    { "title": "The 4 kinds of content", "text": "A good context file opens by saying what the project is, then covers standards and processes, code-quality expectations, problem-solving heuristics and collaboration protocols. A fact that every specification would otherwise repeat belongs in the context, and a rule for one task belongs in that task's specification." },
+    { "title": "The lessons-learned file", "text": "When the agent has to be corrected, you have it write the rule that the correction implies into a companion file, which it reads back at the start of the next task. A lesson is a rule that changes future behavior, such as \"state the output format at the head and the foot of the prompt\", not a complaint." },
+    { "title": "Maintain context and know its 5 failures", "text": "Context decays silently, so you review it at the commit point of every turn: strike what is stale, fix what has drifted, add what is missing. Context fails in 5 ways: excessive, stale, contradictory, implicit and scolding, and each has its own remedy." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "A rule stated plainly on line 200 of a crowded context file keeps being broken. What is the best repair?",
+      "options": [
+        ["a", "Repeat the rule in capital letters at the end of the file."],
+        ["b", "Switch to a stronger model."],
+        ["c", "Make the rule prominent near the top, or cut the file until prominence is not needed."],
+        ["d", "Add 2 examples of the rule right after it."]
+      ],
+      "correct": "c",
+      "right": "Correct. The rule was available but not heeded, because of where it sat among much else.",
+      "wrong": "Not quite. The rule was present; its position decided whether it was followed. Read ideas 3 and 4 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "Which entry belongs in a lessons-learned file?",
+      "options": [
+        ["a", "Demand the fixed verdict form twice, at the head of the judge's prompt and at its foot."],
+        ["b", "The output was in the wrong format again today."],
+        ["c", "The judge model was annoying this morning."],
+        ["d", "A full transcript of the session in which the error happened."]
+      ],
+      "correct": "a",
+      "right": "Correct. It is a rule that tells the next session what to do.",
+      "wrong": "Not quite. A lesson must change future behavior, not record a complaint or an incident. Read idea 6 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "A context file says: \"Call the models following our standard pattern.\" Which failure mode is this?",
+      "options": [
+        ["a", "Excessive context"],
+        ["b", "Stale context"],
+        ["c", "Scolding context"],
+        ["d", "Implicit context"]
+      ],
+      "correct": "d",
+      "right": "Correct. It names a convention without stating it, so the agent learns nothing from it. The remedy is to write the pattern down.",
+      "wrong": "Not quite. Ask what the agent can know about \"our standard pattern\" from the file alone. Read idea 7 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "A rule says that a judge must never see the other judges' verdicts. It matters only when the agent works on a judge. Where does it belong?",
+      "options": [
+        ["a", "In the root context file, so it is always loaded"],
+        ["b", "In a smaller context file in the judges' directory"],
+        ["c", "In the lessons-learned file"],
+        ["d", "Repeated in every task's prompt"]
+      ],
+      "correct": "b",
+      "right": "Correct. A rule for one part of the project goes in a scoped file there, so that what loads on every call stays lean.",
+      "wrong": "Not quite. Static context is paid for on every call. Read idea 4 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "For the Tribunal or your own project, write one rule under each of the 4 kinds of content a context file holds. Give each rule its reason.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "Standards and processes: every model call goes through the OpenRouter client, because the call log is the only record of what a run cost. Code-quality expectations: a failed model call is shown to the user as a failure and never as a verdict, because a hidden failure would look like a judgment. Problem-solving heuristics: look for an existing home for data before creating a new store, so that the agent does not build a second database beside the first. Collaboration protocols: any change to the refusal to combine verdicts goes to the engineer for decision, because that refusal is the reason the Tribunal exists."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "A teammate says: \"The window is huge and tokens are cheap, so let's load all the project's documentation into every session.\" Answer in 3 to 5 sentences.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "The price of tokens is not the main problem. A model attends most to the start and the end of its context and least to the middle, so the few things that matter get hidden among the many that do not. Excessive context produces worse work than a focused context a fraction of its size, sometimes work that contradicts itself. Give the agent the least that will serve, put the essential rules where attention is strongest, and let it fetch more only when a step needs it."
+    }
+  ]
+}

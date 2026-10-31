@@ -1,11 +1,15 @@
 {
   "n": 1,
-  "intro": "This module sets the subject as a discipline. It traces the long line of handovers from hand-written code to directing an agent, asks how much of the decision the agent now makes, and sets the course rhythm of equipping the agent and then verifying its work.",
+  "reading": "Chapter 1, What is agentic software engineering?: all sections, 1.1 to 1.10",
+  "intro": "This module sets out agentic software engineering as a discipline, not a tool skill. You will learn its 3 duties, respect, equip and verify, and see why the gap between how fast an agent produces work and how fast you can check it makes the discipline necessary now. You will also learn to place any coding tool on the autonomy scale and to say what its level asks of you.",
   "ideas": [
-    { "title": "A discipline, not a tool", "text": "Agentic software engineering is a body of practice with durable principles, a method that can be learned, and characteristic faults that a practitioner learns to see." },
-    { "title": "A long line of handovers", "text": "Programming has moved from hand-written code to directing an agent. Each step hands more of the decision to the machine." },
-    { "title": "The course rhythm", "text": "Each piece of work follows the same rhythm: equip the agent, then verify its work." },
-    { "title": "The central tension", "text": "The speed of production has outrun our ability to trust the result. The whole course answers this tension." }
+    { "title": "Good software has 9 qualities", "text": "What makes software good is set by an industry standard, not by taste: functional suitability, reliability, security, maintainability, usability, efficiency, compatibility, portability and flexibility, and safety. Every practice in the course exists to secure one or more of these qualities." },
+    { "title": "A discipline, not a tool", "text": "What separates good work with an agent from casual work is not skill at writing prompts. It is the structure placed around the agent's work: a frame for the problem, a written outcome, a prepared context, a measured grant of tools and permissions, a set of limits, and a check at the end." },
+    { "title": "A long line of handovers", "text": "The history of programming is a history of handing work from the person to the machine, one layer at a time. Each handover moved the engineer's worth to the discipline of directing the machine well, and agentic software engineering is where that worth has moved now." },
+    { "title": "The autonomy scale", "text": "Tools are placed on a scale from level 1 (no model) through 1.5 (line completion), 2 (a whole task) and 3 (a goal across many files) to levels 4 and 5, which are specialized and general autonomy. A higher level is not better: it decides more, so it must be equipped and checked with more care, and it asks for a different kind of attention." },
+    { "title": "Respect, equip, verify", "text": "You respect the agent as a capable collaborator whose work is taken seriously and still checked. You equip it before it acts with the right problem, specification, context, tools and permissions, and limits. You verify after it acts, with tests, type checks, careful reading and a gate." },
+    { "title": "The agent is the model plus the harness", "text": "An agent is its model together with the instructions, context, tools, limits and checks placed around it, which is called the harness. You were given the model, but you build the harness, and the harness decides much of whether the model's work is useful." },
+    { "title": "Speed has outrun trust", "text": "Agents produce code faster than the people who receive it can check it. The hard part is no longer getting work from an agent but establishing that the work is sound, and work that only looks finished builds a quiet backlog of changes that must be opened again." }
   ],
   "slides": "",
   "recording": "",
@@ -13,37 +17,72 @@
     {
       "id": "e1",
       "kind": "choice",
-      "question": "Which tension does this course set out to answer?",
+      "question": "2 engineers give the same agent the task of adding password reset. One gets work that fits the system cleanly, the other spends days undoing wrong guesses. According to the book, what made the difference?",
       "options": [
-        ["a", "The speed of production has outrun our ability to trust the result."],
-        ["b", "Models are still too expensive for everyday coding."],
-        ["c", "Most developers refuse to hand work to an agent."],
-        ["d", "Agents cannot yet write code that compiles."]
+        ["a", "The first engineer wrote a cleverer and longer prompt."],
+        ["b", "The first engineer used a tool with a higher autonomy level."],
+        ["c", "The first engineer placed the work inside a structure: a frame, a written outcome, context, limits and a final check."],
+        ["d", "The first engineer let the agent settle the open points by its own judgment."]
       ],
-      "correct": "a",
-      "right": "Correct. Module 1 names this tension, and the rest of the course answers it.",
-      "wrong": "Not quite. Read idea 4 again."
+      "correct": "c",
+      "right": "Correct. The book says the second engineer composed no cleverer instructions; the difference was the structure around the agent's work.",
+      "wrong": "Not quite. Read idea 2 again."
     },
     {
       "id": "e2",
       "kind": "choice",
-      "question": "How does this course describe agentic software engineering?",
+      "question": "A tool is given a goal, reads the project, lists 30 files it will change, waits for approval, then edits them and runs the full test suite. Where does it sit on the autonomy scale?",
       "options": [
-        ["a", "A discipline with durable principles, a method that can be learned, and characteristic faults."],
-        ["b", "A set of tools that write code faster than a person can."],
-        ["c", "A way to replace programmers with agents."],
-        ["d", "A style of writing prompts for coding assistants."]
+        ["a", "Level 1.5, because it waits for approval before it acts."],
+        ["b", "Level 2, because it works on one task at a time."],
+        ["c", "Level 4, because it works without help once approved."],
+        ["d", "Level 3, because it takes a goal, plans the steps and edits many files."]
       ],
-      "correct": "a",
-      "right": "Correct. The course treats it as a discipline, not as a tool.",
-      "wrong": "Not quite. Read idea 1 again."
+      "correct": "d",
+      "right": "Correct. Taking a goal rather than a task, planning and editing across the project is level 3; asking for approval does not lower the level.",
+      "wrong": "Not quite. Read idea 4 again."
     },
     {
       "id": "e3",
+      "kind": "choice",
+      "question": "An agent writes a change and the tests it wrote for it, and all tests pass. Why does the book say this establishes less than it appears to?",
+      "options": [
+        ["a", "The agent wrote the tests from the same understanding it built against, so a shared misreading would make code and tests agree and both be wrong."],
+        ["b", "Tests written by an agent are never run correctly."],
+        ["c", "Passing tests only matter for tools at level 4 or above."],
+        ["d", "The tests should have been written after the code was merged."]
+      ],
+      "correct": "a",
+      "right": "Correct. You check against the specification, including the points the tests were not asked to cover, not against the impression that it runs.",
+      "wrong": "Not quite. Read idea 7 again, and the part of idea 5 on verifying."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "Why does the book say that equipping and verifying are both needed, rather than one being enough?",
+      "options": [
+        ["a", "Equipping is only for beginners, and verifying is only for experts."],
+        ["b", "Equipping lowers the chance of errors before the agent acts, and verifying catches the errors that remain after it acts."],
+        ["c", "Verifying is required by law, while equipping is optional."],
+        ["d", "They are 2 names for the same caution, used at different times."]
+      ],
+      "correct": "b",
+      "right": "Correct. They are 2 different defences: without verifying you trust that no error escaped, and without equipping you spend effort catching errors better aim would have prevented.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e5",
       "kind": "short",
-      "question": "In 2 or 3 sentences, explain why fast production of code creates a problem of trust.",
+      "question": "You are asked to 'make this faster' about a module that produces a monthly sales report. Using the 5 parts of equipping as a checklist, say what the instruction fails to say, and rewrite it so that the agent could not make the report harder to change.",
       "help": "Write your own answer first, then compare it with the teacher's answer.",
-      "model": "Agents now write code faster than a person can read and check it. If the engineer cannot verify the result, more speed only produces more code that nobody can trust. The course therefore teaches how to equip the agent and then verify its work."
+      "model": "The instruction gives no real problem or specification: it does not say which kind of speed matters, on what input, or what may be given up to get it. It also supplies no context about how the report is maintained, and sets no limits on what the agent may change. A better instruction says that the report must run faster on a full month of real orders, that readability and ease of change must not get worse, that the currency check must stay, and that the agent should return a plan before it changes any code."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Think of the next task you will give an agent on your own project. Write down how you will equip it in all 5 parts, and name the one check you will make afterward that the agent's own tests would not cover.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "A good answer names the intent behind the request rather than the request itself, then writes a specification that fixes the decisions the agent would otherwise make silently. It points the agent at the files and conventions that decide whether the result fits the project, states which tools it may use and which it may not, and limits what it may change, asking for a plan first. The check afterward is taken from the specification, for example a case confirmed by hand that the tests were not asked to cover."
     }
   ]
 }

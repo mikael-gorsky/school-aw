@@ -1,0 +1,88 @@
+{
+  "n": 15,
+  "reading": "Chapter 11, Designing multi-agent workflows: sections 11.1 to 11.10",
+  "intro": "Module 14 gave you the parts of a multi-agent build. In this module you learn to compose them into a workflow you write down, review and trust before any agent runs. You will learn to place each rule at the right level of control, to match the arrangement to the task, to build the interfaces between agents in code, and to use the 3 patterns of cooperation.",
+  "ideas": [
+    { "title": "3 levels of control", "text": "Part of an arrangement can be left to the tool, part fixed in code, and part entrusted to an agent's instructions. Code runs the same way every time, and instructions are more flexible but less predictable, so the decisions that must be reliable are kept in code." },
+    { "title": "The coordination design", "text": "Before any agent runs, you write down 5 things: which patterns are used and where, each agent's role and boundary, how work passes between agents and how it is watched, how a failure is handled, and what the arrangement costs and gains. Because it is written in advance, another engineer can review it while a correction is still cheap." },
+    { "title": "Divide, watch and handle failure in code", "text": "The division of work, the watching of progress and the handling of a failed agent are rules that must be dependable, so they belong in the code that dispatches the agents. A failure plan picks one of 4 choices: retry, reassign, use a simpler result, or stop and escalate to you." },
+    { "title": "Match the effort to the task", "text": "Most ordinary work needs no explicit arrangement at all. A middling task needs a short chain of 2 or 3 agents, a complex task needs an orchestrator with watching and escalation, and high stakes add further checks. Over-orchestration and under-orchestration are both real mistakes." },
+    { "title": "Interfaces are code", "text": "Agents coordinate through the interfaces between them, which are code and data contracts. Pass structured data across each handoff instead of flattening it to prose and back, and check at each boundary that the contract was met, because information lost at an interface fails quietly." },
+    { "title": "3 patterns of cooperation", "text": "A role-based division of labour, an agent that reviews another's work, and a dedicated evaluator that gates progress against a fixed standard. A reviewing agent is stronger than self-reflection, because an agent asked to fault its own work tends to defend it." },
+    { "title": "Cooperation is built, not asked for", "text": "Each pattern of cooperation is named in the coordination design and realized in the code that routes the work and applies the checks. An arrangement that only tells its agents to collaborate has a hope, not a cooperation you can rely on." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "You must change every place in a codebase where a certain function is called. Which way of dividing the work is most reliable?",
+      "options": [
+        ["a", "Tell an orchestrating agent to update all the call sites."],
+        ["b", "Leave the division to the tool and check the result later."],
+        ["c", "Write code that finds each call site and dispatches one sub-task for each."],
+        ["d", "Ask one agent to make all the changes in a single pass."]
+      ],
+      "correct": "c",
+      "right": "Correct. In code the division is exact and repeatable, while an agent may quietly miss a hard case.",
+      "wrong": "Not quite. Read idea 3 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "An agent produces a result with named fields, writes it up as a paragraph, and the next agent reads the fields back out of the paragraph. What is the risk?",
+      "options": [
+        ["a", "The structure is lost and must be guessed, and the guess is sometimes wrong."],
+        ["b", "The second agent uses fewer tokens than it should."],
+        ["c", "The paragraph is too short for the second agent to understand."],
+        ["d", "The handoff becomes too easy to watch and log."]
+      ],
+      "correct": "a",
+      "right": "Correct. Pass structured data across the boundary so the receiver gets the fields themselves.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "In the protocol view build, why may the reviewer agent reject work but not rewrite it?",
+      "options": [
+        ["a", "Because rewriting would cost too many tokens."],
+        ["b", "Because a reviewer that repairs what it finds stops reporting what it found."],
+        ["c", "Because only the engineer is allowed to edit files."],
+        ["d", "Because the reviewer runs on a weaker model."]
+      ],
+      "correct": "b",
+      "right": "Correct. The restriction keeps the review a report that the engineer can see and act on.",
+      "wrong": "Not quite. Read idea 6 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "In an orchestrator-workers arrangement, a worker returns output in a shape the aggregation layer cannot read, and the orchestrator passes it on. Where should the check have been?",
+      "options": [
+        ["a", "Inside the worker's instructions."],
+        ["b", "Inside the orchestrator's prompt."],
+        ["c", "In a final review by the engineer after the merge."],
+        ["d", "At the interface between the worker and the aggregation layer."]
+      ],
+      "correct": "d",
+      "right": "Correct. The containment belongs at the interface, where the contract can be checked in code.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "A coordination design says only that an architect agent will divide the work and that 3 workers will do it. Name what it fails to state, and say which omission is the most serious and why.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "It does not say how the work is divided, by a definite rule in code or at the architect's discretion. It does not say how progress is watched while the workers run. It does not say how a failure in one agent is contained: retry, reassign, a simpler result, or stop and escalate. And it does not define the interface the agents share. The missing interface is the most serious, because without a fixed contract each worker must guess the shape of its input, information is lost at the handoffs, and there is nothing definite to check or watch."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Choose one part of your own project, or of the Tribunal, that several agents could build. Sketch its coordination design in the 5 headings, and say which rules you would keep in code and which you would leave to the agents' instructions.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "For the Tribunal's protocol view: the patterns are a role-based division (1 architect, 3 workers, 1 reviewer), prompt chaining from data layer to panels to layout, and parallelization of the 3 workers. Each agent may change only its own directory, and only the architect may change the interface. Work passes through a field-by-field interface that the code checks before any worker starts, and the code checks which files each worker changed. A worker that cannot proceed stops and reports, a rejection returns to the same worker, and nothing merges until all pass review. The cost is several times the tokens of one agent, in return for parallel building and a review of every part. The order, boundaries, checks and stops live in code; the instructions carry only what needs judgment, such as how a panel presents its data."
+    }
+  ]
+}

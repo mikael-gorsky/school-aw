@@ -1,0 +1,88 @@
+{
+  "n": 18,
+  "reading": "No chapter of the textbook covers entrepreneurship as such. The closest places are chapter 14, Next steps, section 14.2 (the spiral applied to the product and its market) and sections 14.3 and 14.4; chapter 2, The human role: what erodes and what compounds, section 2.3 (deciding what is worth building) and section 2.7; and chapter 6, Framing, specification, and the co-evolution spiral, sections 6.3.2, 6.3.3 and 6.5.3.",
+  "intro": "When agents make building fast and cheap, the hard question in making a product is no longer how to build it but whether it is worth building and for whom. This module gathers what the textbook says about that question: deciding what deserves to exist, stating the purpose and the user, and carrying the co-evolution spiral past the software into the product and the market, where users decide whether your software is worth keeping.",
+  "ideas": [
+    { "title": "Judgment now does the work cost once did", "text": "When building was slow and expensive, the cost itself stopped many bad ideas from being built. Now that building is fast and cheap, only your judgment stands between an idea and its construction, and the agent will willingly build features no one needs and products that solve no real problem." },
+    { "title": "The advantage moves to judgment", "text": "The AI tools are available to everyone at much the same price. What is not available to everyone is the judgment to aim them at the right problems and to judge their output, so the advantage moves from owning the tools to the judgment that directs them." },
+    { "title": "Ask whether it should exist", "text": "Beneath what a project should do lies what it is for and whether it should exist at all, and the honest answer is sometimes no. A plain statement of its single primary usefulness, the seed of the product vision, gives many later decisions their criterion." },
+    { "title": "State the user, even by guessing", "text": "Every design has a user model, and the only choice is whether it is explicit or hidden. It is better to be wrong than vague, because evidence from real users can correct a stated model, while a hidden one cannot be examined." },
+    { "title": "Build the next real thing", "text": "Your next system should be built at greater scale, for real users and under real consequences. A larger project exposes what a teaching exercise can hide: a framing that was too narrow, gaps in the specification and verification that was shallower than it looked." },
+    { "title": "The spiral does not end where the software ends", "text": "Problem and solution keep revising each other in the product and in the market, where users decide whether the software is worth keeping. Their patterns of use, the assumptions that fail and the needs that remain unmet show what the product must become." },
+    { "title": "Commit what use confirms, and watch for drift", "text": "At the end of each turn, lock what use has confirmed and what has held across several turns, and leave open what is still contested. Turns that repeat, scope that grows without a milestone, intent that wanders and a purpose nobody can state are the signs that the spiral has become a trap, and sometimes the right correction is to end the project." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "Why does deciding what is worth building matter more now that agents write the code?",
+      "options": [
+        ["a", "Agents now choose the features, so you must check their choices."],
+        ["b", "The cost of building once stopped many bad ideas, and now only judgment stands between an idea and its construction."],
+        ["c", "Users now expect more features in every product."],
+        ["d", "Building is still slow, so a wrong choice wastes more time."]
+      ],
+      "correct": "b",
+      "right": "Correct. The agent removed the cost that once forced the question, so judgment must now do the work that cost did.",
+      "wrong": "Not quite. Read idea 1 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "A team builds a well-made health app that mixes exercise plans, recipes, a step counter and a calorie table. Nobody can say who would open it, or when. Which part of the framing was never done?",
+      "options": [
+        ["a", "Stating the project's single primary usefulness."],
+        ["b", "Choosing a faster technology stack."],
+        ["c", "Writing tests for each feature."],
+        ["d", "Pinning the project's dependencies."]
+      ],
+      "correct": "a",
+      "right": "Correct. Without a stated purpose, no proposal for a new feature could ever be refused, and the app had no center.",
+      "wrong": "Not quite. Read idea 3 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "You are not sure who will use your product. What does the book advise?",
+      "options": [
+        ["a", "Wait to describe the user until you have real usage data."],
+        ["b", "Leave the user open so that the product suits everyone."],
+        ["c", "Let each person on the team picture the user they know best."],
+        ["d", "Write down a user model now, even as a guess, so that evidence from real users can correct it."]
+      ],
+      "correct": "d",
+      "right": "Correct. It is better to be wrong than vague: a stated model can be corrected, and an unstated one is filled in silently by whoever guesses.",
+      "wrong": "Not quite. Read idea 4 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "Your product has had real users for 2 months. They ignore 1 feature you were sure of and keep working around a missing one. What does the spiral ask of you?",
+      "options": [
+        ["a", "Keep the specification as it is, because you approved it before the build."],
+        ["b", "Add every feature that any user asks for."],
+        ["c", "Revise the specification where use showed an assumption failed, and lock only what use has confirmed."],
+        ["d", "Change the agent or the model, because the result did not match the plan."]
+      ],
+      "correct": "c",
+      "right": "Correct. Users show by their use what the product must become, and the specification is a hypothesis that this evidence revises.",
+      "wrong": "Not quite. Read ideas 6 and 7 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "Write the primary usefulness of your individual project in 1 sentence. Then name 1 design decision that the sentence settles, and say honestly whether the project should exist.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "For the Tribunal the sentence is: to let the user see a hard judgment examined from several sides and see where thoughtful judges disagree, and so judge better rather than be handed an answer to accept. It settles whether to combine the judges' verdicts into one: the answer is no, because a single verdict would hand the user an answer to accept. A good answer for your own project names one purpose, shows a choice it decides that would otherwise be a matter of taste, and says why the project deserves to exist. If you cannot say why, you have not finished framing it."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "Imagine your individual project in the hands of 20 real users for a month. What would you watch, how would it change your specification, and how would you know the spiral had stopped converging?",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "You would watch their patterns of use, the assumptions in your framing that fail, and the needs that remain unmet, because these show what the product must become. Where use shows that the first understanding was incomplete, you revise the specification, and then the system from the revised specification. You lock what use has confirmed and what holds across several turns, and leave open what is still contested. The spiral is failing if turns repeat without progress, scope grows without a milestone, the intent wanders from the goal, or nobody can say any longer why the project exists."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "n": 19,
+  "reading": "No chapter of the textbook covers this module: the book says in About the book that it leaves out career advice and forecasts about the labor market. Passages that touch it: the Preface (what organizations need); Chapter 1, section 1.3 (a long line of handovers); Chapter 2, sections 2.3, 2.4 and 2.7 (what erodes and what compounds, the book test, the market lacks exactly these skills) and section 2.11 (the further reading on employment by Brynjolfsson, Chandar and Chen); Chapter 14, sections 14.3 and 14.4 (hold the tools lightly, the entry point is growing narrower).",
+  "intro": "This module is about looking for work at a time when agents write much of the code. The lesson covers this topic, and the textbook touches it in the Preface and in chapters 1, 2 and 14. It matters because the same tools that make producing code cheap also change what employers look for, and the book shows which of your skills that change makes more valuable.",
+  "ideas": [
+    { "title": "A handover moves skill to a new place", "text": "Each time the machine took over a layer of programming, from the assembler to the compiler to the agent, the need for skill did not disappear. It moved to the discipline of directing the machine well, and that discipline became the programmer's worth." },
+    { "title": "What organizations need now", "text": "The author's view in the Preface is that organizations no longer need junior developers who write code by hand, and they do not need vibe-coded software either. They need people who build software together with agents thoughtfully, methodically and reliably." },
+    { "title": "The market lacks exactly these skills", "text": "A 2026 review of how organizations adopt agentic tools found that the leading obstacle was not the cost of the tools but trust and reliability, followed by joining the tools to existing systems, ways to evaluate the output, and gaps in staff skills. A company solves the trust problem by employing people who can regard an agent rightly, equip it well and verify its output." },
+    { "title": "The market is dividing in 2", "text": "In one part, the work is to frame, to judge and to decide, and it grows more valuable as agents grow stronger. In the other, the work is to produce code to a clear instruction, and it grows cheaper, because the agents do it too; which part you belong to depends on the skills you choose to grow." },
+    { "title": "Tools are common, judgment is scarce", "text": "The AI tools are available to everyone at much the same price, so owning them gives no company an edge. What is scarce is people who can aim the tools at the right problems and judge their output with authority, and the advantage moves to employing that judgment." },
+    { "title": "The entry point is narrowing", "text": "A study of payroll records found no broad displacement, but employment of workers aged 22 to 25 in the most exposed occupations about 19% below where it would otherwise be, through reduced hiring rather than dismissal, with no such gap for experienced workers. The book treats this as early evidence that the effect falls first on the entry to the profession, and it warns that no prediction of where this ends deserves trust." },
+    { "title": "Invest before the market decides", "text": "Ask of any skill whether it could be taught completely from a book: if it could, expect the agent to gain it in time; if it is learned only by doing the work under guidance, it is likely to stay valuable in your hands. Hold the tools lightly, because familiarity with today's tools loses value with each release, while the judgment gained through the work keeps growing." }
+  ],
+  "slides": "",
+  "recording": "",
+  "practice": [
+    {
+      "id": "e1",
+      "kind": "choice",
+      "question": "A company buys the best agent tools for every engineer, and its results do not improve. What explanation does the book give?",
+      "options": [
+        ["a", "The company bought the wrong tools."],
+        ["b", "The tools are not yet capable enough to help."],
+        ["c", "Every company can buy the same tools; what it lacks is people who can aim them and judge their output."],
+        ["d", "The engineers need to learn better prompts."]
+      ],
+      "correct": "c",
+      "right": "Correct. The advantage has moved from owning the tools to employing the judgment, and the judgment is scarce.",
+      "wrong": "Not quite. Read idea 5 again."
+    },
+    {
+      "id": "e2",
+      "kind": "choice",
+      "question": "According to the payroll study the book cites, how have these tools so far reached workers aged 22 to 25 in the most exposed occupations?",
+      "options": [
+        ["a", "Through fewer people being hired, rather than through people being dismissed."],
+        ["b", "Through broad dismissals across all ages."],
+        ["c", "Through lower pay for experienced workers."],
+        ["d", "They have not affected these workers at all."]
+      ],
+      "correct": "a",
+      "right": "Correct. The mechanism was reduced hiring, and no comparable gap appeared for experienced workers, so the effect falls first on the entry to the profession.",
+      "wrong": "Not quite. Read idea 6 again."
+    },
+    {
+      "id": "e3",
+      "kind": "choice",
+      "question": "2 graduates describe themselves to an employer. The first says she turns clear instructions into working code very fast. The second says he frames problems, judges agents' output and decides what is worth building. As agents grow stronger, what does the book expect?",
+      "options": [
+        ["a", "Both kinds of work gain value equally."],
+        ["b", "The second kind of work gains value, and the first grows cheaper."],
+        ["c", "The first kind of work gains value, because speed is always scarce."],
+        ["d", "Both kinds of work lose value equally."]
+      ],
+      "correct": "b",
+      "right": "Correct. The same improvement in the tools raises the value of framing and judging and lowers the value of producing code to an instruction.",
+      "wrong": "Not quite. Read idea 4 again."
+    },
+    {
+      "id": "e4",
+      "kind": "choice",
+      "question": "You have time this month to deepen one skill. Which choice does the book's test, \"could it be taught completely from a book?\", favor most?",
+      "options": [
+        ["a", "Memorizing every command of the agent tool you use now."],
+        ["b", "Learning the syntax of a second popular framework."],
+        ["c", "Writing boilerplate configuration faster."],
+        ["d", "Building the sense of when a design has grown too elaborate, by judging real designs and seeing how they turned out."]
+      ],
+      "correct": "d",
+      "right": "Correct. A skill learned only by doing the work under guidance is tacit, and it is likely to stay valuable in your hands.",
+      "wrong": "Not quite. Read idea 7 again."
+    },
+    {
+      "id": "e5",
+      "kind": "short",
+      "question": "The book says the market is asking for people who can regard an agent rightly, equip it well and verify its output. For each of the 3, name one thing from your own project, or the Tribunal, that shows you can do it, and say what it shows.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "To regard the agent rightly: a record of a plan I read before the agent acted and corrected where it had misunderstood the task. To equip it: the specification with testable success criteria and the context file, each rule with its reason. To verify: the gate my changes passed and a review record that names what I checked, together with the audit trail that shows what was decided and why. Each of these is a trail that someone else can examine, which shows judgment rather than claiming it."
+    },
+    {
+      "id": "e6",
+      "kind": "short",
+      "question": "The book says that no prediction of where the change in software work will end deserves trust, including any in the book itself. How, then, should you decide what to learn next? Answer in 3 to 5 sentences.",
+      "help": "Write your own answer first, then compare it with the teacher's answer.",
+      "model": "I should not bet on a forecast, but on what the book argues holds across the change: framing, specification, verification and judgment. I watch where the boundary between what erodes and what compounds moves, and keep my effort on the side the agent cannot yet reach. I apply the book test to each skill, asking whether it could be taught completely from a book. I learn each new tool well enough to use it properly, judge it by giving it real work rather than by its reputation, and hold it lightly, because the tool will age while the judgment keeps growing."
+    }
+  ]
+}
