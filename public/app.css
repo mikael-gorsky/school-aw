@@ -350,3 +350,5 @@ input[type=file].inp{padding:10px 14px}
   .helper-fab{bottom:84px;right:14px;width:54px;height:54px}
   .helper{right:8px;left:8px;bottom:8px;width:auto;height:calc(100vh - 16px)}
 }
+.hm .hh{display:block;font-size:15.5px;margin-top:4px}
+.hm code{font-family:var(--mono);font-size:13px;background:var(--surface);padding:1px 4px;border-radius:4px}

@@ -242,7 +242,17 @@ document.addEventListener('change', async e => {
   let turns = [];
   try { turns = JSON.parse(sessionStorage.getItem(KEY) || '[]'); } catch { turns = []; }
   const save = () => { try { sessionStorage.setItem(KEY, JSON.stringify(turns.slice(-24))); } catch { /* private window */ } };
-  const add = (cls, text) => { const d = document.createElement('div'); d.className = `hm ${cls}`; d.textContent = text; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; };
+  // Answers use a little Markdown. The text is escaped first, and only bold,
+  // italics, code and headings are then turned into markup, so no HTML from
+  // an answer can reach the page.
+  const esc = t => t.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const md = t => esc(t)
+    .replace(/^#{1,4} +(.+)\n?/gm, '<strong class="hh">$1</strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*\w])\*(?!\s)(.+?)\*(?!\w)/g, '$1<em>$2</em>')
+    .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+    .replace(/^[-*] +/gm, '• ');
+  const add = (cls, text) => { const d = document.createElement('div'); d.className = `hm ${cls}`; if (cls === 'a') d.innerHTML = md(text); else d.textContent = text; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; };
   for (const t of turns) add(t.role === 'user' ? 'u' : 'a', t.text);
   const open = () => { panel.hidden = false; fab.setAttribute('aria-expanded', 'true'); box.focus(); log.scrollTop = log.scrollHeight; };
   const close = () => { panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); fab.focus(); };
