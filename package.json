@@ -12,6 +12,7 @@
     "dev": "DEV_LOGIN=1 node --no-warnings --watch server/main.js",
     "seed-demo": "node --no-warnings scripts/seed-demo.js",
     "backup": "node --no-warnings scripts/backup.js",
+    "import-schedule": "node --no-warnings scripts/import-schedule.js",
     "test": "node --no-warnings --test test/*.test.js"
   }
 }

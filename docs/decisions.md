@@ -87,3 +87,13 @@ Students and the demo login have a helper: a round button with the teacher's pho
 The site spends at most $20 on the Claude API, counted from the start, not per month. Every call records its cost from the token counts the API returns. When the total reaches the limit, the helper, @tutor and the grouping of comments stop and stay stopped until the teacher allows more on the Agents page, or stops them sooner there. The teacher is told each time another $10 has been spent: an alert stays on every teacher page until he marks it seen. This replaces the monthly cap set earlier the same day, at the owner's instruction. A spending limit on the API key itself can be set only in the owner's Anthropic Console.
 
 The helper is called the Teaching Assistant. Its button shows a drawn icon of an Ethiopian woman professor in glasses, wearing a white netela, with the label "Teaching Assistant" above it, instead of the teacher's photo. The button sits above the "Made with Podway" badge that Podway adds in the lower right corner. The same icon is the site's favicon.
+
+## 1 November 2026
+
+The semester schedule is imported from the teacher's spreadsheet for Fall 2026. Group 62121-1 meets on Sunday at 10:00–13:00 and group 62121-2 on Tuesday at 16:00–19:00, at the owner's word, because the spreadsheet names the groups only by their day. Group 62121-1 has 13 meetings and group 62121-2 has 12, with no class on Tuesday 27 October (election day) or Sunday 6 December (Hanukkah). Meetings 12 and 13 are project work and presentations, with no module, and meeting 7 begins with the Tribunal introduction. The schedule is kept in `content/ase/schedule.json` and written into the lessons with `npm run import-schedule`, which can run again after a change without losing answers.
+
+Times are Israel times. A lesson whose end has passed counts as held, and the next lesson is the first one still to come, even if the teacher did not run a lesson on the site. My program shows each student the schedule of their own group, with each meeting marked held, today or coming.
+
+The Teaching Assistant gets today's date and time in Israel and the schedule of the student's group with each question, so it can say what today's class covers and what to read for it. It gets the group code, not the student's name or address. The date comes after the cached part of the prompt, so the cache still works.
+
+The demo group's lessons show at 10:00–13:00 Israel time on their days, like a real class.

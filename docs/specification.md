@@ -76,7 +76,7 @@ The page continues with the 4 sections, each with the agent that runs it, a sect
 
 ### 4.2 My program
 
-The page shows the program name, the institution, the group and the teacher. It shows the next lesson with its date, a button to Learn in class and the Zoom link. It shows the student's group as the site recorded it, the description of the program, the parts of the grade with their weights, the full curriculum with the status of each module, the documents (the program 2-pager, the full curriculum, the project rules and the grading rules) and a way to contact the teacher.
+The page shows the program name, the institution, the group and the teacher. It shows the next lesson with its date, a button to Learn in class and the Zoom link. It shows the student's group as the site recorded it, the description of the program, the parts of the grade with their weights, the schedule of the student's own group, with the date, the time in Israel and the content of each meeting and whether it is held, today or coming, the full curriculum with the status of each module, the documents (the program 2-pager, the full curriculum, the project rules and the grading rules) and a way to contact the teacher.
 
 ### 4.3 Learn in class
 
@@ -120,7 +120,7 @@ The student sees 6 figures: live exercises answered, live exercise score, practi
 
 ### 4.7b The Teaching Assistant
 
-Every page shows students and the demo login a round button with a drawn icon of an Ethiopian woman professor in glasses, labeled "Teaching Assistant", above the "Made with Podway" badge in the corner. The same icon is the site's favicon. It opens a chat that begins "How can I help?". The helper answers questions about the site, the course and the textbook in the language the student writes in, in detail and in simple words, and names the textbook chapter it draws on. When the material does not settle a question about the course, it says so and points to Contact SAW. It never grades, never decides about a person, and does not write a student's project code. A student may ask 20 questions a day; the demo login's limit is counted per visitor. The conversation stays in the browser tab, and no name or email address is sent.
+Every page shows students and the demo login a round button with a drawn icon of an Ethiopian woman professor in glasses, labeled "Teaching Assistant", above the "Made with Podway" badge in the corner. The same icon is the site's favicon. It opens a chat that begins "How can I help?". The helper answers questions about the site, the course and the textbook in the language the student writes in, in detail and in simple words, and names the textbook chapter it draws on. When the material does not settle a question about the course, it says so and points to Contact SAW. With each question it gets today's date and time in Israel and the schedule of the student's group, by group code only, so it can say what today's or the next class covers and what to read for it. It never grades, never decides about a person, and does not write a student's project code. A student may ask 20 questions a day; the demo login's limit is counted per visitor. The conversation stays in the browser tab, and no name or email address is sent.
 
 ### 4.7a My account
 

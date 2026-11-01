@@ -8,7 +8,7 @@ A student registers once with Google, using the email address they gave their co
 
 ## The parts of the site
 
-- **My program** is the page a student sees after signing in. It shows the next lesson and its Zoom link, the student's group, the description of the program, what the student will be able to do, the parts of the grade and how work is graded, the curriculum part by part and module by module, the projects and their rules, the course policies, the textbook and reading, and the documents.
+- **My program** is the page a student sees after signing in. It shows the next lesson and its Zoom link, the student's group, the schedule of the group's meetings in Israel time (each marked held, today or coming), the description of the program, what the student will be able to do, the parts of the grade and how work is graded, the curriculum part by part and module by module, the projects and their rules, the course policies, the textbook and reading, and the documents.
 - **Learn in class** is open beside the lecture, in class or on Zoom. Before the lecture a warm-up quiz opens; after each block of the lecture a short exercise opens with a timer. The student answers on a phone or laptop, and the teacher shows the class results. Answers count towards class engagement. After the lesson the student may rate it anonymously.
 - **Study alone** lists the modules. Each module has a study page with an introduction, the key ideas, the reading in the textbook and practice exercises. Practice answers count towards no grade. The page also has @tutor, which answers questions from the course rules only, and passes a question it cannot answer to the teacher without the student's name.
 - **Submit projects** is where the student links the public GitHub repository of each project. @reviewer checks the repository's structure and history: public access, a context file, commits spread over time, clear commit messages, tests, a record of the work with the agent, and a README. It explains every failed check. The check never grades; the teacher grades the work itself.
@@ -18,7 +18,7 @@ A student registers once with Google, using the email address they gave their co
 
 ## The Teaching Assistant
 
-On every page a student sees a round button in the lower right corner, labeled "Teaching Assistant". It opens a chat that answers questions about the site, the course and the textbook, in the language the student writes in. A student may ask 20 questions a day. It does not know who the student is.
+On every page a student sees a round button in the lower right corner, labeled "Teaching Assistant". It opens a chat that answers questions about the site, the course and the textbook, in the language the student writes in. A student may ask 20 questions a day. It does not know who the student is, but it knows today's date and the schedule of the student's group, so it can say what today's class covers and what to read before it.
 
 ## The agents
 

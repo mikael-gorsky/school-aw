@@ -58,9 +58,12 @@ How you answer:
 - Base your answers on the site guide, the course material and the textbook below. When you use the textbook, name the chapter. When the material does not settle a question about the course (a date, a grade, a deadline, an exception to a rule), say so plainly and suggest the student ask the teacher through Contact SAW. Never invent dates, weights, rules or decisions.
 - You never grade, never say what grade a piece of work would get, and never decide anything about a person; those are the teacher's decisions.
 - You may explain concepts and help a student think through their own project, but do not write the project's code for them: the course grades the discipline of directing an agent, and the student does that with their own tools.
-- You do not know who the student is. Do not ask for their name, email or ID number.`;
+- You do not know who the student is. Do not ask for their name, email or ID number.
+- At the end you get today's date and time in Israel and the schedule of the student's group, with each lesson marked held, live, today or coming. Use them when the student asks about today's class, the next class, what was covered so far or what to prepare: name the lesson, its date and time, its modules, and the reading for those modules. If today has no class, say so and name the next one. Never invent a date that is not in the schedule; a change to the schedule is announced by the lecturer by email and on Moodle.`;
 
-export function systemBlocks(id) {
+// The date and the group's schedule change from question to question, so they
+// come after the cached part and do not break the cache.
+export function systemBlocks(id, now = '') {
   const blocks = [
     { type: 'text', text: INSTRUCTIONS },
     { type: 'text', text: `# Site guide\n\n${fs.readFileSync(path.join(ROOT, 'saw-guide.md'), 'utf8')}` },
@@ -72,6 +75,7 @@ export function systemBlocks(id) {
   // about 200,000 tokens, and reading it from the cache costs a tenth of the
   // normal price. The 1-hour lifetime keeps it warm between lessons.
   blocks[blocks.length - 1].cache_control = { type: 'ephemeral', ttl: '1h' };
+  if (now) blocks.push({ type: 'text', text: now });
   return blocks;
 }
 
@@ -91,7 +95,7 @@ export function cleanTurns(turns) {
   return out.length && out[out.length - 1].role === 'user' ? out : [];
 }
 
-export async function askHelper(id, turns) {
+export async function askHelper(id, turns, now = '') {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -106,7 +110,7 @@ export async function askHelper(id, turns) {
       max_tokens: 4000,
       output_config: { effort: 'medium' },
       fallbacks: 'default',
-      system: systemBlocks(id),
+      system: systemBlocks(id, now),
       messages: turns,
     }),
     signal: AbortSignal.timeout(120e3),

@@ -29,14 +29,17 @@ export function groupLabel(g) {
 export const lessonsOf = groupId => all('SELECT * FROM lessons WHERE group_id = ? ORDER BY number', groupId);
 export const itemsOf = lessonId => all('SELECT * FROM items WHERE lesson_id = ? ORDER BY seq', lessonId);
 export const liveLesson = groupId => get("SELECT * FROM lessons WHERE group_id = ? AND state = 'live' ORDER BY number DESC LIMIT 1", groupId);
-export const nextLesson = groupId => get("SELECT * FROM lessons WHERE group_id = ? AND state != 'ended' ORDER BY number LIMIT 1", groupId);
+// A planned lesson whose day has passed is not the next one, even if the
+// teacher never ran it on the site (decision of 1 November 2026).
+export const nextLesson = groupId => get(`SELECT * FROM lessons WHERE group_id = ? AND state != 'ended'
+  AND (state = 'live' OR starts_at IS NULL OR COALESCE(ends_at, substr(starts_at, 1, 10) || 'T23:59:59.999Z') >= ?) ORDER BY number LIMIT 1`, groupId, now());
 export const lastEnded = groupId => get("SELECT * FROM lessons WHERE group_id = ? AND state = 'ended' ORDER BY number DESC LIMIT 1", groupId);
 
 // A lesson covers the modules the teacher chose, and copies the live
 // exercises of each module in turn.
-export function addLesson(groupId, number, modules, startsAt, zoomUrl) {
+export function addLesson(groupId, number, modules, startsAt, zoomUrl, extra = {}) {
   const g = groupById(groupId);
-  run('INSERT INTO lessons(group_id, number, module, modules, starts_at, zoom_url) VALUES(?, ?, ?, ?, ?, ?)', groupId, number, modules[0], JSON.stringify(modules), startsAt || null, zoomUrl || null);
+  run('INSERT INTO lessons(group_id, number, module, modules, starts_at, zoom_url, ends_at, note) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', groupId, number, modules[0] || 0, JSON.stringify(modules), startsAt || null, zoomUrl || null, extra.endsAt || null, extra.note || null);
   const lesson = get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', groupId, number);
   lessonItemsFor(g.programme, modules).forEach((it, i) => {
     run('INSERT INTO items(lesson_id, seq, label, question, options, correct) VALUES(?, ?, ?, ?, ?, ?)',

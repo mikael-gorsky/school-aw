@@ -1,0 +1,139 @@
+{
+  "term": "Fall 2026",
+  "source": "ASE_fall_2026_schedule.xlsx",
+  "timeZone": "Asia/Jerusalem",
+  "breaks": [
+    "No class on Tuesday 27 October 2026 (election day).",
+    "No class on Sunday 6 December 2026 (Hanukkah)."
+  ],
+  "groups": [
+    {
+      "code": "62121-1",
+      "day": "Sunday",
+      "from": "10:00",
+      "to": "13:00",
+      "dates": [
+        "2026-10-18",
+        "2026-10-25",
+        "2026-11-01",
+        "2026-11-08",
+        "2026-11-15",
+        "2026-11-22",
+        "2026-11-29",
+        "2026-12-13",
+        "2026-12-20",
+        "2026-12-27",
+        "2027-01-03",
+        "2027-01-10",
+        "2027-01-17"
+      ]
+    },
+    {
+      "code": "62121-2",
+      "day": "Tuesday",
+      "from": "16:00",
+      "to": "19:00",
+      "dates": [
+        "2026-10-20",
+        "2026-11-03",
+        "2026-11-10",
+        "2026-11-17",
+        "2026-11-24",
+        "2026-12-01",
+        "2026-12-08",
+        "2026-12-15",
+        "2026-12-22",
+        "2026-12-29",
+        "2027-01-05",
+        "2027-01-12"
+      ]
+    }
+  ],
+  "lessons": [
+    {
+      "n": 1,
+      "modules": [
+        1
+      ]
+    },
+    {
+      "n": 2,
+      "modules": [
+        2,
+        3
+      ]
+    },
+    {
+      "n": 3,
+      "modules": [
+        4,
+        6
+      ]
+    },
+    {
+      "n": 4,
+      "modules": [
+        5,
+        7
+      ]
+    },
+    {
+      "n": 5,
+      "modules": [
+        8,
+        9
+      ]
+    },
+    {
+      "n": 6,
+      "modules": [
+        10
+      ]
+    },
+    {
+      "n": 7,
+      "modules": [
+        11
+      ],
+      "note": "Tribunal introduction"
+    },
+    {
+      "n": 8,
+      "modules": [
+        12,
+        13
+      ]
+    },
+    {
+      "n": 9,
+      "modules": [
+        14,
+        15
+      ]
+    },
+    {
+      "n": 10,
+      "modules": [
+        16,
+        17
+      ]
+    },
+    {
+      "n": 11,
+      "modules": [
+        18,
+        19
+      ]
+    },
+    {
+      "n": 12,
+      "modules": [],
+      "note": "Project work and presentations"
+    },
+    {
+      "n": 13,
+      "modules": [],
+      "note": "Project work and presentations"
+    }
+  ]
+}

@@ -208,7 +208,10 @@ test('a question to the helper reaches the AI service without the name or addres
     for (const w of [email, 'helper.user', 'Quinby', 'Marlowe']) assert.ok(!sent[0].includes(w), w);
     const body = JSON.parse(sent[0]);
     assert.equal(body.model, 'claude-sonnet-5-5');
-    assert.ok(body.system.at(-1).cache_control);
+    // The course is cached; today's date comes after it, uncached.
+    assert.ok(body.system.at(-2).cache_control);
+    assert.match(body.system.at(-1).text, /^Today is /);
+    assert.ok(!body.system.at(-1).cache_control);
     db.run("UPDATE helper_usage SET count = 20 WHERE who LIKE 'user:%'");
     const over = await req('POST', '/api/helper', { jar, json: { turns: [{ role: 'user', text: 'Another?' }] } });
     assert.equal(over.status, 429);

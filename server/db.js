@@ -205,6 +205,12 @@ function migrate() {
   // first one, and "modules" the full list (decision of 31 October 2026).
   const haveLesson = new Set(db.prepare('PRAGMA table_info(lessons)').all().map(c => c.name));
   if (!haveLesson.has('modules')) db.exec('ALTER TABLE lessons ADD COLUMN modules TEXT');
+  // A lesson from the semester schedule has an end time, and may carry a note
+  // such as "Tribunal introduction", or no module at all for project work
+  // (decision of 1 November 2026).
+  for (const col of ['ends_at', 'note']) {
+    if (!haveLesson.has(col)) db.exec(`ALTER TABLE lessons ADD COLUMN ${col} TEXT`);
+  }
   // Questions to the helper, counted per person and day for the daily limit.
   db.exec('CREATE TABLE IF NOT EXISTS helper_usage(who TEXT NOT NULL, day TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY(who, day))');
   // The teacher may give the English names of students on the list, which the

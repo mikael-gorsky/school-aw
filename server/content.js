@@ -47,7 +47,7 @@ export function moduleTitle(id, n) {
 }
 
 export function lessonModules(l) {
-  try { const m = l.modules ? JSON.parse(l.modules) : null; if (Array.isArray(m) && m.length) return m; } catch { /* fall back */ }
+  try { const m = l.modules ? JSON.parse(l.modules) : null; if (Array.isArray(m)) return m; } catch { /* fall back */ }
   return [l.module];
 }
 
@@ -55,9 +55,9 @@ export function lessonModules(l) {
 // added: how modules are grouped into lessons is a decision for each semester,
 // not part of the program (decision of 31 October 2026).
 export function lessonTitle(id, l) {
-  return lessonModules(l).map(n => moduleTitle(id, n)).join(' · ');
+  return [l.note, ...lessonModules(l).map(n => moduleTitle(id, n))].filter(Boolean).join(' · ');
 }
-export const lessonModulesLabel = l => { const ms = lessonModules(l); return ms.length > 1 ? `modules ${ms.slice(0, -1).join(', ')} and ${ms[ms.length - 1]}` : `module ${ms[0]}`; };
+export const lessonModulesLabel = l => { const ms = lessonModules(l); return !ms.length ? 'no module' : ms.length > 1 ? `modules ${ms.slice(0, -1).join(', ')} and ${ms[ms.length - 1]}` : `module ${ms[0]}`; };
 
 export function partOf(id, n) {
   const p = programme(id);

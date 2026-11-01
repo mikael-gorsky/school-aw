@@ -6,6 +6,7 @@ import { programme, moduleContent, moduleTitle, hasExam, lessonTitle, lessonModu
 import { setting } from '../db.js';
 import { aiAvailable } from '../ai.js';
 import * as M from '../model.js';
+import { lessonPhase, dayLabel, timeLabel } from '../schedule.js';
 
 const signedIn = ctx => ctx.role === 'student' || ctx.role === 'demo';
 export const HELPED = ['Live exercises', 'Examples', 'Slides', 'Pace', 'Questions and answers'];
@@ -118,14 +119,17 @@ function groupInfo(ctx) {
 // ---------- My program ----------
 function programmeBody(prog, info, lessons, interactive, ctx) {
   const byModule = new Map();
-  for (const l of lessons) for (const n of lessonModules(l)) if (!byModule.has(n) || l.state !== 'ended') byModule.set(n, l);
-  const next = lessons.find(l => l.state === 'live') || lessons.find(l => l.state === 'planned');
+  // A lesson whose date has passed counts as taught, even if the teacher did
+  // not run it on the site (decision of 1 November 2026).
+  const phase = l => lessonPhase(l);
+  for (const l of lessons) for (const n of lessonModules(l)) if (!byModule.has(n) || phase(l) !== 'held') byModule.set(n, l);
+  const next = lessons.find(l => phase(l) === 'live') || lessons.find(l => phase(l) !== 'held');
   const parts = prog.parts.map(p => {
     let rows = '';
     for (let n = p.from; n <= p.to; n++) {
       const m = prog.modules.find(x => x.n === n);
       const l = byModule.get(n);
-      const st = !l ? '' : l.state === 'ended' ? stat('ok', 'taught') : l.state === 'live' ? '<span class="chip solid">live now</span>' : `<span class="chip">lesson ${l.number} · ${esc(fmtDate(l.starts_at))}</span>`;
+      const st = !l ? '' : phase(l) === 'held' ? stat('ok', 'taught') : phase(l) === 'live' ? '<span class="chip solid">live now</span>' : `<span class="chip">lesson ${l.number} · ${esc(l.starts_at ? dayLabel(l.starts_at) : fmtDate(l.starts_at))}</span>`;
       const has = moduleContent(prog.id, n);
       const title = interactive && has ? `<a href="/study/${n}" style="color:var(--fg);text-decoration:none">${esc(m.title)}</a>` : esc(m.title);
       rows += `<div class="li"><span class="n">${pad(n)}</span><div class="t"><b>${title}</b><span>${esc(m.summary)}</span></div>${st}</div>`;
@@ -133,7 +137,7 @@ function programmeBody(prog, info, lessons, interactive, ctx) {
     return `<div class="section"><div class="row" style="gap:6px 14px;margin-bottom:6px"><span class="mono" style="color:var(--accent);font-size:14px">part-${p.n}/</span><h3 class="h3" style="margin:0;font-size:21px">${esc(p.title)}</h3><span class="mono small">modules ${pad(p.from)}–${pad(p.to)}</span></div><p class="fg2" style="margin:0 0 12px;font-size:15px">${esc(p.text)}</p><div class="card" style="padding:4px 20px">${rows}</div></div>`;
   }).join('');
   const nextCard = next
-    ? `<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">${next.state === 'live' ? 'lesson running now' : 'next lesson'} <span class="r">${esc(fmtDate(next.starts_at))}</span></p><h2 class="h2" style="font-size:24px">Lesson ${next.number} · ${esc(lessonTitle(prog.id, next))}</h2><p class="fg2" style="margin:0 0 16px">The warm-up quiz opens before the lecture starts. Keep Learn in class open beside Zoom during the lesson.</p><div class="row"><a class="btn pri" href="/class">Open Learn in class</a>${next.zoom_url ? `<a class="btn sec" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div></div>`
+    ? `<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">${phase(next) === 'live' ? 'lesson running now' : phase(next) === 'today' ? 'today\'s lesson' : 'next lesson'} <span class="r">${esc(fmtDate(next.starts_at))}</span></p><h2 class="h2" style="font-size:24px">Lesson ${next.number} · ${esc(lessonTitle(prog.id, next))}</h2><p class="fg2" style="margin:0 0 16px">The warm-up quiz opens before the lecture starts. Keep Learn in class open beside Zoom during the lesson.</p><div class="row"><a class="btn pri" href="/class">Open Learn in class</a>${next.zoom_url ? `<a class="btn sec" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div></div>`
     : '<div class="card" style="--b:420px;flex:999 1 420px"><p class="ch">next lesson</p><p class="fg2" style="margin:0">Your teacher has not set the next lesson yet.</p></div>';
   // A weight set by the teacher wins; otherwise the weight from the syllabus.
   const weight = k => esc(setting(`weight_${k}`, '') || (prog.grade.find(x => x.key === k) || {}).weight || '[%]');
@@ -152,9 +156,21 @@ function programmeBody(prog, info, lessons, interactive, ctx) {
    <div class="card" style="flex:1 1 300px"><p class="ch">your group</p><dl class="kv" style="margin:0"><dt>institution</dt><dd>${esc(info.inst)}</dd><dt>group</dt><dd>${esc(info.group)}</dd><dt>teacher</dt><dd>Mikael Gorsky</dd><dt>signed in as</dt><dd class="mono" style="font-size:13.5px">${esc(info.who)}</dd></dl><p class="note">The site placed you in this group from the list your teacher keeps.</p></div></div>
    <div class="section"><h2 class="h2">About the program</h2>${prog.description.map(p => `<p class="lede" style="margin-bottom:12px">${esc(p)}</p>`).join('')}</div>${extra}
    <div class="cols section" style="--b:260px;gap:14px">${prog.grade.map(a => `<div class="card" style="padding:16px 18px"><p class="ch" style="margin-bottom:6px">${esc(a.title)} <span class="r">${weight(a.key)} of the grade</span></p><p style="margin:0;font-size:15px" class="fg2">${esc(a.text)}</p></div>`).join('')}</div>
+   ${interactive ? scheduleCard(prog, lessons, phase) : ''}
    <h2 class="h2 section">Curriculum</h2>${parts}${after}
    <div class="cols section"><div class="card" style="--b:320px"><p class="ch">documents</p>${docs}</div>
    <div class="card" style="--b:320px"><p class="ch">teacher</p><p style="margin:0 0 6px;font-weight:800;font-size:18px">Mikael Gorsky</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Questions about the program go to your teacher through Contact SAW. Questions about the rules can also go to ${agS('tutor')}.</p><a class="btn sec" href="/contact">Contact SAW</a></div></div>`;
+}
+
+// The meetings of the student's own group, from the semester schedule.
+const PHASE_CHIP = { held: () => stat('ok', 'held'), live: () => '<span class="chip solid">live now</span>', today: () => '<span class="chip solid">today</span>', coming: () => '<span class="chip">coming</span>' };
+function scheduleCard(prog, lessons, phase) {
+  if (!lessons.length) return '<div class="section card"><p class="ch">your schedule</p><p class="fg2" style="margin:0">Your teacher has not put the schedule of your group on the site yet.</p></div>';
+  const rows = lessons.map(l => {
+    const ms = lessonModules(l);
+    return `<tr><td class="m">${l.number}</td><td class="m">${l.starts_at ? esc(dayLabel(l.starts_at)) : '[date]'}</td><td class="m">${l.starts_at ? `${esc(timeLabel(l.starts_at))}${l.ends_at ? `–${esc(timeLabel(l.ends_at))}` : ''}` : ''}</td><td>${ms.length ? `<span class="mono small" style="display:block">module${ms.length > 1 ? 's' : ''} ${ms.join(' and ')}</span>` : ''}${esc(lessonTitle(prog.id, l))}</td><td>${PHASE_CHIP[phase(l)]()}</td></tr>`;
+  }).join('');
+  return `<div class="section"><h2 class="h2">Your schedule</h2><p class="fg2" style="margin:0 0 12px;font-size:15px">The meetings of your group this semester, in Israel time. The Teaching Assistant knows this schedule and today's date, so you can ask it what today's class covers and what to read for it.</p><div class="card" style="padding:6px 0"><div class="scroll"><table class="tbl" style="min-width:620px"><thead><tr><th>lesson</th><th>date</th><th>time</th><th>content</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`;
 }
 
 export function programmePage(ctx) {

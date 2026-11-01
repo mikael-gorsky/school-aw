@@ -18,6 +18,7 @@ import { readPermitCsv, readPermitList, isEmail } from './csv.js';
 import { parseRepo, checkRepository } from './reviewer.js';
 import { aiAvailable, askTutor, groupThemes } from './ai.js';
 import { askHelper, cleanTurns, HELPER_DAILY } from './helper.js';
+import { scheduleContext } from './schedule.js';
 import { overBudget, allowMore, stopAi, dismissAlerts } from './spend.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -270,7 +271,9 @@ on('POST', '/api/helper', { roles: STU }, async ctx => {
   run('INSERT INTO helper_usage(who, day, count) VALUES(?, ?, 1) ON CONFLICT(who, day) DO UPDATE SET count = count + 1', who, day);
   try {
     // Only the conversation text goes to the AI service: no name and no address.
-    const a = await askHelper(ctx.group.programme, turns);
+    // With it go today's date and the schedule of the student's group, by group
+    // code only (decision of 1 November 2026).
+    const a = await askHelper(ctx.group.programme, turns, scheduleContext(ctx.group));
     return { json: { text: a.text, left: HELPER_DAILY - used - 1 } };
   } catch (e) {
     console.error(`Helper failed: ${e.message}`);

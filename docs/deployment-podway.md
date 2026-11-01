@@ -40,6 +40,10 @@ The site resets the demo group every night at 03:00 Israel time. A pod that is s
 
 `npm run backup` writes a consistent copy of the database to `backups/` while the site runs. Copy each backup out of the pod. To restore one, stop the service, replace `saw.db` in `DATA_DIR` with the backup file, delete any `saw.db-wal` and `saw.db-shm` files beside it, and start the service again. Write down here where the copies go once that is set up.
 
+## The semester schedule
+
+The schedule of each group is kept in `content/ase/schedule.json`. After the file changes, run `npm run import-schedule` in the pod with `DATA_DIR=~/saw-data`, then restart the site with `podway startup restart preview-3000`. Lessons keep their state, answers and Zoom links.
+
 ## The helper and the textbook
 
 The helper reads the course textbook from `textbook-ase.txt` in `DATA_DIR` (in the pod, `~/saw-data/textbook-ase.txt`). The file is the teacher's own book and is never committed, because the repository is public. Without the file the helper still answers from the site guide and the course content. The helper and @tutor need `ANTHROPIC_API_KEY`; `HELPER_MODEL` overrides the model, which is `claude-sonnet-5-5` by default.
