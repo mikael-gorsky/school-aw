@@ -5,6 +5,7 @@
 import { all, get, run, now, tx, voterKey, setting, setSetting, log } from './db.js';
 import { programme, lessonItems, moduleContent, modulesWithContent } from './content.js';
 import { DIMENSIONS } from './model.js';
+import { israelDay, israelToIso } from './schedule.js';
 
 const DEMO = { institution: 'SAW demo', code: 'demo', programme: 'ase' };
 const SAMPLES = 33;
@@ -97,7 +98,11 @@ function build() {
     const starts = new Date(nowMs + (pl.n - LIVE) * 7 * 864e5 - 30 * 60000);
     starts.setUTCMinutes(0, 0, 0);
     const state = pl.n < LIVE ? 'ended' : pl.n === LIVE ? 'live' : 'planned';
-    run('INSERT INTO lessons(group_id, number, module, modules, starts_at, state) VALUES(?, ?, ?, ?, ?, ?)', g.id, pl.n, pl.modules[0], JSON.stringify(pl.modules), starts.toISOString(), state);
+    // The calendar shows each lesson on its day at 10:00–13:00 Israel time, like
+    // a real class; the exercises keep their times around the reset, so that
+    // the demo lesson runs at any hour (decision of 1 November 2026).
+    const day = israelDay(starts);
+    run('INSERT INTO lessons(group_id, number, module, modules, starts_at, ends_at, state) VALUES(?, ?, ?, ?, ?, ?, ?)', g.id, pl.n, pl.modules[0], JSON.stringify(pl.modules), israelToIso(day, '10:00'), israelToIso(day, '13:00'), state);
     const l = get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', g.id, pl.n);
     l.modules_list = pl.modules;
     itemsForLesson(pl.modules).forEach((it, i) => {
