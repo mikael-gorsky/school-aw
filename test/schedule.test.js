@@ -51,6 +51,8 @@ test('the Teaching Assistant gets the date and the group schedule, without names
   assert.match(t, /Lesson 2, Sun, Nov 1, 2026, 10:00–13:00 \[today\]/);
   assert.match(t, /Lesson 3, .*Project work and presentations/);
   assert.match(t, /Hanukkah/);
+  db.run('UPDATE lessons SET zoom_url = ? WHERE group_id = ?', 'https://zoom.example/j/1', g.id);
+  assert.match(scheduleContext(g), /Zoom link of the group, for a class that moves to Zoom: https:\/\/zoom\.example\/j\/1$|Zoom link of the group, for a class that moves to Zoom: https:\/\/zoom\.example\/j\/1\n/);
   assert.ok(!t.includes('sched.user'));
 });
 

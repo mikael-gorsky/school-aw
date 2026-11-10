@@ -97,3 +97,7 @@ Times are Israel times. A lesson whose end has passed counts as held, and the ne
 The Teaching Assistant gets today's date and time in Israel and the schedule of the student's group with each question, so it can say what today's class covers and what to read for it. It gets the group code, not the student's name or address. The date comes after the cached part of the prompt, so the cache still works.
 
 The demo group's lessons show at 10:00–13:00 Israel time on their days, like a real class.
+
+## 10 November 2026
+
+Both HIT groups use the same Zoom link, set on every lesson of the semester in the database. The link is not written into the repository, because the repository is public. Classes are on campus; the link is for a class that cannot be held there. My program shows it on the next lesson, and the Teaching Assistant gives it when asked.

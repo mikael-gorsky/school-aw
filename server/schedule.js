@@ -102,6 +102,10 @@ export function scheduleContext(group, t = new Date()) {
     const mods = lessonModules(l);
     lines.push(`- Lesson ${l.number}, ${when} [${lessonPhase(l, t)}]: ${lessonTitle(group.programme, l) || 'no content set'}${mods.length ? ` (module${mods.length > 1 ? 's' : ''} ${mods.join(' and ')})` : ''}`);
   }
+  // The Zoom link, for when a class cannot be held on campus (decision of
+  // 10 November 2026). It is the same for every lesson, so it is named once.
+  const zooms = [...new Set(ls.map(l => l.zoom_url).filter(Boolean))];
+  if (zooms.length) lines.push('', `Classes are on campus. The Zoom link of the group, for a class that moves to Zoom: ${zooms.join(', ')}`);
   const sched = scheduleFile(group.programme);
   if (sched && sched.breaks && !group.is_demo) lines.push('', ...sched.breaks);
   return lines.join('\n');
