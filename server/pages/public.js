@@ -115,16 +115,40 @@ export function contact(ctx) {
 
 function googleButton(intent, label) {
   if (!googleConfigured()) return '<p class="alert">Google sign-in is not set up on this server yet. The teacher needs to add the Google sign-in credentials.</p>';
-  return `<a class="btn pri wide" href="/auth/google?intent=${intent}" style="min-height:52px;font-size:17px">${label}</a>`;
+  // Google refuses sign-in inside the browser of an app such as Gmail or
+  // WhatsApp, with its own error page that the site never sees
+  // (decision of 17 November 2026).
+  return `<a class="btn pri wide" href="/auth/google?intent=${intent}" style="min-height:52px;font-size:17px">${label}</a>
+   <p class="small" style="margin-top:12px;font-size:13px">If Google shows an error, open this page in Chrome or Safari, not inside the Gmail or WhatsApp app.</p>`;
 }
 function devForm(intent) {
   if (!config.devLogin) return '';
   return `<form method="post" action="/auth/dev" class="card dash" style="margin-top:16px;padding:16px"><p class="ch" style="color:var(--warn)">development sign-in</p><input type="hidden" name="intent" value="${intent}"><div class="row" style="flex-wrap:nowrap"><label class="sr" for="dev">address</label><input class="inp" id="dev" name="email" type="email" placeholder="any address"><button class="btn sec" type="submit">Enter</button></div><p class="small" style="margin-top:6px;font-size:13px">Shown only because DEV_LOGIN is set. Never set it in the pod.</p></form>`;
 }
 const refusedMsg = '<p class="alert">The site did not accept this address, because it is not on your group’s list. Check that it is the address you gave your course organizer. If it is, write to us through <a href="/contact">Contact SAW</a> and say which program and group you are in.</p>';
+// After a refused Google sign-in, the student may name the address that is on
+// the list. The site then moves that place on the list to the Google address,
+// at once (decision of 17 November 2026). The token in the link ties the
+// answer to the sign-in that was just refused.
+const CLAIM_MSG = {
+  unknown: 'This address is not on any group’s list either. Check it and try again.',
+  taken: 'Someone has already registered with this address. If it is yours, sign in with it. If not, write to us through <a href="/contact">Contact SAW</a>.',
+  limit: 'You have tried several addresses in the last hour. Please wait, or write to us through <a href="/contact">Contact SAW</a>.',
+};
+function refusedClaim(ctx) {
+  const token = String(ctx.query.r || '');
+  if (!/^[0-9a-f]{32}$/.test(token)) return refusedMsg;
+  return `<div class="card warnb"><p class="ch" style="color:var(--warn)">this address is not on the list</p>
+   ${CLAIM_MSG[ctx.query.m] ? `<p class="alert">${CLAIM_MSG[ctx.query.m]}</p>` : ''}
+   <p class="fg2" style="margin:0 0 14px">The site did not find the Google address you used on your group’s list. Perhaps your course organizer has another address of yours. Write the address that is on the list, and the site will let you in with this Google account from now on.</p>
+   <form method="post" action="/auth/claim"><input type="hidden" name="r" value="${esc(token)}"><label class="f" for="cl">the address on the list</label>
+   <div class="row" style="flex-wrap:nowrap"><input class="inp" id="cl" name="email" type="email" required autocomplete="email" placeholder="name@example.com"><button class="btn pri" type="submit">Continue</button></div></form>
+   <p class="small" style="margin-top:12px;font-size:13px">If you do not know which address is on the list, write to us through <a href="/contact">Contact SAW</a>.</p></div>`;
+}
+const errorFor = ctx => ctx.query.e === 'refused' ? refusedClaim(ctx) : null;
 
 export function signin(ctx) {
-  const err = ctx.query.e === 'refused' ? refusedMsg : ctx.query.e === 'demo' ? '<p class="alert">The demo login or password is wrong.</p>' : ctx.query.e ? `<p class="alert">${esc(ctx.query.e)}</p>` : '';
+  const err = errorFor(ctx) || (ctx.query.e === 'demo' ? '<p class="alert">The demo login or password is wrong.</p>' : ctx.query.e ? `<p class="alert">${esc(ctx.query.e)}</p>` : '');
   return `<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">
    <div style="--b:340px"><p class="eyebrow"><span class="p">$</span> sign-in</p><h1 class="h1">Sign in</h1><p class="lede" style="margin-bottom:22px">Sign in with the address you registered with. The site then opens your program.</p>
    <div class="card flat"><p class="ch">not registered yet?</p><p class="fg2" style="margin:0 0 14px;font-size:15px">Register once, with the email address you gave your course organizer.</p><a class="btn sec" href="/register">Register to use the service</a></div></div>
@@ -143,7 +167,7 @@ export function register(ctx) {
      <dl class="kv" style="margin:0 0 20px"><dt>address</dt><dd>${esc(ctx.user.email)}</dd><dt>institution</dt><dd>${esc(ctx.group.institution)}</dd><dt>group</dt><dd>${esc(ctx.group.code)}</dd><dt>programme</dt><dd>${esc(ctx.programme ? ctx.programme.title : ctx.group.programme)}</dd></dl>
      <p class="small" style="margin:0 0 18px">From now on, sign in with the same address.</p><a class="btn pri" href="/program">Go to my program</a></div></div>`;
   }
-  const err = ctx.query.e === 'refused' ? refusedMsg : ctx.query.e ? `<p class="alert">${esc(ctx.query.e)}</p>` : '';
+  const err = errorFor(ctx) || (ctx.query.e ? `<p class="alert">${esc(ctx.query.e)}</p>` : '');
   return `<div class="wrap page"><div class="cols" style="align-items:flex-start;gap:32px;max-width:1080px;margin-inline:auto">
    <div style="--b:360px"><p class="eyebrow"><span class="p">$</span> register</p><h1 class="h1">Register to use the service</h1><p class="lede" style="margin-bottom:22px">You register once. After that, you sign in with the same address.</p>
    <div class="card warnb"><p class="ch" style="color:var(--warn)">use the right address</p><p class="fg2" style="margin:0 0 10px">Register with the email address you gave your course organizer. If it is a Gmail address, register with Google.</p><p class="fg2" style="margin:0">The site accepts only addresses that your teacher has put on a group list. It reads your institution and group from that list, so you do not enter them yourself.</p></div></div>

@@ -213,6 +213,13 @@ function migrate() {
   for (const col of ['ends_at', 'note', 'room']) {
     if (!haveLesson.has(col)) db.exec(`ALTER TABLE lessons ADD COLUMN ${col} TEXT`);
   }
+  // A refused sign-in gets a one-time token, so that the same person can then
+  // name the address on the list; "claimed" keeps the listed address it
+  // replaced (decision of 17 November 2026).
+  const haveRefused = new Set(db.prepare('PRAGMA table_info(refused)').all().map(c => c.name));
+  for (const col of ['token', 'claimed']) {
+    if (!haveRefused.has(col)) db.exec(`ALTER TABLE refused ADD COLUMN ${col} TEXT`);
+  }
   // Questions to the helper, counted per person and day for the daily limit.
   db.exec('CREATE TABLE IF NOT EXISTS helper_usage(who TEXT NOT NULL, day TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY(who, day))');
   // The teacher may give the English names of students on the list, which the

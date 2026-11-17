@@ -59,9 +59,10 @@ export function admit(rawEmail) {
   const existing = get('SELECT * FROM users WHERE email = ?', email);
   if (existing && (existing.role === 'demo' || existing.role === 'sample')) return { refused: true };
   if (!perm) {
-    run('INSERT INTO refused(email, at) VALUES(?, ?)', email, now());
+    const token = crypto.randomBytes(16).toString('hex');
+    run('INSERT INTO refused(email, at, token) VALUES(?, ?, ?)', email, now(), token);
     log('registrar', 'refused a registration from an address that is not on any list');
-    return { refused: true };
+    return { refused: true, token };
   }
   const group = get('SELECT * FROM groups WHERE id = ?', perm.group_id);
   if (existing) {
@@ -162,3 +163,27 @@ async function fetchPhoto(url) {
 }
 
 export const displayName = u => (u ? u.last_name || u.first_name || (u.role === 'demo' ? 'demo' : u.email.split('@')[0]) : '');
+
+// A student whose Google address was refused names the address on the list.
+// If that address is on a group's list and nobody has registered with it yet,
+// its place on the list moves to the Google address, at once, as the owner
+// decided on 17 November 2026. The one-time token proves that the answer comes
+// from the person who just signed in with that Google address, within 30
+// minutes. Returns { email } or { error } with a code for the page.
+export const CLAIM_MINUTES = 30;
+export function claimListed(token, rawListed) {
+  const row = /^[0-9a-f]{32}$/.test(String(token || '')) &&
+    get('SELECT * FROM refused WHERE token = ? AND handled = 0 AND at >= ?', token, new Date(Date.now() - CLAIM_MINUTES * 60e3).toISOString());
+  if (!row) return { error: 'expired' };
+  const listed = normEmail(rawListed);
+  if (!listed || listed === row.email || config.teacherEmails.includes(listed)) return { error: 'unknown' };
+  const perm = get('SELECT p.* FROM permitted p JOIN groups g ON g.id = p.group_id WHERE p.email = ? AND g.is_demo = 0', listed);
+  if (!perm) return { error: 'unknown' };
+  if (get('SELECT 1 FROM users WHERE email = ?', listed)) return { error: 'taken' };
+  if (get('SELECT 1 FROM permitted WHERE email = ?', row.email)) return { email: row.email };
+  run('UPDATE permitted SET email = ? WHERE email = ?', row.email, listed);
+  run('UPDATE refused SET handled = 1, token = NULL WHERE email = ?', row.email);
+  run('UPDATE refused SET claimed = ? WHERE id = ?', listed, row.id);
+  log('registrar', 'moved a place on a group list to the Google address of the student who named it');
+  return { email: row.email };
+}

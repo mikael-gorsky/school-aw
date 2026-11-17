@@ -25,7 +25,7 @@ The teacher keeps a list of permitted addresses. Each address on the list carrie
 
 The page "Register to use the service" tells the student to register with the email address given to the course organizer, preferably a Gmail address. A Gmail address registers with Google. Any other address registers through a link sent to it by email. The site accepts only an address on the list. When it accepts one, it tells the student the institution, group and program in which it has placed them. The student never enters these values.
 
-When an address is not on any list, the site refuses the registration, tells the student to check the address or write to Contact SAW, and shows the attempt to the teacher on the Groups and access page. The teacher can add the address to a group or ignore it.
+When an address is not on any list, the site refuses the registration, tells the student to check the address or write to Contact SAW, and shows the attempt to the teacher on the Groups and access page. The teacher can add the address to a group or ignore it. After a refused Google sign-in, the site also asks the student for the address that is on the list. If that address is on a group's list and nobody has registered with it, the site moves its place on the list to the Google address at once and signs the student in, and the teacher sees each such change on the Groups and access page. The sign-in pages tell students to open the site in Chrome or Safari, not inside the Gmail or WhatsApp app, if Google shows an error.
 
 After registration, the student signs in with the same address.
 
@@ -136,7 +136,7 @@ The analyst agent flags a student who has not registered, who answers fewer than
 
 ### 4.9 Groups and access (teacher)
 
-The page shows each group with its institution, program and the numbers of permitted and registered addresses, and the demo group. It holds the form for permitting addresses, the CSV upload, the list of permitted addresses with the state of each, refused registrations, the demo logins with their last use and a way to change the password, and the messages from Contact SAW.
+The page shows each group with its institution, program and the numbers of permitted and registered addresses, and the demo group. It holds the form for permitting addresses, the CSV upload, the list of permitted addresses with the state of each, refused registrations, the addresses that students changed themselves, the demo logins with their last use and a way to change the password, and the messages from Contact SAW.
 
 ### 4.10 Agents (teacher)
 

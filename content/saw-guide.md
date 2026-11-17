@@ -4,7 +4,7 @@ School of Agentic Work (SAW) is the site that supports students of Mikael Gorsky
 
 ## Signing in and registering
 
-A student registers once with Google, using the email address they gave their course organizer. The site accepts only addresses on the teacher's list of permitted addresses, and it takes the institution, group and program from that list, so the student never enters them. If the site refuses an address, or the address is not a Google address, the student writes to the teacher through Contact SAW. The demo login is a sample student for people who want to see the site; everything entered under it is deleted every night.
+A student registers once with Google, using the email address they gave their course organizer. The site accepts only addresses on the teacher's list of permitted addresses, and it takes the institution, group and program from that list, so the student never enters them. If the site refuses a Google address, it asks for the address that is on the list; when that address is on a list and nobody has registered with it, the site lets the student in with the Google address from then on. If Google itself shows an error, the student opens the site in Chrome or Safari, not inside the Gmail or WhatsApp app. If the student does not know which address is on the list, or the address is not a Google address, the student writes to the teacher through Contact SAW. The demo login is a sample student for people who want to see the site; everything entered under it is deleted every night.
 
 ## The parts of the site
 

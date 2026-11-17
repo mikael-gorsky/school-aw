@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { config, secureCookies } from './config.js';
 import { all, get, run, now, log, setting, setSetting } from './db.js';
-import { COOKIE, createSession, sessionUser, endSession, admit, demoLogin, googleStart, googleFinish, applyProfile, normEmail } from './auth.js';
+import { COOKIE, createSession, sessionUser, endSession, admit, demoLogin, googleStart, googleFinish, applyProfile, normEmail, claimListed } from './auth.js';
 import { layout, HOME } from './html.js';
 import { programme, hasExam } from './content.js';
 import * as M from './model.js';
@@ -130,7 +130,7 @@ on('GET', '/healthz', {}, () => ({ text: 'ok' }));
 // ---------- sign-in ----------
 async function signInAs(ctx, email, intent, profile) {
   const a = admit(email);
-  if (a.refused) return { redirect: `/${intent === 'register' ? 'register' : 'signin'}?e=refused` };
+  if (a.refused) return { redirect: `/${intent === 'register' ? 'register' : 'signin'}?e=refused${a.token ? `&r=${a.token}` : ''}` };
   // The profile is stored only for an address that was admitted.
   await applyProfile(a.user.id, profile);
   const token = createSession(a.user.id);
@@ -149,6 +149,17 @@ on('GET', '/auth/google/callback', {}, async ctx => {
   } catch (e) {
     return { redirect: `/signin?e=${encodeURIComponent(e.message)}` };
   }
+});
+// The student names the address on the list after a refused sign-in
+// (decision of 17 November 2026). The limits keep anyone from trying address
+// after address: 5 tries for each refused sign-in, and 30 an hour for a
+// connection, since a whole class may share the campus connection.
+on('POST', '/auth/claim', {}, ctx => {
+  const token = str(ctx.form.r, 64);
+  if (limited(`claim:${token}`, 5, 3600e3) || limited(`claim-ip:${ctx.ip}`, 30, 3600e3)) return { redirect: `/register?e=refused&r=${encodeURIComponent(token)}&m=limit` };
+  const c = claimListed(token, str(ctx.form.email, 200));
+  if (c.error) return { redirect: c.error === 'expired' ? '/register?e=' + encodeURIComponent('This step has expired. Register with Google again.') : `/register?e=refused&r=${encodeURIComponent(token)}&m=${c.error}` };
+  return signInAs(ctx, c.email, 'register');
 });
 on('POST', '/auth/dev', {}, ctx => {
   if (!config.devLogin) return { status: 404, title: 'Not found', body: P.notFound() };

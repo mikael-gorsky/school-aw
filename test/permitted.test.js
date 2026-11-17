@@ -16,7 +16,7 @@ test('the teacher signs in as the teacher', () => {
 test('an address that is not on any list is refused and recorded', async () => {
   const { r, jar } = await signInDev('stranger@gmail.com');
   assert.equal(r.status, 303);
-  assert.equal(r.location, '/register?e=refused');
+  assert.match(r.location, /^\/register\?e=refused&r=[0-9a-f]{32}$/);
   assert.equal(jar.cookie, undefined);
   assert.ok(db.get('SELECT * FROM refused WHERE email = ?', 'stranger@gmail.com'));
   assert.equal(db.get('SELECT * FROM users WHERE email = ?', 'stranger@gmail.com'), undefined);
@@ -70,7 +70,7 @@ test('removing an address from the list ends the access at once', async () => {
   await req('POST', '/teacher/access/remove', { jar: teacher.jar, form: { email: 'student.one@gmail.com' } });
   assert.equal((await req('GET', '/class/live', { jar })).status, 401);
   const again = await signInDev('student.one@gmail.com');
-  assert.equal(again.r.location, '/register?e=refused');
+  assert.match(again.r.location, /^\/register\?e=refused&r=/);
 });
 
 test('a form sent from another site is refused', async () => {
