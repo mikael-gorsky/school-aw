@@ -76,7 +76,7 @@ The page continues with the 4 sections, each with the agent that runs it, a sect
 
 ### 4.2 My program
 
-The page shows the program name, the institution, the group and the teacher. It shows the next lesson with its date, a button to Learn in class and the Zoom link. It shows the student's group as the site recorded it, the description of the program, the parts of the grade with their weights, the schedule of the student's own group, with the date, the time in Israel and the content of each meeting and whether it is held, today or coming, the full curriculum with the status of each module, the documents (the program 2-pager, the full curriculum, the project rules and the grading rules) and a way to contact the teacher.
+The page shows the program name, the institution, the group and the teacher. It shows the next lesson with its date, its room on campus, a button to Learn in class and the Zoom link. It shows the student's group as the site recorded it, the description of the program, the parts of the grade with their weights, the schedule of the student's own group, with the date, the time in Israel, the room and the content of each meeting and whether it is held, today or coming, the full curriculum with the status of each module, the documents (the program 2-pager, the full curriculum, the project rules and the grading rules) and a way to contact the teacher.
 
 ### 4.3 Learn in class
 

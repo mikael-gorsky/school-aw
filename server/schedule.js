@@ -48,12 +48,12 @@ export function importSchedule(progId, sched = scheduleFile(progId)) {
       const plan = sched.lessons.find(l => l.n === i + 1);
       if (!plan) return;
       const startsAt = israelToIso(date, gs.from), endsAt = israelToIso(date, gs.to);
-      const note = plan.note || null;
+      const note = plan.note || null, room = gs.room || null;
       const old = get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', g.id, plan.n);
       if (!old) {
-        addLesson(g.id, plan.n, plan.modules, startsAt, null, { endsAt, note });
+        addLesson(g.id, plan.n, plan.modules, startsAt, null, { endsAt, note, room });
       } else {
-        run('UPDATE lessons SET starts_at = ?, ends_at = ?, note = ? WHERE id = ?', startsAt, endsAt, note, old.id);
+        run('UPDATE lessons SET starts_at = ?, ends_at = ?, note = ?, room = ? WHERE id = ?', startsAt, endsAt, note, room, old.id);
         if (JSON.stringify(lessonModules(old)) !== JSON.stringify(plan.modules)) {
           const answered = get('SELECT 1 FROM answers a JOIN items i ON i.id = a.item_id WHERE i.lesson_id = ? LIMIT 1', old.id);
           if (!answered) {
@@ -102,10 +102,13 @@ export function scheduleContext(group, t = new Date()) {
     const mods = lessonModules(l);
     lines.push(`- Lesson ${l.number}, ${when} [${lessonPhase(l, t)}]: ${lessonTitle(group.programme, l) || 'no content set'}${mods.length ? ` (module${mods.length > 1 ? 's' : ''} ${mods.join(' and ')})` : ''}`);
   }
-  // The Zoom link, for when a class cannot be held on campus (decision of
-  // 10 November 2026). It is the same for every lesson, so it is named once.
+  // The room on campus (decision of 17 November 2026), and the Zoom link for
+  // when a class cannot be held there (decision of 10 November 2026). Each is
+  // the same for every lesson, so each is named once.
+  const rooms = [...new Set(ls.map(l => l.room).filter(Boolean))];
+  if (rooms.length) lines.push('', `Classes are on campus, in room ${rooms.join(', ')} (building ${rooms[0].split('-')[0]}).`);
   const zooms = [...new Set(ls.map(l => l.zoom_url).filter(Boolean))];
-  if (zooms.length) lines.push('', `Classes are on campus. The Zoom link of the group, for a class that moves to Zoom: ${zooms.join(', ')}`);
+  if (zooms.length) lines.push('', `${rooms.length ? '' : 'Classes are on campus. '}The Zoom link of the group, for a class that moves to Zoom: ${zooms.join(', ')}`);
   const sched = scheduleFile(group.programme);
   if (sched && sched.breaks && !group.is_demo) lines.push('', ...sched.breaks);
   return lines.join('\n');

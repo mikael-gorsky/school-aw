@@ -137,7 +137,7 @@ function programmeBody(prog, info, lessons, interactive, ctx) {
     return `<div class="section"><div class="row" style="gap:6px 14px;margin-bottom:6px"><span class="mono" style="color:var(--accent);font-size:14px">part-${p.n}/</span><h3 class="h3" style="margin:0;font-size:21px">${esc(p.title)}</h3><span class="mono small">modules ${pad(p.from)}–${pad(p.to)}</span></div><p class="fg2" style="margin:0 0 12px;font-size:15px">${esc(p.text)}</p><div class="card" style="padding:4px 20px">${rows}</div></div>`;
   }).join('');
   const nextCard = next
-    ? `<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">${phase(next) === 'live' ? 'lesson running now' : phase(next) === 'today' ? 'today\'s lesson' : 'next lesson'} <span class="r">${esc(fmtDate(next.starts_at))}</span></p><h2 class="h2" style="font-size:24px">Lesson ${next.number} · ${esc(lessonTitle(prog.id, next))}</h2><p class="fg2" style="margin:0 0 16px">The warm-up quiz opens before the lecture starts. Keep Learn in class open beside Zoom during the lesson.</p><div class="row"><a class="btn pri" href="/class">Open Learn in class</a>${next.zoom_url ? `<a class="btn sec" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div></div>`
+    ? `<div class="card hl" style="--b:420px;flex:999 1 420px"><p class="ch">${phase(next) === 'live' ? 'lesson running now' : phase(next) === 'today' ? 'today\'s lesson' : 'next lesson'} <span class="r">${esc(fmtDate(next.starts_at))}</span></p><h2 class="h2" style="font-size:24px">Lesson ${next.number} · ${esc(lessonTitle(prog.id, next))}</h2><p class="fg2" style="margin:0 0 16px">${next.room ? `On campus, in room ${esc(next.room)}. ` : ''}The warm-up quiz opens before the lecture starts. Keep Learn in class open during the lesson.</p><div class="row"><a class="btn pri" href="/class">Open Learn in class</a>${next.zoom_url ? `<a class="btn sec" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div></div>`
     : '<div class="card" style="--b:420px;flex:999 1 420px"><p class="ch">next lesson</p><p class="fg2" style="margin:0">Your teacher has not set the next lesson yet.</p></div>';
   // A weight set by the teacher wins; otherwise the weight from the syllabus.
   const weight = k => esc(setting(`weight_${k}`, '') || (prog.grade.find(x => x.key === k) || {}).weight || '[%]');
@@ -168,9 +168,9 @@ function scheduleCard(prog, lessons, phase) {
   if (!lessons.length) return '<div class="section card"><p class="ch">your schedule</p><p class="fg2" style="margin:0">Your teacher has not put the schedule of your group on the site yet.</p></div>';
   const rows = lessons.map(l => {
     const ms = lessonModules(l);
-    return `<tr><td class="m">${l.number}</td><td class="m">${l.starts_at ? esc(dayLabel(l.starts_at)) : '[date]'}</td><td class="m">${l.starts_at ? `${esc(timeLabel(l.starts_at))}${l.ends_at ? `–${esc(timeLabel(l.ends_at))}` : ''}` : ''}</td><td>${ms.length ? `<span class="mono small" style="display:block">module${ms.length > 1 ? 's' : ''} ${ms.join(' and ')}</span>` : ''}${esc(lessonTitle(prog.id, l))}</td><td>${PHASE_CHIP[phase(l)]()}</td></tr>`;
+    return `<tr><td class="m">${l.number}</td><td class="m">${l.starts_at ? esc(dayLabel(l.starts_at)) : '[date]'}</td><td class="m">${l.starts_at ? `${esc(timeLabel(l.starts_at))}${l.ends_at ? `–${esc(timeLabel(l.ends_at))}` : ''}` : ''}</td><td class="m">${esc(l.room || '')}</td><td>${ms.length ? `<span class="mono small" style="display:block">module${ms.length > 1 ? 's' : ''} ${ms.join(' and ')}</span>` : ''}${esc(lessonTitle(prog.id, l))}</td><td>${PHASE_CHIP[phase(l)]()}</td></tr>`;
   }).join('');
-  return `<div class="section"><h2 class="h2">Your schedule</h2><p class="fg2" style="margin:0 0 12px;font-size:15px">The meetings of your group this semester, in Israel time. The Teaching Assistant knows this schedule and today's date, so you can ask it what today's class covers and what to read for it.</p><div class="card" style="padding:6px 0"><div class="scroll"><table class="tbl" style="min-width:620px"><thead><tr><th>lesson</th><th>date</th><th>time</th><th>content</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`;
+  return `<div class="section"><h2 class="h2">Your schedule</h2><p class="fg2" style="margin:0 0 12px;font-size:15px">The meetings of your group this semester, in Israel time. The Teaching Assistant knows this schedule and today's date, so you can ask it what today's class covers and what to read for it.</p><div class="card" style="padding:6px 0"><div class="scroll"><table class="tbl" style="min-width:680px"><thead><tr><th>lesson</th><th>date</th><th>time</th><th>room</th><th>content</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`;
 }
 
 export function programmePage(ctx) {
@@ -223,12 +223,12 @@ export function classPage(ctx) {
   if (lesson) {
     const items = M.itemsOf(lesson.id);
     const mineIds = new Set(ctx.db.all('SELECT item_id FROM answers WHERE user_id = ? AND item_id IN (SELECT id FROM items WHERE lesson_id = ?)', ctx.user.id, lesson.id).map(r => r.item_id));
-    plan = `<div class="card"><p class="ch">lesson ${lesson.number} <span class="r">${esc(fmtDate(lesson.starts_at))}</span></p>${items.map(x => {
+    plan = `<div class="card"><p class="ch">lesson ${lesson.number}${lesson.room ? ` · room ${esc(lesson.room)}` : ''} <span class="r">${esc(fmtDate(lesson.starts_at))}</span></p>${items.map(x => {
       const st = x.state === 'open' ? '<span class="chip solid">open now</span>' : mineIds.has(x.id) ? stat('ok', 'answered') : x.state === 'ready' ? '<span class="chip none">not yet</span>' : stat('none', 'not answered');
       return `<div class="li"><span class="t"><b style="font-size:15px;font-weight:600">${esc(x.label)}</b></span>${st}</div>`;
     }).join('')}${lesson.zoom_url ? `<a class="btn sec wide" href="${esc(lesson.zoom_url)}" rel="noopener" style="margin-top:12px">Zoom link</a>` : ''}</div>`;
   } else if (next) {
-    plan = `<div class="card"><p class="ch">next lesson <span class="r">${esc(fmtDate(next.starts_at))}</span></p><p style="margin:0 0 10px;font-weight:700">Lesson ${next.number} · ${esc(lessonTitle(d.g.programme, next))}</p>${next.zoom_url ? `<a class="btn sec wide" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div>`;
+    plan = `<div class="card"><p class="ch">next lesson <span class="r">${esc(fmtDate(next.starts_at))}</span></p><p style="margin:0 0 10px;font-weight:700">Lesson ${next.number} · ${esc(lessonTitle(d.g.programme, next))}</p>${next.room ? `<p class="fg2" style="margin:0 0 10px">Room ${esc(next.room)}</p>` : ''}${next.zoom_url ? `<a class="btn sec wide" href="${esc(next.zoom_url)}" rel="noopener">Zoom link</a>` : ''}</div>`;
   }
   const studyMod = next ? next.module : null;
   const rate = M.lessonToRate(ctx.user);

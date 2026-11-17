@@ -101,3 +101,8 @@ The demo group's lessons show at 10:00–13:00 Israel time on their days, like a
 ## 10 November 2026
 
 Both HIT groups use the same Zoom link, set on every lesson of the semester in the database. The link is not written into the repository, because the repository is public. Classes are on campus; the link is for a class that cannot be held there. My program shows it on the next lesson, and the Teaching Assistant gives it when asked.
+
+## 17 November 2026
+
+Both HIT groups meet on campus in room 3-101 (building 3, room 101). The room is part of the semester schedule and is written into each lesson by `npm run import-schedule`. My program shows it on the next lesson and in the schedule table, Learn in class shows it on the lesson, and the Teaching Assistant gives it when asked. A student had asked for the room because the site did not show it.
+

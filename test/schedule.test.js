@@ -8,7 +8,7 @@ const teacher = await signInDev('teacher@example.com');
 
 const SCHED = {
   term: 'Test term', timeZone: 'Asia/Jerusalem', breaks: ['No class on Sunday 6 December 2026 (Hanukkah).'],
-  groups: [{ code: 'sched-1', day: 'Sunday', from: '10:00', to: '13:00', dates: ['2026-10-18', '2026-11-01', '2026-11-08'] }],
+  groups: [{ code: 'sched-1', day: 'Sunday', from: '10:00', to: '13:00', room: '3-101', dates: ['2026-10-18', '2026-11-01', '2026-11-08'] }],
   lessons: [{ n: 1, modules: [1] }, { n: 2, modules: [4, 6] }, { n: 3, note: 'Project work and presentations', modules: [] }],
 };
 
@@ -27,6 +27,7 @@ test('the schedule is imported into the group, can run again, and keeps answers'
   assert.equal(ls[1].ends_at, '2026-11-01T11:00:00.000Z');
   assert.equal(ls[1].modules, '[4,6]');
   assert.equal(ls[2].note, 'Project work and presentations');
+  assert.equal(ls[0].room, '3-101');
   assert.equal(db.get('SELECT COUNT(*) AS n FROM items WHERE lesson_id = ?', ls[2].id).n, 0);
   // Again, with a new date: the same lessons, moved.
   const moved = structuredClone(SCHED);
@@ -51,6 +52,7 @@ test('the Teaching Assistant gets the date and the group schedule, without names
   assert.match(t, /Lesson 2, Sun, Nov 1, 2026, 10:00–13:00 \[today\]/);
   assert.match(t, /Lesson 3, .*Project work and presentations/);
   assert.match(t, /Hanukkah/);
+  assert.match(t, /Classes are on campus, in room 3-101 \(building 3\)\./);
   db.run('UPDATE lessons SET zoom_url = ? WHERE group_id = ?', 'https://zoom.example/j/1', g.id);
   assert.match(scheduleContext(g), /Zoom link of the group, for a class that moves to Zoom: https:\/\/zoom\.example\/j\/1$|Zoom link of the group, for a class that moves to Zoom: https:\/\/zoom\.example\/j\/1\n/);
   assert.ok(!t.includes('sched.user'));
@@ -62,6 +64,8 @@ test('My program shows the schedule of the student\'s own group', async () => {
   const html = r.text;
   assert.match(html, /Your schedule/);
   assert.match(html, /Project work and presentations/);
+  assert.match(html, /<th>room<\/th>/);
+  assert.match(html, /<td class="m">3-101<\/td>/);
   const visitor = (await req('GET', '/program')).text;
   assert.ok(!visitor.includes('Your schedule'));
 });

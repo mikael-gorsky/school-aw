@@ -208,7 +208,9 @@ function migrate() {
   // A lesson from the semester schedule has an end time, and may carry a note
   // such as "Tribunal introduction", or no module at all for project work
   // (decision of 1 November 2026).
-  for (const col of ['ends_at', 'note']) {
+  // The room comes from the schedule too, so that students find the class on
+  // campus (decision of 17 November 2026).
+  for (const col of ['ends_at', 'note', 'room']) {
     if (!haveLesson.has(col)) db.exec(`ALTER TABLE lessons ADD COLUMN ${col} TEXT`);
   }
   // Questions to the helper, counted per person and day for the daily limit.

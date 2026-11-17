@@ -39,7 +39,7 @@ export const lastEnded = groupId => get("SELECT * FROM lessons WHERE group_id = 
 // exercises of each module in turn.
 export function addLesson(groupId, number, modules, startsAt, zoomUrl, extra = {}) {
   const g = groupById(groupId);
-  run('INSERT INTO lessons(group_id, number, module, modules, starts_at, zoom_url, ends_at, note) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', groupId, number, modules[0] || 0, JSON.stringify(modules), startsAt || null, zoomUrl || null, extra.endsAt || null, extra.note || null);
+  run('INSERT INTO lessons(group_id, number, module, modules, starts_at, zoom_url, ends_at, note, room) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', groupId, number, modules[0] || 0, JSON.stringify(modules), startsAt || null, zoomUrl || null, extra.endsAt || null, extra.note || null, extra.room || null);
   const lesson = get('SELECT * FROM lessons WHERE group_id = ? AND number = ?', groupId, number);
   lessonItemsFor(g.programme, modules).forEach((it, i) => {
     run('INSERT INTO items(lesson_id, seq, label, question, options, correct) VALUES(?, ?, ?, ?, ?, ?)',
