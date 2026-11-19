@@ -18,7 +18,7 @@ import { readPermitCsv, readPermitList, isEmail } from './csv.js';
 import { parseRepo, checkRepository } from './reviewer.js';
 import { aiAvailable, askTutor, groupThemes } from './ai.js';
 import { askHelper, cleanTurns, HELPER_DAILY } from './helper.js';
-import { scheduleContext } from './schedule.js';
+import { scheduleContext, lessonPhase } from './schedule.js';
 import { overBudget, allowMore, stopAi, dismissAlerts } from './spend.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -339,6 +339,8 @@ on('POST', '/teacher/class/act', { roles: TEACHER }, ctx => {
   if (a === 'start') {
     const l = lessonOf(f.lesson);
     if (M.liveLesson(g.id)) flash = 'Another lesson is running. End it first.';
+    // A past lesson cannot be started (decision of 19 November 2026).
+    else if (l && l.state === 'planned' && lessonPhase(l) === 'held') flash = `The day of lesson ${l.number} has passed. It cannot be started.`;
     else if (l && l.state === 'planned') { run("UPDATE lessons SET state = 'live' WHERE id = ?", l.id); log('proctor', `started lesson ${l.number} of ${M.groupLabel(g)}`); }
   } else if (a === 'release' || a === 'release-next') {
     let it = itemOf(f.item);

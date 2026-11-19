@@ -9,6 +9,7 @@ import { aiAvailable } from '../ai.js';
 import { activeAgents } from './public.js';
 import { totalSpend, monthSpend, spendLimit, aiStopped } from '../spend.js';
 import * as M from '../model.js';
+import { lessonPhase } from '../schedule.js';
 
 const r1 = v => (v == null ? '–' : (Math.round(v * 10) / 10).toFixed(1));
 const gq = ctx => `?group=${ctx.group.id}`;
@@ -107,7 +108,10 @@ export function tClass(ctx) {
     // Suggest the first module that no lesson covers yet.
     const covered = new Set(lessons.flatMap(l => lessonModules(l)));
     const nextMod = (prog.modules.find(m => !covered.has(m.n)) || prog.modules[0]).n;
-    const rows = lessons.map(l => `<tr><td class="m">${l.number}</td><td><span class="mono small" style="display:block">${esc(lessonModulesLabel(l))}</span>${esc(lessonTitle(g.programme, l))}</td><td class="m">${esc(fmtDate(l.starts_at))}</td><td>${l.state === 'ended' ? stat('ok', 'held') : '<span class="chip">planned</span>'}</td><td>${l.state === 'planned' ? `<form method="post" action="/teacher/class/act" class="inline">${hidden(ctx)}<input type="hidden" name="lesson" value="${l.id}"><button class="btn pri" style="min-height:38px" name="action" value="start">Start lesson</button></form>` : ''}</td></tr>`).join('');
+    // A lesson whose day has passed cannot be started any more, even if the
+    // teacher never ran it on the site (decision of 19 November 2026).
+    const passed = l => l.state === 'planned' && lessonPhase(l) === 'held';
+    const rows = lessons.map(l => `<tr><td class="m">${l.number}</td><td><span class="mono small" style="display:block">${esc(lessonModulesLabel(l))}</span>${esc(lessonTitle(g.programme, l))}</td><td class="m">${esc(fmtDate(l.starts_at))}</td><td>${l.state === 'ended' ? stat('ok', 'held') : passed(l) ? stat('none', 'past, not run on the site') : '<span class="chip">planned</span>'}</td><td>${l.state === 'planned' && !passed(l) ? `<form method="post" action="/teacher/class/act" class="inline">${hidden(ctx)}<input type="hidden" name="lesson" value="${l.id}"><button class="btn pri" style="min-height:38px" name="action" value="start">Start lesson</button></form>` : ''}</td></tr>`).join('');
     return `<div class="wrap page">${head('proctor --live', 'Learn in class', `No lesson is running · ${scope(ctx)}`, groupSwitch(ctx) + ag('proctor'))}
      <div class="cols" style="align-items:flex-start"><div class="card" style="--b:520px;flex:999 1 520px;padding:6px 0"><p class="ch" style="padding:16px 20px 0">lessons of this group</p>${lessons.length ? `<div class="scroll"><table class="tbl"><thead><tr><th>lesson</th><th>modules</th><th>starts</th><th>state</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="fg2" style="padding:0 20px 16px;margin:0">No lessons yet. Add the first lesson.</p>'}</div>
      <form method="post" action="/teacher/class/act" class="card" style="flex:1 1 320px">${hidden(ctx)}<input type="hidden" name="action" value="add-lesson"><p class="ch">add a lesson</p>
