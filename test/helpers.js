@@ -7,6 +7,11 @@ process.env.DEV_LOGIN = '1';
 process.env.SESSION_SECRET = 'test-secret';
 process.env.SAW_LOG = '0';
 process.env.ANTHROPIC_API_KEY = 'test-key';
+// Tests must never touch the pod's real backups: the data check deletes old ones.
+const { mkdtempSync } = await import('node:fs');
+const { tmpdir } = await import('node:os');
+const { join } = await import('node:path');
+process.env.BACKUP_DIR = mkdtempSync(join(tmpdir(), 'saw-test-backups-'));
 
 const http = await import('node:http');
 const db = await import('../server/db.js');

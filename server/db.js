@@ -258,6 +258,12 @@ function migrate() {
     updated_at TEXT NOT NULL
   )`);
   minimizeNames();
+  // When the teacher sent the notice that a group's data will be deleted, and
+  // when it was (decision of 20 November 2026).
+  const haveGroup = new Set(db.prepare('PRAGMA table_info(groups)').all().map(c => c.name));
+  for (const col of ['notice_sent_at', 'purged_at']) {
+    if (!haveGroup.has(col)) db.exec(`ALTER TABLE groups ADD COLUMN ${col} TEXT`);
+  }
 }
 
 export function getDb() {

@@ -38,7 +38,7 @@ The site resets the demo group every night at 03:00 Israel time. A pod that is s
 
 ## Backups
 
-`npm run backup` writes a consistent copy of the database to `backups/` while the site runs. Copy each backup out of the pod. To restore one, stop the service, replace `saw.db` in `DATA_DIR` with the backup file, delete any `saw.db-wal` and `saw.db-shm` files beside it, and start the service again. Write down here where the copies go once that is set up.
+`npm run backup` writes a consistent copy of the database to `backups/` while the site runs. Backups older than 30 days are deleted, by the backup itself and by the site every 10 minutes, so that data the site deleted does not live on in them (decision of 20 November 2026). Copy each backup out of the pod. To restore one, stop the service, replace `saw.db` in `DATA_DIR` with the backup file, delete any `saw.db-wal` and `saw.db-shm` files beside it, and start the service again. Write down here where the copies go once that is set up.
 
 ## The semester schedule
 

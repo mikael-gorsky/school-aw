@@ -188,7 +188,7 @@ Ratings and survey answers are anonymous to the teacher, as described in section
 
 Questions to the tutor go to an AI service without the student's name or email address, and students are asked not to write personal matters in them. The site runs on [hosting service] in [region].
 
-Course data is deleted [period] after the end of the course, once the time for grade appeals has passed.
+A group's course ends on the day of its last lesson. 4 months later the teacher emails the group's students that their data will be deleted, and marks the notice sent on Groups and access. The students then have 7 days to download their data from My account. After that the site deletes the students, their answers, practice, projects, checks and messages, and the group's list of permitted addresses. Ratings and survey answers stay, with the one-way key replaced, so they can no longer be linked to anyone. The site deletes nothing before the teacher marks the notice sent, and the teacher can stop a deletion until it happens. Refused sign-in addresses are deleted after 30 days, messages through Contact SAW after 4 months, and backups after 30 days. A student cannot delete their own account during the course, because the teacher needs their work for grading; a student who wants their data deleted asks the teacher.
 
 A student who does not want to use the site can do the lesson exercises in another way, for example by email to the teacher.
 

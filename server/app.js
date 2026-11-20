@@ -20,6 +20,7 @@ import { aiAvailable, askTutor, groupThemes } from './ai.js';
 import { askHelper, cleanTurns, HELPER_DAILY } from './helper.js';
 import { scheduleContext, lessonPhase } from './schedule.js';
 import { overBudget, allowMore, stopAi, dismissAlerts } from './spend.js';
+import { markNoticeSent, cancelNotice } from './retention.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STATIC = {
@@ -476,6 +477,15 @@ on('POST', '/teacher/access/permit', { roles: TEACHER }, ctx => {
   }
   const msg = [added ? `${added} address${added > 1 ? 'es are' : ' is'} on the list.` : '', missing ? `${missing} address${missing > 1 ? 'es have' : ' has'} no institution or group. Write them in the form and add again.` : ''].filter(Boolean).join(' ');
   return { redirect: `/teacher/access?group=${first ? first.id : ''}`, flash: msg };
+});
+// The teacher marks that the students were told their data will be deleted;
+// the site deletes it 7 days later (decision of 20 November 2026).
+on('POST', '/teacher/access/notice', { roles: TEACHER }, ctx => {
+  const g = ctx.group;
+  if (!g) return { redirect: '/teacher/access' };
+  const a = str(ctx.form.action, 20);
+  const ok = a === 'cancel' ? cancelNotice(g.id) : markNoticeSent(g.id);
+  return back(ctx, '/teacher/access', ok ? (a === 'cancel' ? 'The deletion is stopped. The data stays.' : 'The notice is marked sent. The data will be deleted in 7 days.') : 'Nothing was changed.');
 });
 on('POST', '/teacher/access/remove', { roles: TEACHER }, ctx => {
   const email = normEmail(str(ctx.form.email, 200));

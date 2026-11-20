@@ -5,12 +5,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { initDb, getDb } from '../server/db.js';
+import { backupDir, pruneBackups, BACKUP_DAYS } from '../server/retention.js';
 
 initDb();
-const dir = path.resolve(process.env.BACKUP_DIR || './backups');
+const dir = backupDir();
 fs.mkdirSync(dir, { recursive: true });
 const stamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 13);
 const file = path.join(dir, `saw-${stamp}.db`);
 if (fs.existsSync(file)) fs.unlinkSync(file);
 getDb().exec(`VACUUM INTO '${file.replace(/'/g, "''")}'`);
 console.log(`The database is copied to ${file}.`);
+// Backups older than 30 days are deleted, so that data the site deleted does
+// not live on in them (decision of 20 November 2026).
+const gone = pruneBackups(dir);
+if (gone) console.log(`${gone} backups older than ${BACKUP_DAYS} days are deleted.`);
