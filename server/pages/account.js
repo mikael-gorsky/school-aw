@@ -1,4 +1,4 @@
-// My account: the user's photo and name from Google, a comment, and Sign out.
+// My account: the user's name, a comment, and Sign out.
 // The teacher sees the same details of each student, read-only. Other students
 // never see them (decision of 31 October 2026).
 import { esc, head, exFrame, signStrip, fmtDay } from '../html.js';
@@ -34,24 +34,24 @@ function form(u, g, interactive) {
   const off = interactive ? '' : ' disabled';
   return `<form method="post" action="/account" class="card" style="display:flex;flex-direction:column;gap:18px">
    <div class="row" style="gap:18px;flex-wrap:nowrap">${avatar(u)}<div style="min-width:0"><p style="margin:0;font-weight:800;font-size:20px">${esc([u.first_name, u.last_name].filter(Boolean).join(' ') || displayName(u))}</p><p class="mono small" style="margin:4px 0 0">${esc(roleLabel(u.role))}</p></div></div>
-   <div class="cols" style="--b:220px;gap:16px"><div><label class="f" for="af">first name</label><input class="inp" id="af" name="first_name" maxlength="80" value="${esc(u.first_name || '')}"${off}></div><div><label class="f" for="al">last name</label><input class="inp" id="al" name="last_name" maxlength="80" value="${esc(u.last_name || '')}"${off}></div></div>
+   <div class="cols" style="--b:220px;gap:16px"><div><label class="f" for="af">first name</label><input class="inp" id="af" name="first_name" maxlength="80" value="${esc(u.first_name || '')}"${off}></div><div><label class="f" for="al">${u.role === 'teacher' ? 'last name' : 'first letter of your last name'}</label><input class="inp" id="al" name="last_name" maxlength="${u.role === 'teacher' ? 80 : 2}" value="${esc(u.last_name || '')}"${off}></div></div>
    ${readonly('ae', 'email', u.email)}
    ${groupFields(g)}
-   <div><label class="f" for="ac">comment</label><textarea class="inp" id="ac" name="comment" rows="5" maxlength="${COMMENT_MAX}" placeholder="Anything you want the teacher to know"${off}>${esc(u.comment || '')}</textarea><p class="small" style="margin:6px 0 0">Only you and the teacher see your name, photo and comment.</p></div>
+   <div><label class="f" for="ac">comment</label><textarea class="inp" id="ac" name="comment" rows="5" maxlength="${COMMENT_MAX}" placeholder="Anything you want the teacher to know"${off}>${esc(u.comment || '')}</textarea><p class="small" style="margin:6px 0 0">Only you and the teacher see your name and comment. Of your last name, the site keeps only the first letter.</p></div>
    <div class="row"><button class="btn pri" type="submit"${off}>Save</button></div></form>`;
 }
 
 export function accountPage(ctx) {
   if (ctx.role === 'visitor') {
-    const sample = { first_name: 'Noa', last_name: 'Cohen', email: 'noa.cohen@gmail.com', role: 'student', comment: 'I work full time, so I join most lessons on Zoom.' };
-    return `<div class="wrap page" style="max-width:820px">${head('whoami', 'My account', 'This page shows your name and photo, the program and group you belong to, and a comment for your teacher.')}
+    const sample = { first_name: 'Noa', last_name: 'C.', email: 'noa.cohen@gmail.com', role: 'student', comment: 'I work full time, so I join most lessons on Zoom.' };
+    return `<div class="wrap page" style="max-width:820px">${head('whoami', 'My account', 'This page shows your name, the program and group you belong to, and a comment for your teacher.')}
      ${exFrame('the account of a student', form(sample, { institution: 'Holon Institute of Technology', code: '1', programme: 'ase' }, false))}
-     ${signStrip('Sign in to see your own account.', ['your name and photo from your Google account, which you can correct', 'the institution, group and program from your teacher’s list', 'a comment that only you and the teacher see'])}</div>`;
+     ${signStrip('Sign in to see your own account.', ['your first name and the first letter of your last name, which you can correct', 'the institution, group and program from your teacher’s list', 'a comment that only you and the teacher see'])}</div>`;
   }
   const u = get('SELECT * FROM users WHERE id = ?', ctx.user.id);
   const g = ctx.role === 'teacher' ? null : ctx.group;
   const note = ctx.role === 'demo' ? '<p class="small" style="margin:0 0 16px">This is the account of the sample student. Everything you change here is deleted every night.</p>' : '';
-  return `<div class="wrap page" style="max-width:820px">${head('whoami', 'My account', 'Your name and photo come from your Google account when you sign in. You can correct your name here.')}
+  return `<div class="wrap page" style="max-width:820px">${head('whoami', 'My account', 'Your first name and the first letter of your last name come from your teacher’s list or your Google account. You can correct them here.')}
    ${note}${form(u, g, true)}
    <div class="card section row" style="justify-content:space-between;align-items:center"><p class="fg2" style="margin:0">Sign out of School of Agentic Work on this device.</p><form method="post" action="/auth/signout" class="inline"><button class="btn sec">Sign out</button></form></div></div>`;
 }

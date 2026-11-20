@@ -21,7 +21,7 @@ The site therefore follows one rule of communication. Every page addresses the s
 
 ### 2.1 Registration and the list of permitted addresses
 
-The teacher keeps a list of permitted addresses. Each address on the list carries an institution name, a group number and a program. The teacher adds addresses by pasting them, one per line, with the institution, group and program for the whole batch, or by uploading a CSV file. When the site reads a CSV file, such as a Moodle export, it reads only 5 columns: first name, last name, email, group and institution. It never imports ID numbers. Where a file has names in 2 languages, as a Moodle export does, the English columns are read. A group or institution in the file overrides the one written in the form. The names may be left out, and then they come from the student's Google account at sign-in. A name from the list comes before the name from Google.
+The teacher keeps a list of permitted addresses. Each address on the list carries an institution name, a group number and a program. The teacher adds addresses by pasting them, one per line, with the institution, group and program for the whole batch, or by uploading a CSV file. When the site reads a CSV file, such as a Moodle export, it reads only 5 columns: first name, last name, email, group and institution. It never imports ID numbers. Where a file has names in 2 languages, as a Moodle export does, the English columns are read. A group or institution in the file overrides the one written in the form. The names may be left out, and then they come from the student's Google account at sign-in. A name from the list comes before the name from Google. Of a student's last name, the site keeps only the first letter.
 
 The page "Register to use the service" tells the student to register with the email address given to the course organizer, preferably a Gmail address. A Gmail address registers with Google. Any other address registers through a link sent to it by email. The site accepts only an address on the list. When it accepts one, it tells the student the institution, group and program in which it has placed them. The student never enters these values.
 
@@ -47,7 +47,7 @@ The main menu has 4 sections: Learn in class, Study alone, Submit projects and E
 
 A signed-in student also has 2 personal pages, My program and My progress, which appear beside the main menu. My program is the page a student sees after signing in.
 
-Every signed-in user, the teacher included, sees their last name and status beside the main menu, for example "Gold · student". It opens My account, which also holds Sign out.
+Every signed-in user, the teacher included, sees their first name and the first letter of their last name, with their status, beside the main menu, for example "Ann G. · student". It opens My account, which also holds Sign out.
 
 The school pages are Home, The agents, Contact SAW, Privacy notice, Sign in and Register to use the service.
 
@@ -64,7 +64,7 @@ On a phone, the 4 sections sit in a tab bar at the bottom of the screen, and all
 | Submit projects | How checks work, an example check and the list of checks. | Repository links, check results, feedback and project rules. | Checks of all students and the most common failed checks. |
 | Exam finale | How the exam works, an example readiness card and the exam format. | The student's readiness, practice exams and the rules for the exam day. | Readiness of the class, the exam draft and the exam settings. |
 | My progress | What the page shows, with an example. | The student's figures against the average of the group. | Class progress. |
-| My account | What the page shows, with an example. | The student's photo and name, email, institution, group, program and comment, and Sign out. | The teacher's own name, photo, comment and Sign out. |
+| My account | What the page shows, with an example. | The student's name, email, institution, group, program and comment, and Sign out. | The teacher's own name, photo, comment and Sign out. |
 
 ## 4. Pages
 
@@ -124,7 +124,7 @@ Every page shows students and the demo login a round button with a drawn icon of
 
 ### 4.7a My account
 
-The page shows the user's photo, first name and last name, which come from the Google account at sign-in. The user can change both names freely. A name from the teacher's list or from Google fills a name only until the user saves My account; after that the user's own name always stays, even if it is empty. The site copies the photo at each sign-in and serves it itself. The page also shows the email address and, for a student, the institution, group and program from the teacher's list, which the student cannot change. A comment field of up to 2,000 characters holds anything the student wants the teacher to know. Only the user and the teacher see the name, photo and comment; other students never see them. The page holds Sign out.
+The page shows the user's first name and the first letter of the last name, such as "Ann G.", which come from the teacher's list or the Google account at sign-in. The site keeps only that letter of a student's last name, and the teacher's own full name. The user can change both freely. A name from the teacher's list or from Google fills a name only until the user saves My account; after that the user's own name always stays, even if it is empty. The site copies no student's photo; only the teacher's photo is copied at each sign-in and served by the site itself. The page also shows the email address and, for a student, the institution, group and program from the teacher's list, which the student cannot change. A comment field of up to 2,000 characters holds anything the student wants the teacher to know. Only the user and the teacher see the name and comment; other students never see them. The page holds Sign out.
 
 The teacher's lists show each student by name, with the email address under it, and the name opens the student's details and comment, read-only.
 
@@ -182,7 +182,7 @@ Each week, the analyst writes a short list of findings at the top of the report.
 
 Mikael Gorsky runs the site and is responsible for the data it keeps. The privacy notice on the site states the following.
 
-The site keeps the email address a student registers with, and the institution, group and program written beside it on the teacher's list. It keeps the student's answers to exercises, project links and their checks, and messages sent through Contact SAW. When a user signs in with Google, the site also keeps the first and last name and the profile photo from the Google account, and the comment the user writes on My account. Only the user and the teacher see them. The site never asks for an ID number.
+The site keeps the email address a student registers with, and the institution, group and program written beside it on the teacher's list. It keeps the student's answers to exercises, project links and their checks, and messages sent through Contact SAW. It keeps the student's first name and the first letter of the last name, from the teacher's list or the Google account, and the comment the user writes on My account. It keeps no student's photo. Only the user and the teacher see them. The site never asks for an ID number.
 
 Ratings and survey answers are anonymous to the teacher, as described in section 6.2.
 

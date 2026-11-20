@@ -2,7 +2,7 @@
 // permitted addresses (decisions of 31 October 2026).
 import crypto from 'node:crypto';
 import { config, googleConfigured } from './config.js';
-import { get, run, now, log } from './db.js';
+import { get, run, now, log, lastInitial } from './db.js';
 
 const SESSION_DAYS = 30;
 export const COOKIE = 'saw_session';
@@ -134,12 +134,14 @@ export async function googleFinish(query) {
 }
 
 // Names from Google fill only empty fields, so a name the user corrected on
-// My account stays. The photo is copied at every sign-in and served by the
-// site itself, because Google's photo addresses can change.
+// My account stays. Of the last name only the first letter is kept, and only
+// the teacher's photo is copied from Google, at every sign-in, because Google's
+// photo addresses can change (decision of 20 November 2026).
 export async function applyProfile(userId, profile) {
   if (!profile) return;
   const clip = v => String(v || '').trim().slice(0, 80) || null;
-  run('UPDATE users SET first_name = COALESCE(first_name, ?), last_name = COALESCE(last_name, ?) WHERE id = ?', clip(profile.first), clip(profile.last), userId);
+  run('UPDATE users SET first_name = COALESCE(first_name, ?), last_name = COALESCE(last_name, ?) WHERE id = ?', clip(profile.first), lastInitial(profile.last), userId);
+  if (get('SELECT role FROM users WHERE id = ?', userId)?.role !== 'teacher') return;
   const photo = await fetchPhoto(profile.picture);
   if (photo) {
     run(`INSERT INTO user_photos(user_id, type, data, updated_at) VALUES(?, ?, ?, ?)
@@ -162,7 +164,9 @@ async function fetchPhoto(url) {
   }
 }
 
-export const displayName = u => (u ? u.last_name || u.first_name || (u.role === 'demo' ? 'demo' : u.email.split('@')[0]) : '');
+// The header shows the first name and the letter of the last name, such as
+// "Noa K." (decision of 20 November 2026).
+export const displayName = u => (u ? [u.first_name, u.last_name].filter(Boolean).join(' ') || (u.role === 'demo' ? 'demo' : u.email.split('@')[0]) : '');
 
 // A student whose Google address was refused names the address on the list.
 // If that address is on a group's list and nobody has registered with it yet,

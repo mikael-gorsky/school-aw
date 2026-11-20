@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { config, secureCookies } from './config.js';
-import { all, get, run, now, log, setting, setSetting } from './db.js';
+import { all, get, run, now, log, setting, setSetting, lastInitial } from './db.js';
 import { COOKIE, createSession, sessionUser, endSession, admit, demoLogin, googleStart, googleFinish, applyProfile, normEmail, claimListed } from './auth.js';
 import { layout, HOME } from './html.js';
 import { programme, hasExam } from './content.js';
@@ -179,8 +179,11 @@ on('GET', '/account', { title: 'My account' }, ctx => A.accountPage(ctx));
 on('POST', '/account', { roles: ['student', 'demo', 'teacher'] }, ctx => {
   // Names are saved even when empty, so that neither the list nor Google
   // fills them again: the user decides their own name.
+  // A student keeps only the first letter of the last name (decision of
+  // 20 November 2026); the teacher keeps the whole name.
+  const last = ctx.role === 'teacher' ? str(ctx.form.last_name, 80) : (lastInitial(ctx.form.last_name) ?? '');
   run('UPDATE users SET first_name = ?, last_name = ?, comment = ? WHERE id = ?',
-    str(ctx.form.first_name, 80), str(ctx.form.last_name, 80), str(ctx.form.comment, A.COMMENT_MAX) || null, ctx.user.id);
+    str(ctx.form.first_name, 80), last, str(ctx.form.comment, A.COMMENT_MAX) || null, ctx.user.id);
   return { redirect: '/account', flash: 'Your account is saved.' };
 });
 // A photo is open to its owner and to the teacher, and to nobody else.
@@ -438,7 +441,7 @@ function permitTo(groupId, email, first = '', last = '') {
   run(`INSERT INTO permitted(email, group_id, added_at, first_name, last_name) VALUES(?, ?, ?, ?, ?)
        ON CONFLICT(email) DO UPDATE SET group_id = excluded.group_id,
          first_name = COALESCE(excluded.first_name, permitted.first_name), last_name = COALESCE(excluded.last_name, permitted.last_name)`,
-  email, groupId, now(), first || null, last || null);
+  email, groupId, now(), first || null, lastInitial(last));
   run("UPDATE users SET group_id = ? WHERE email = ? AND role = 'student'", groupId, email);
   run('UPDATE refused SET handled = 1 WHERE email = ?', email);
 }

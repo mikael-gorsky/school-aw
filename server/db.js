@@ -196,6 +196,29 @@ export function initDb(file) {
 // columns to a table that already exists, so they are added here once.
 // Names and the photo come from Google, and the comment is written by the user
 // (decision of 31 October 2026).
+// Of a student's last name, the site keeps only the first letter, such as "K.",
+// so that 2 students with the same first name can be told apart while the site
+// holds as little as it can (decision of 20 November 2026).
+export function lastInitial(v) {
+  const s = String(v ?? '').trim();
+  return s ? [...s][0].toUpperCase() + '.' : null;
+}
+
+// Last names stored before 20 November 2026 are cut to their first letter, and
+// photos copied from Google are deleted; only the teacher keeps both
+// (decision of 20 November 2026). Running it again changes nothing.
+export function minimizeNames() {
+  const cut = (table, where) => {
+    for (const r of db.prepare(`SELECT rowid AS id, last_name FROM ${table} WHERE last_name IS NOT NULL AND last_name != '' ${where}`).all()) {
+      const short = lastInitial(r.last_name);
+      if (short !== r.last_name) db.prepare(`UPDATE ${table} SET last_name = ? WHERE rowid = ?`).run(short, r.id);
+    }
+  };
+  cut('users', "AND role != 'teacher'");
+  cut('permitted', '');
+  db.exec("DELETE FROM user_photos WHERE user_id NOT IN (SELECT id FROM users WHERE role = 'teacher')");
+}
+
 function migrate() {
   const have = new Set(db.prepare('PRAGMA table_info(users)').all().map(c => c.name));
   for (const col of ['first_name', 'last_name', 'comment']) {
@@ -234,6 +257,7 @@ function migrate() {
     data BLOB NOT NULL,
     updated_at TEXT NOT NULL
   )`);
+  minimizeNames();
 }
 
 export function getDb() {

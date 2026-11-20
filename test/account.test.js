@@ -5,6 +5,7 @@ import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { req, signInDev, signInDemo, stop, db } from './helpers.js';
 import { applyProfile } from '../server/auth.js';
+import { minimizeNames } from '../server/db.js';
 
 after(stop);
 
@@ -36,7 +37,7 @@ test('My account saves the names and the comment, and holds Sign out', async () 
   const r = await req('POST', '/account', { jar: ann.jar, form: { first_name: 'Ann', last_name: 'Gold', comment: 'I join on Zoom.' } });
   assert.equal(r.location, '/account');
   const u = db.get('SELECT * FROM users WHERE id = ?', annId);
-  assert.deepEqual([u.first_name, u.last_name, u.comment], ['Ann', 'Gold', 'I join on Zoom.']);
+  assert.deepEqual([u.first_name, u.last_name, u.comment], ['Ann', 'G.', 'I join on Zoom.']);
   const page = await req('GET', '/account', { jar: ann.jar });
   assert.match(page.text, /I join on Zoom\./);
   assert.match(page.text, /action="\/auth\/signout"/);
@@ -64,11 +65,11 @@ test('the teacher sees a student’s name, comment and photo', async () => {
   db.run('UPDATE users SET comment = ? WHERE id = ?', 'Needs extra time', annId);
   const page = await req('GET', `/teacher/student/${annId}`, { jar: teacher.jar });
   assert.equal(page.status, 200);
-  assert.match(page.text, /Ann Gold/);
+  assert.match(page.text, /Ann G\./);
   assert.match(page.text, /Needs extra time/);
   assert.equal((await req('GET', `/photo/${benId}`, { jar: teacher.jar })).status, 200);
   const list = await req('GET', '/teacher/access', { jar: teacher.jar });
-  assert.match(list.text, new RegExp(`href="/teacher/student/${annId}"[^>]*>Ann Gold</a>`));
+  assert.match(list.text, new RegExp(`href="/teacher/student/${annId}"[^>]*>Ann G\\.</a>`));
 });
 
 test('names from Google fill only empty fields', async () => {
@@ -76,25 +77,46 @@ test('names from Google fill only empty fields', async () => {
   await applyProfile(id, { first: 'Benjamin', last: 'Stone', picture: '' });
   await applyProfile(id, { first: 'Other', last: 'Name', picture: '' });
   const u = db.get('SELECT first_name, last_name FROM users WHERE id = ?', id);
-  assert.deepEqual([u.first_name, u.last_name], ['Benjamin', 'Stone']);
+  assert.deepEqual([u.first_name, u.last_name], ['Benjamin', 'S.']);
   await applyProfile(annId, { first: 'Anna', last: 'Goldberg', picture: '' });
-  assert.equal(db.get('SELECT last_name FROM users WHERE id = ?', annId).last_name, 'Gold');
+  assert.equal(db.get('SELECT last_name FROM users WHERE id = ?', annId).last_name, 'G.');
 });
 
-test('a photo is copied only from Google’s photo servers', async () => {
+test('a student’s photo is never copied, and the teacher’s only from Google’s photo servers', async () => {
+  const teacherId = db.get("SELECT id FROM users WHERE role = 'teacher'").id;
   const asked = [];
   const original = globalThis.fetch;
   globalThis.fetch = async url => { asked.push(String(url)); return new Response(new Uint8Array([9]), { headers: { 'content-type': 'image/jpeg' } }); };
   try {
-    await applyProfile(annId, { picture: 'https://evil.example.com/a.jpg' });
-    await applyProfile(annId, { picture: 'http://lh3.googleusercontent.com/a.jpg' });
-    assert.equal(asked.length, 0);
     await applyProfile(annId, { picture: 'https://lh3.googleusercontent.com/a/x=s96-c' });
+    assert.equal(asked.length, 0);
+    assert.equal(db.get('SELECT 1 AS x FROM user_photos WHERE user_id = ?', annId), undefined);
+    await applyProfile(teacherId, { picture: 'https://evil.example.com/a.jpg' });
+    await applyProfile(teacherId, { picture: 'http://lh3.googleusercontent.com/a.jpg' });
+    assert.equal(asked.length, 0);
+    await applyProfile(teacherId, { picture: 'https://lh3.googleusercontent.com/a/x=s96-c' });
     assert.equal(asked.length, 1);
-    assert.equal(db.get('SELECT type FROM user_photos WHERE user_id = ?', annId).type, 'image/jpeg');
+    assert.equal(db.get('SELECT type FROM user_photos WHERE user_id = ?', teacherId).type, 'image/jpeg');
   } finally {
     globalThis.fetch = original;
   }
+});
+
+test('stored last names are cut to a letter and students’ photos deleted, but the teacher keeps both', async () => {
+  const teacherId = db.get("SELECT id FROM users WHERE role = 'teacher'").id;
+  db.run('UPDATE users SET last_name = ? WHERE id = ?', 'Goldberg', annId);
+  db.run('UPDATE users SET last_name = ? WHERE id = ?', 'Gorsky', teacherId);
+  db.run("INSERT OR REPLACE INTO user_photos(user_id, type, data, updated_at) VALUES(?, 'image/png', ?, ?)", annId, new Uint8Array([1]), new Date().toISOString());
+  const g = db.get("SELECT id FROM groups WHERE code = 'acct'");
+  db.run('INSERT INTO permitted(email, group_id, added_at, first_name, last_name) VALUES(?, ?, ?, ?, ?)', 'eli@gmail.com', g.id, new Date().toISOString(), 'Eli', 'אביטל');
+  minimizeNames();
+  minimizeNames();
+  assert.equal(db.get('SELECT last_name FROM users WHERE id = ?', annId).last_name, 'G.');
+  assert.equal(db.get('SELECT last_name FROM users WHERE id = ?', teacherId).last_name, 'Gorsky');
+  assert.equal(db.get('SELECT last_name FROM permitted WHERE email = ?', 'eli@gmail.com').last_name, 'א.');
+  assert.equal(db.get('SELECT 1 AS x FROM user_photos WHERE user_id = ?', annId), undefined);
+  assert.ok(db.get('SELECT 1 AS x FROM user_photos WHERE user_id = ?', teacherId));
+  assert.equal(db.get('SELECT 1 AS x FROM user_photos WHERE user_id = ?', benId), undefined);
 });
 
 test('names on the teacher’s list are used at registration, and Google does not replace them', async () => {

@@ -2,7 +2,7 @@
 // Everything in it is deleted and built again every night, so whatever anyone
 // enters under the demo login is gone the next day (decision of 31 October 2026).
 // The sample data is made from a fixed seed, so the demo looks the same each day.
-import { all, get, run, now, tx, voterKey, setting, setSetting, log } from './db.js';
+import { all, get, run, now, tx, voterKey, setting, setSetting, log, lastInitial } from './db.js';
 import { programme, lessonItems, moduleContent, modulesWithContent } from './content.js';
 import { DIMENSIONS } from './model.js';
 import { israelDay, israelToIso } from './schedule.js';
@@ -74,7 +74,7 @@ function build() {
   const t0 = now();
   run('INSERT INTO groups(institution, code, programme, is_demo, created_at) VALUES(?, ?, ?, 1, ?)', DEMO.institution, DEMO.code, DEMO.programme, t0);
   const g = demoGroup();
-  run("INSERT INTO users(email, role, group_id, registered_at, first_name, last_name) VALUES('demo', 'demo', ?, ?, ?, ?)", g.id, t0, FIRST[0], LAST[0]);
+  run("INSERT INTO users(email, role, group_id, registered_at, first_name, last_name) VALUES('demo', 'demo', ?, ?, ?, ?)", g.id, t0, FIRST[0], lastInitial(LAST[0]));
   const demo = get("SELECT * FROM users WHERE role = 'demo'");
 
   // Each sample student has a steady habit of answering and a level of accuracy.
@@ -82,7 +82,7 @@ function build() {
   const people = [{ id: demo.id, p: 0.96, q: 0.78, fade: 0 }];
   for (let i = 1; i <= SAMPLES; i++) {
     const email = `student${String(i).padStart(2, '0')}@example.org`;
-    run("INSERT INTO users(email, role, group_id, registered_at, last_seen, first_name, last_name) VALUES(?, 'sample', ?, ?, ?, ?, ?)", email, g.id, t0, t0, FIRST[i], LAST[i]);
+    run("INSERT INTO users(email, role, group_id, registered_at, last_seen, first_name, last_name) VALUES(?, 'sample', ?, ?, ?, ?, ?)", email, g.id, t0, t0, FIRST[i], lastInitial(LAST[i]));
     const u = get('SELECT id FROM users WHERE email = ?', email);
     people.push({ id: u.id, p: 0.62 + r() * 0.38, q: 0.5 + r() * 0.45, fade: i % 9 === 0 ? 0.12 : 0 });
   }

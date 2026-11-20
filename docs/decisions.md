@@ -113,3 +113,7 @@ When the site refuses a Google address that is on no list, it now asks the stude
 ## 19 November 2026
 
 On Learn in class, a lesson whose day has passed and that was never run on the site shows as "past, not run on the site", with no Start lesson button, and the site refuses to start it. Classes were held on campus without running the lessons on the site, so the list showed every past lesson as planned and offered to start it. Such a lesson stays planned in the database: it is not marked held, so it opens no rating for students.
+
+## 20 November 2026
+
+The site keeps as little about students as it can, so that a breach would reveal little and the duties of the privacy laws of Israel and India stay light. Both laws still apply: an email address is personal data. Of a student's last name, the site keeps only the first letter, such as "Ann G.", so that 2 students with the same first name can be told apart; the teacher's full list stays in Moodle. Last names already stored were cut the same way, and the students' photos copied from Google were deleted; the site no longer copies them. The teacher keeps his full name and photo. The header shows the first name with that letter, instead of the last name.
