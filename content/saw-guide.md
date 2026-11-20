@@ -13,7 +13,7 @@ A student registers once with Google, using the email address they gave their co
 - **Study alone** lists the modules. Each module has a study page with an introduction, the key ideas, the reading in the textbook and practice exercises. Practice answers count towards no grade. The page also has @tutor, which answers questions from the course rules only, and passes a question it cannot answer to the teacher without the student's name.
 - **Submit projects** is where the student links the public GitHub repository of each project. @reviewer checks the repository's structure and history: public access, a context file, commits spread over time, clear commit messages, tests, a record of the work with the agent, and a README. It explains every failed check. The check never grades; the teacher grades the work itself.
 - **My progress** shows the student's own figures set against the average of the group: live exercises answered and their score, practice accuracy, modules studied and projects passing. Only the student sees their own figures.
-- **My account** opens from the student's name at the top right. It shows the first name and the first letter of the last name, which the student can correct, the email, institution, group and program, a comment that only the student and the teacher see, and Sign out.
+- **My account** opens from the student's name at the top right. It shows the first name and the first letter of the last name, which the student can correct, the email, institution, group and program, a comment that only the student and the teacher see, Download my data, which gives one file with everything the site keeps about the student, and Sign out.
 - **Contact SAW** sends a message to the teacher, who answers by email.
 
 ## The Teaching Assistant

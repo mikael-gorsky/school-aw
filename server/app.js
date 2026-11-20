@@ -176,6 +176,12 @@ on('POST', '/auth/demo', {}, ctx => {
 // The name in the header opens this page, which also holds Sign out
 // (decision of 31 October 2026).
 on('GET', '/account', { title: 'My account' }, ctx => A.accountPage(ctx));
+// A student downloads everything the site keeps about them, as one JSON file
+// (decision of 20 November 2026).
+on('GET', '/account/data.json', { roles: ['student', 'demo'] }, ctx => ({
+  text: JSON.stringify(M.myData(ctx.user), null, 2), type: 'application/json; charset=utf-8',
+  headers: { 'content-disposition': 'attachment; filename="my-saw-data.json"', 'cache-control': 'no-store' },
+}));
 on('POST', '/account', { roles: ['student', 'demo', 'teacher'] }, ctx => {
   // Names are saved even when empty, so that neither the list nor Google
   // fills them again: the user decides their own name.

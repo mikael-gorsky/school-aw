@@ -39,7 +39,7 @@ export async function req(method, path, { jar, form, json, headers = {} } = {}) 
     if (jar && name === 'saw_session') jar.cookie = value ? `saw_session=${value}` : '';
   }
   const text = await r.text();
-  return { status: r.status, location: r.headers.get('location'), text, json: () => JSON.parse(text) };
+  return { status: r.status, location: r.headers.get('location'), headers: Object.fromEntries(r.headers), text, json: () => JSON.parse(text) };
 }
 
 export async function signInDev(email) {

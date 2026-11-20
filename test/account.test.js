@@ -164,3 +164,19 @@ test('the teacher adds a lesson of 2 modules, and it takes the live exercises of
   const labels = db.all('SELECT label FROM items WHERE lesson_id = ?', l.id).map(i => i.label);
   assert.ok(labels.some(x => x.startsWith('Module 4 · ')) && labels.some(x => x.startsWith('Module 6 · ')));
 });
+
+test('a student downloads their own data, and only their own', async () => {
+  db.run("INSERT INTO messages(name, email, topic, body, at) VALUES('Ann', 'ann@gmail.com', 'q', 'My own message', ?)", new Date().toISOString());
+  db.run("INSERT INTO messages(name, email, topic, body, at) VALUES('Ben', 'ben@gmail.com', 'q', 'Ben message', ?)", new Date().toISOString());
+  const r = await req('GET', '/account/data.json', { jar: ann.jar });
+  assert.equal(r.status, 200);
+  assert.match(r.headers['content-disposition'], /attachment/);
+  const d = JSON.parse(r.text);
+  assert.equal(d.you.email, 'ann@gmail.com');
+  assert.equal(d.group.group, 'acct');
+  assert.deepEqual(d.messages.map(m => m.body), ['My own message']);
+  assert.doesNotMatch(r.text, /ben@gmail\.com|Ben message/);
+  assert.match((await req('GET', '/account', { jar: ann.jar })).text, /href="\/account\/data\.json"/);
+  assert.equal((await req('GET', '/account/data.json')).status, 401);
+  assert.equal((await req('GET', '/account/data.json', { jar: teacher.jar })).status, 403);
+});

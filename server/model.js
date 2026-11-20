@@ -412,3 +412,43 @@ export function classRows(groupId) {
   const notRegistered = all(`SELECT p.email, p.first_name, p.last_name FROM permitted p LEFT JOIN users u ON u.email = p.email WHERE p.group_id = ? AND u.id IS NULL ORDER BY p.email`, groupId);
   return { group: g, matrix: m, rows, notRegistered, held };
 }
+
+// ---------- a student's own data ----------
+// Everything the site keeps about one student, for "Download my data" on
+// My account: the student may keep it before the group's data is deleted
+// (decision of 20 November 2026). Ratings carry no user id, so they are found
+// by the student's own one-way keys.
+export function myData(user) {
+  const g = user.group_id ? groupById(user.group_id) : null;
+  const parse = s => { try { return JSON.parse(s); } catch { return s; } };
+  const lessons = g ? lessonsOf(g.id) : [];
+  const lessonRatings = lessons.map(l => {
+    const r = get('SELECT rating, helped, blocked, comment, at FROM lesson_ratings WHERE lesson_id = ? AND voter = ?', l.id, voterKey(user.id, `lesson:${l.id}`));
+    return r && { lesson: l.number, rating: r.rating, helped: parse(r.helped), blocked: parse(r.blocked), comment: r.comment, at: r.at };
+  }).filter(Boolean);
+  const moduleRatings = g ? (programme(g.programme)?.modules || []).map(m => {
+    const r = get('SELECT clarity, at FROM module_ratings WHERE group_id = ? AND module = ? AND voter = ?', g.id, m.n, voterKey(user.id, `module:${m.n}`));
+    return r && { module: m.n, clarity: r.clarity, at: r.at };
+  }).filter(Boolean) : [];
+  const surveys = g ? all('SELECT id, label FROM surveys WHERE group_id = ? ORDER BY id', g.id).map(s => {
+    const r = get('SELECT overall, clarity, pace, usefulness, interest, support, workload, recommend, at FROM survey_answers WHERE survey_id = ? AND voter = ?', s.id, voterKey(user.id, `survey:${s.id}`));
+    return r && { survey: s.label, ...r };
+  }).filter(Boolean) : [];
+  return {
+    downloaded: now(),
+    site: 'School of Agentic Work',
+    you: { email: user.email, first_name: user.first_name, last_name: user.last_name, comment: user.comment, registered: user.registered_at, last_seen: user.last_seen },
+    group: g && { institution: g.institution, group: g.code, program: g.programme },
+    lesson_answers: all(`SELECT l.number AS lesson, i.label, i.question, a.choice AS your_answer, i.correct, a.at
+      FROM answers a JOIN items i ON i.id = a.item_id JOIN lessons l ON l.id = i.lesson_id WHERE a.user_id = ? ORDER BY l.number, i.seq`, user.id),
+    practice: all('SELECT module, exercise, answer, correct, at FROM practice WHERE user_id = ? ORDER BY module, exercise', user.id),
+    projects: all('SELECT id, kind, repo, submitted_at FROM projects WHERE user_id = ? ORDER BY kind', user.id).map(p => ({
+      kind: p.kind, repository: p.repo, submitted: p.submitted_at,
+      checks: all('SELECT at, passed, warnings, failed, results, feedback FROM checks WHERE project_id = ? ORDER BY at', p.id).map(c => ({ ...c, results: parse(c.results) })),
+    })),
+    lesson_ratings: lessonRatings,
+    module_ratings: moduleRatings,
+    survey_answers: surveys,
+    messages: all('SELECT topic, body, at FROM messages WHERE email = ? ORDER BY at', user.email),
+  };
+}

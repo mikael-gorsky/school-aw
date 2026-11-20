@@ -53,6 +53,7 @@ export function accountPage(ctx) {
   const note = ctx.role === 'demo' ? '<p class="small" style="margin:0 0 16px">This is the account of the sample student. Everything you change here is deleted every night.</p>' : '';
   return `<div class="wrap page" style="max-width:820px">${head('whoami', 'My account', 'Your first name and the first letter of your last name come from your teacher’s list or your Google account. You can correct them here.')}
    ${note}${form(u, g, true)}
+   ${u.role === 'student' || u.role === 'demo' ? `<div class="card section row" style="justify-content:space-between;align-items:center"><p class="fg2" style="margin:0">Download everything the site keeps about you: your name, group, answers, practice, projects, ratings and messages, in one file.</p><a class="btn sec" href="/account/data.json" download>Download my data</a></div>` : ''}
    <div class="card section row" style="justify-content:space-between;align-items:center"><p class="fg2" style="margin:0">Sign out of School of Agentic Work on this device.</p><form method="post" action="/auth/signout" class="inline"><button class="btn sec">Sign out</button></form></div></div>`;
 }
 
